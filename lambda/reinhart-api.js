@@ -1,6 +1,3 @@
-
-
-
 //database storage and requries
 const fs = require("fs");
 const Util = require('./util.js');

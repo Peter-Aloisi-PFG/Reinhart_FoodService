@@ -266,6 +266,7 @@ const Start_SubmitOrderIntentHandler = {
         // there is no pending order and therefore no items in the customer's cart
         return handlerInput.responseBuilder
           .speak("You do not currently have any items in your shopping cart. Please start a new order before attempting to submit.")
+          .reprompt("What would you like to do?")
           .getResponse();
     }
     
@@ -503,7 +504,8 @@ const ProductNotGiven_EditOrderIntentHandler = {
      console.log("pending order is " + pendingOrder);
      if(pendingOrder === null){
         return handlerInput.responseBuilder
-         .speak("You do not have a pending order to edit, please use the website to edit submitted orders.")
+         .speak("You do not have any items in your shopping cart to edit. What else can I help you with today?")
+         .reprompt("What else can I help you with today?")
          .getResponse();
   
      }
@@ -511,8 +513,8 @@ const ProductNotGiven_EditOrderIntentHandler = {
      sessionAttributes.orderNumber = pendingOrder.orderNumber
     return handlerInput.responseBuilder
       .addElicitSlotDirective('spokenProductName')
-      .speak("What product do you want to change?")
-      .reprompt('You can view orders by saying, View Pending order, at this time we can only change pending orders for your next delivery date using Alexa.  What product would you like to change?')
+      .speak("Which item in your cart do you want to edit?")
+      .reprompt('If you would like to me list the items in your shopping cart, say view my shopping cart, otherwise state the name of the product you wish to edit.')
       .getResponse();
   }
 };
@@ -535,11 +537,11 @@ const ProductGiven_EditOrderIntentHandler = {
 
     var resolvedProduct =  await reinhart.getProductFromCatalogue(spokenProductName);
     if(resolvedProduct !== null){
-        var productExists = await reinhart.getOrderItemFromOrder(sessionAttributes.orderNumber,resolvedProduct.resolvedProductID);
+        var productInCart = await reinhart.getOrderItemFromOrder(sessionAttributes.orderNumber,resolvedProduct.resolvedProductID);
         console.log("resolvedProduct(edit): " + resolvedProduct);
     }
     
-    if (resolvedProduct === null || productExists === null) {
+    if (resolvedProduct === null || productInCart === null) {
         
         return handlerInput.responseBuilder
           .addElicitSlotDirective('spokenProductName',
@@ -558,8 +560,8 @@ const ProductGiven_EditOrderIntentHandler = {
                         }
                     }
                 })
-          .speak("I'm sorry, I was not able to find any product matching " + spokenProductName + " in your shopping cart. Please state a new product or try being more specific.")
-          .reprompt("Try to be as specific as possible. What product in your cart do you want to change?")
+          .speak("I'm sorry, I was not able to find a product matching " + spokenProductName + " in your shopping cart. Please state a new product or try being more specific.")
+          .reprompt("Try to be as specific as possible. Which item in your cart do you want to edit?")
           .getResponse();
     }
     
@@ -567,8 +569,8 @@ const ProductGiven_EditOrderIntentHandler = {
     
     return handlerInput.responseBuilder
       .addConfirmSlotDirective('spokenProductName')
-      .speak("I was able to find " + sessionAttributes.resolvedProduct.resolvedProductName + ". Is this what you would like to change?")
-      .reprompt("I was able to find " + sessionAttributes.resolvedProduct.resolvedProductName + ". Is this what you would like to change?")
+      .speak("I was able to find " + productInCart.quantity + " cases of " + productInCart.productName + " in your cart. Is this the item you wish to edit?")
+      .reprompt("I was able to find " + sessionAttributes.resolvedProduct.resolvedProductName + " in your cart. Is this the item you wish to edit?")
       .getResponse();
   }
 };
