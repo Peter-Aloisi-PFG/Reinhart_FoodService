@@ -1,0 +1,255 @@
+{
+  "length": 50,
+  "products": [
+    {
+      "productName": "10 pc. chicken",
+      "ID": 1,
+      "commonName": "chicken"
+    },
+    {
+      "productName": "15 pc. pork tenderloin",
+      "ID": 2,
+      "commonName": "pork"
+    },
+    {
+      "productName": "10 pc. fish fillets",
+      "ID": 3,
+      "commonName": "fish"
+    },
+    {
+      "productName": "4 pc. rhino horn",
+      "ID": 4,
+      "commonName": "rhino"
+    },
+    {
+      "productName": "2 pc. penguin wings",
+      "ID": 5,
+      "commonName": "penguin"
+    },
+    {
+      "productName": "6 pc. lamb chop",
+      "ID": 6,
+      "commonName": "lamb"
+    },
+    {
+      "productName": "5 lbs. ground beef",
+      "ID": 7,
+      "commonName": "beef"
+    },
+    {
+      "productName": "3 pc. turkey legs",
+      "ID": 8,
+      "commonName": "turkey"
+    },
+    {
+      "productName": "3 lbs. shaved ham",
+      "ID": 9,
+      "commonName": "ham"
+    },
+    {
+      "productName": "10 lbs. honeycrisp apples",
+      "ID": 10,
+      "commonName": "apples"
+    },
+    {
+      "productName": "5 lbs. oranges",
+      "ID": 11,
+      "commonName": "oranges"
+    },
+    {
+      "productName": "2 lbs. unripened bananas",
+      "ID": 12,
+      "commonName": "bananas"
+    },
+    {
+      "productName": "5 pc. graham crackers",
+      "ID": 13,
+      "commonName": "crackers"
+    },
+    {
+      "productName": "3 loafs whole wheat bread",
+      "ID": 14,
+      "commonName": "bread"
+    },
+    {
+      "productName": "4 pack(6 count) blueberry bagels",
+      "ID": 15,
+      "commonName": "bagels"
+    },
+    {
+      "productName": "7 pack(8 count) spinach tortillas",
+      "ID": 16,
+      "commonName": "tortillas"
+    },
+    {
+      "productName": "5 pack dark roast coffee",
+      "ID": 17,
+      "commonName": "coffee"
+    },
+    {
+      "productName": "2 pack(12 count) chocolate chip granola bars",
+      "ID": 18,
+      "commonName": "granola bars"
+    },
+    {
+      "productName": "6 pack lucky charms cereal",
+      "ID": 19,
+      "commonName": "cereal"
+    },
+    {
+      "productName": "2 lbs. american cheese",
+      "ID": 20,
+      "commonName": "cheese"
+    },
+    {
+      "productName": "5 lbs pre-cooked shrimp",
+      "ID": 21,
+      "commonName": "shrimp"
+    },
+    {
+      "productName": "4 pc. lobster tail",
+      "ID": 22,
+      "commonName": "lobster"
+    },
+    {
+      "productName": "6 lbs. crab claws",
+      "ID": 23,
+      "commonName": "crab"
+    },
+    {
+      "productName": "10 lbs. white rice",
+      "ID": 24,
+      "commonName": "rice"
+    },
+    {
+      "productName": "2 lbs. unsalted butter",
+      "ID": 25,
+      "commonName": "butter"
+    },
+    {
+      "productName": "1 lb. salt",
+      "ID": 26,
+      "commonName": "salt"
+    },
+    {
+      "productName": "2 pack spaghetti noodles",
+      "ID": 27,
+      "commonName": "noodles"
+    },
+    {
+      "productName": "5 pack(10 count) sugar cookies",
+      "ID": 28,
+      "commonName": "cookies"
+    },
+    {
+      "productName": "3 pack heads of lettuce",
+      "ID": 29,
+      "commonName": "lettuce"
+    },
+    {
+      "productName": "4 lbs. baby carrots",
+      "ID": 30,
+      "commonName": "carrots"
+    },
+    {
+      "productName": "8 lbs. red potatoes",
+      "ID": 31,
+      "commonName": "potatoe"
+    },
+    {
+      "productName": "5 lbs. tomato soup",
+      "ID": 32,
+      "commonName": "soup"
+    },
+    {
+      "productName": "5 pack brown beans",
+      "ID": 33,
+      "commonName": "beans"
+    },
+    {
+      "productName": "6 pack(12 count) eggs",
+      "ID": 34,
+      "commonName": "eggs"
+    },
+    {
+      "productName": "8 lbs. green grapes",
+      "ID": 35,
+      "commonName": "grapes"
+    },
+    {
+      "productName": "5 lbs. antelope",
+      "ID": 36,
+      "commonName": "antelope"
+    },
+    {
+      "productName": "4 pc. alligator tail",
+      "ID": 37,
+      "commonName": "alligator"
+    },
+    {
+      "productName": "4 lbs. bison",
+      "ID": 38,
+      "commonName": "bison"
+    },
+    {
+      "productName": "8 lbs. brown bear",
+      "ID": 39,
+      "commonName": "bear"
+    },
+    {
+      "productName": "4 lbs. deer tenderloin",
+      "ID": 40,
+      "commonName": "deer"
+    },
+    {
+      "productName": "7 lbs. calamari",
+      "ID": 41,
+      "commonName": "calamari"
+    },
+    {
+      "productName": "2 lbs. shark",
+      "ID": 42,
+      "commonName": "shark"
+    },
+    {
+      "productName": "5 pc. duck breast",
+      "ID": 43,
+      "commonName": "duck"
+    },
+    {
+      "productName": "6 pack gnocchi",
+      "ID": 44,
+      "commonName": "gnocchi"
+    },
+    {
+      "productName": "8 packs(5 count) hot dogs",
+      "ID": 45,
+      "commonName": "hot dogs"
+    },
+    {
+      "productName": "8 packs(5 count) brats",
+      "ID": 46,
+      "commonName": "brats"
+    },
+    {
+      "productName": "4 pack jelly",
+      "ID": 47,
+      "commonName": "jelly"
+    },
+    {
+      "productName": "10 lbs. moose",
+      "ID": 48,
+      "commonName": "moose"
+    },
+    {
+      "productName": "5 pc.(1 gallon each) whole milk",
+      "ID": 49,
+      "commonName": "milk"
+    },
+    {
+      "productName": "4 lbs. pepperoni",
+      "ID": 50,
+      "commonName": "pepperoni"
+    }
+  ]
+}
