@@ -1,0 +1,334 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "this is the bad batch unique",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
+        {
+          "name": "MakeOrderIntent",
+          "slots": [
+            {
+              "name": "quantity",
+              "type": "AMAZON.NUMBER",
+              "samples": [
+                "{quantity} cases",
+                "I want {quantity} cases",
+                "{quantity}"
+              ]
+            },
+            {
+              "name": "spokenProductName",
+              "type": "AMAZON.Food",
+              "samples": [
+                "give me {quantity} cases of {spokenProductName}",
+                "get me {quantity} cases of {spokenProductName}",
+                "I need {quantity} cases of {spokenProductName}",
+                "add {quantity} cases of {spokenProductName} to my order",
+                "I\u0027ll have {spokenProductName}",
+                "I want {spokenProductName}",
+                "{spokenProductName}",
+                "{quantity} cases of {spokenProductName}",
+                "I want {quantity} cases of {spokenProductName}"
+              ]
+            }
+          ],
+          "samples": [
+            "can I get {quantity} {spokenProductName}",
+            "can I have {spokenProductName}",
+            "can I have {quantity} cases of {spokenProductName}",
+            "I want {quantity} cases of {spokenProductName} as well",
+            "get me {quantity} cases of {spokenProductName} too",
+            "I want {spokenProductName} too",
+            "get me {quantity} cases of {spokenProductName}",
+            "add {quantity} {spokenProductName} to my order",
+            "get me {quantity} {spokenProductName}",
+            "I want {quantity} {spokenProductName}",
+            "I want to add {quantity} cases of {spokenProductName} to my cart",
+            "I want to add {spokenProductName}",
+            "I want to add {quantity} cases of {spokenProductName} to my order",
+            "add {spokenProductName} to my cart",
+            "add {quantity} cases of {spokenProductName} to my cart",
+            "put {quantity} cases of {spokenProductName} in my cart",
+            "put {spokenProductName} in my cart",
+            "add to my cart",
+            "add to shopping cart",
+            "add to pending order",
+            "add to order",
+            "add to my order",
+            "add {spokenProductName} to my order",
+            "add {quantity} cases of {spokenProductName} to my order",
+            "Start an order for {spokenProductName}",
+            "Start an order for {quantity} cases of {spokenProductName}",
+            "Start order",
+            "Start an order",
+            "I\u0027ll have {quantity} cases of {spokenProductName}",
+            "{quantity} cases of {spokenProductName}",
+            "Get me {spokenProductName}",
+            "I need {spokenProductName}",
+            "I want {quantity} cases of {spokenProductName}"
+          ]
+        },
+        {
+          "name": "EditOrderIntent",
+          "slots": [
+            {
+              "name": "spokenProductName",
+              "type": "AMAZON.Food",
+              "samples": [
+                "{spokenProductName}"
+              ]
+            },
+            {
+              "name": "NewQuantity",
+              "type": "AMAZON.NUMBER"
+            }
+          ],
+          "samples": [
+            "change {spokenProductName} to {NewQuantity} cases",
+            "edit {spokenProductName} to {NewQuantity}",
+            "edit {spokenProductName} to {NewQuantity} cases",
+            "actually I want it to be {NewQuantity}",
+            "edit my quantity to be {NewQuantity}",
+            "wait change that to {NewQuantity}",
+            "make my quantity for {spokenProductName} to {NewQuantity}",
+            "please change {spokenProductName} to {NewQuantity} cases",
+            "please change the quantity for {spokenProductName} to {NewQuantity}",
+            "please edit my order",
+            "Can I have {NewQuantity} cases intead for {spokenProductName}",
+            "make {NewQuantity} the amount of cases for {spokenProductName}",
+            "edit my quantity for {spokenProductName} to be {NewQuantity}",
+            "Change my cases of {spokenProductName} to {NewQuantity}",
+            "Can I change my {spokenProductName} cases to {NewQuantity}",
+            "Change {spokenProductName} to {NewQuantity} in my cart",
+            "edit my order for {spokenProductName} to be {NewQuantity}",
+            "edit order",
+            "edit unsubmitted order",
+            "edit",
+            "I want to change things in my next order",
+            "I want to edit my cart",
+            "I want to edit my next order",
+            "I want to edit my order"
+          ]
+        },
+        {
+          "name": "ViewNextDeliveryContents",
+          "slots": [],
+          "samples": [
+            "view next delivery",
+            "what is my next delivery",
+            "what items are in my next delivery",
+            "next delivery",
+            "what will arrive on my next delivery date",
+            "What is in my next delivery"
+          ]
+        },
+        {
+          "name": "YesNoIntent",
+          "slots": [
+            {
+              "name": "answer",
+              "type": "yes_no"
+            }
+          ],
+          "samples": [
+            "{answer}"
+          ]
+        },
+        {
+          "name": "SubmitOrderIntent",
+          "slots": [],
+          "samples": [
+            "submit the order",
+            "please submit",
+            "I wanna submit",
+            "submit it",
+            "just submit it",
+            "let\u0027s submit",
+            "submit my pending order",
+            "submit order"
+          ]
+        },
+        {
+          "name": "ViewPendingOrderContents",
+          "slots": [],
+          "samples": [
+            "what is in my cart",
+            "view pending orders",
+            "What is my next ofder"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "values": [
+            {
+              "name": {
+                "value": "yes",
+                "synonyms": [
+                  "yes please",
+                  "of course",
+                  "yah",
+                  "yeah",
+                  "yup"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "no",
+                "synonyms": [
+                  "definitely not",
+                  "no thank you",
+                  "no thanks",
+                  "nah",
+                  "nope"
+                ]
+              }
+            }
+          ],
+          "name": "yes_no"
+        }
+      ]
+    },
+    "dialog": {
+      "intents": [
+        {
+          "name": "MakeOrderIntent",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": [
+            {
+              "name": "quantity",
+              "type": "AMAZON.NUMBER",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.346939382142.1462815290058"
+              }
+            },
+            {
+              "name": "spokenProductName",
+              "type": "AMAZON.Food",
+              "elicitationRequired": true,
+              "confirmationRequired": true,
+              "prompts": {
+                "confirmation": "Confirm.Slot.831481279506.420250421361",
+                "elicitation": "Elicit.Slot.346939382142.1520437581110"
+              }
+            }
+          ],
+          "delegationStrategy": "SKILL_RESPONSE"
+        },
+        {
+          "name": "SubmitOrderIntent",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": []
+        },
+        {
+          "name": "EditOrderIntent",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": [
+            {
+              "name": "spokenProductName",
+              "type": "AMAZON.Food",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.670601812336.281805026272"
+              }
+            },
+            {
+              "name": "NewQuantity",
+              "type": "AMAZON.NUMBER",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.670601812336.1618120151253"
+              }
+            }
+          ],
+          "delegationStrategy": "SKILL_RESPONSE"
+        }
+      ],
+      "delegationStrategy": "SKILL_RESPONSE"
+    },
+    "prompts": [
+      {
+        "id": "Elicit.Slot.346939382142.1462815290058",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "How many cases of {spokenProductName} would you like?"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.346939382142.1520437581110",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "What product would you like to order?"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Slot.831481279506.420250421361",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "I was able to find {spokenProductName} . Is this correct?"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Intent.841627996573",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Are you sure you would like to submit?"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.670601812336.281805026272",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "What do you want to edit?"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.670601812336.1618120151253",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "enter New value enter zero to remove"
+          }
+        ]
+      }
+    ]
+  },
+  "version": "14"
+}
