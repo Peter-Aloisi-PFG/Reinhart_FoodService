@@ -103,6 +103,8 @@
             }
           ],
           "samples": [
+            "I need to edit my cart",
+            "edit what\u0027s in my cart",
             "change {spokenProductName} to {NewQuantity} cases",
             "edit {spokenProductName} to {NewQuantity}",
             "edit {spokenProductName} to {NewQuantity} cases",
@@ -169,6 +171,12 @@
           "name": "SubmitOrderIntent",
           "slots": [],
           "samples": [
+            "I need to submit",
+            "I want to submit what\u0027s in my cart",
+            "submit my cart",
+            "submit the cart",
+            "submit what is in my cart",
+            "submit what\u0027s in my cart",
             "submit the order",
             "please submit",
             "I wanna submit",
@@ -345,6 +353,5 @@
       }
     ]
   },
-
-  "version": "19"
+  "version": "6"
 }
