@@ -52,6 +52,8 @@
             }
           ],
           "samples": [
+            "order me {quantity} cases of {spokenProductName}",
+            "order me {spokenProductName}",
             "can I get {quantity} {spokenProductName}",
             "can I have {spokenProductName}",
             "can I have {quantity} cases of {spokenProductName}",
@@ -92,10 +94,7 @@
           "slots": [
             {
               "name": "spokenProductName",
-              "type": "AMAZON.Food",
-              "samples": [
-                "{spokenProductName}"
-              ]
+              "type": "AMAZON.Food"
             },
             {
               "name": "NewQuantity",
@@ -103,6 +102,13 @@
             }
           ],
           "samples": [
+            "edit pending order",
+            "edit my cart",
+            "edit cart",
+            "wait I only want {NewQuantity} cases of {spokenProductName}",
+            "edit {spokenProductName}",
+            "actually I only want {NewQuantity} cases of {spokenProductName}",
+            "edit my cart to only have {NewQuantity} cases of {spokenProductName}",
             "I need to edit my cart",
             "edit what\u0027s in my cart",
             "change {spokenProductName} to {NewQuantity} cases",
@@ -275,20 +281,16 @@
             {
               "name": "spokenProductName",
               "type": "AMAZON.Food",
-              "elicitationRequired": true,
+              "elicitationRequired": false,
               "confirmationRequired": false,
-              "prompts": {
-                "elicitation": "Elicit.Slot.670601812336.281805026272"
-              }
+              "prompts": {}
             },
             {
               "name": "NewQuantity",
               "type": "AMAZON.NUMBER",
-              "elicitationRequired": true,
+              "elicitationRequired": false,
               "confirmationRequired": false,
-              "prompts": {
-                "elicitation": "Elicit.Slot.670601812336.1618120151253"
-              }
+              "prompts": {}
             }
           ],
           "delegationStrategy": "SKILL_RESPONSE"
@@ -353,5 +355,5 @@
       }
     ]
   },
-  "version": "6"
+  "version": "12"
 }
