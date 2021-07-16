@@ -1,7 +1,7 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "this is the bad batch unique",
+      "invocationName": "chris foodservice",
       "intents": [
         {
           "name": "AMAZON.CancelIntent",
@@ -103,6 +103,8 @@
             }
           ],
           "samples": [
+            "I need to edit my cart",
+            "edit what\u0027s in my cart",
             "change {spokenProductName} to {NewQuantity} cases",
             "edit {spokenProductName} to {NewQuantity}",
             "edit {spokenProductName} to {NewQuantity} cases",
@@ -133,6 +135,18 @@
           "name": "ViewNextDeliveryContents",
           "slots": [],
           "samples": [
+            "list the contents of my next delivery",
+            "view what\u0027s coming in my next delivery",
+            "what do I have coming in my next delivery",
+            "what\u0027s all in my next delivery",
+            "what are the contents in my next delivery",
+            "what are my next delivery contents",
+            "check what is in my next delivery",
+            "hey what\u0027s in my next delivery",
+            "tell me what is in my next delivery",
+            "can you tell me what\u0027s in my next delivery",
+            "check what\u0027s in my next delivery",
+            "What\u0027s in my next delivery",
             "view next delivery",
             "what is my next delivery",
             "what items are in my next delivery",
@@ -157,6 +171,12 @@
           "name": "SubmitOrderIntent",
           "slots": [],
           "samples": [
+            "I need to submit",
+            "I want to submit what\u0027s in my cart",
+            "submit my cart",
+            "submit the cart",
+            "submit what is in my cart",
+            "submit what\u0027s in my cart",
             "submit the order",
             "please submit",
             "I wanna submit",
@@ -171,9 +191,12 @@
           "name": "ViewPendingOrderContents",
           "slots": [],
           "samples": [
+            "what\u0027s in my pending order",
+            "what\u0027s in my order",
+            "what\u0027s in my shopping cart",
             "what is in my cart",
             "view pending orders",
-            "What is my next ofder"
+            "What is my next order"
           ]
         }
       ],
@@ -330,5 +353,5 @@
       }
     ]
   },
-  "version": "19"
+  "version": "6"
 }

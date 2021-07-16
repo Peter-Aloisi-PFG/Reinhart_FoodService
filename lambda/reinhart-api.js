@@ -1,12 +1,26 @@
-
-
-
 //database storage and requries
 const fs = require("fs");
 const Util = require('./util.js');
 
 
 //------------------------------------DATABASE API-----------------------------------------------------
+
+async function debugViewOrders() {
+    var orderData = await Util.getJSON("orders.json")
+    console.log("Order data is : " + orderData); // Success
+}
+
+async function debugViewProducts() {
+    var orderData = await Util.getJSON("products.json")
+    console.log("products data is : " + orderData); // Success
+}
+
+async function debugViewCustomers() {
+    var orderData = await Util.getJSON("customers.json")
+    console.log("customers data is : " + orderData); // Success
+}
+
+
 
 
 /*
@@ -33,6 +47,7 @@ async function startOrder(customerID) {
     orderData.orders.push(newOrder);
     await Util.uploadJSON("orders.json", orderData);
     console.log("Started Order"); // Success
+
     return { orderNumber };
 }
 
@@ -45,12 +60,19 @@ async function startOrder(customerID) {
 /    return: true if successful, false if not
 */
 async function addToOrder(orderNumber, productID, quantity, productName) {
+    
+    
     var orderData = await Util.getJSON("orders.json");
+    console.log("our order data 3 " + JSON.stringify(orderData));
     var foundOrder = false;
 
     for (let i = 0; i < 5; i++) {
+        console.log("print one");
         for (var key in orderData.orders) {
+            console.log("print two");
+            console.log("order number: " + orderData.orders[key].orderNumber);
             if (orderData.orders[key].orderNumber === orderNumber) {
+                console.log("order numbers matched");
                 let orderItem = {
                     productID: productID,
                     quantity: quantity,
@@ -69,15 +91,17 @@ async function addToOrder(orderNumber, productID, quantity, productName) {
         orderData = await Util.getJSON("orders.json");
     }
 
-    if (!foundOrder) {
+    
+    if(!foundOrder){
+        console.log("foundOrder is false");
         return false;
     }
+    
 
     await Util.uploadJSON("orders.json", orderData);
-    console.log("adding to order");
+    console.log("added product to order");
     return true;
 }
-
 
 /*
 /   Checks if there is a pending order and returns the pending order's order
@@ -89,12 +113,13 @@ async function addToOrder(orderNumber, productID, quantity, productName) {
 */
 async function getPendingOrderInfo(customerID) {
     var orderData = await Util.getJSON("orders.json");
+    console.log("orderData is valid", orderData);
     for (var key in orderData.orders) {
         if (orderData.orders[key].orderStatus === 0) {
             if (orderData.orders[key].customerID === customerID) {
+                console.log("found and returned pending order");
                 var orderNumber = orderData.orders[key].orderNumber;
                 var orderStatus = orderData.orders[key].orderStatus;
-                console.log("found pending order");
                 return { orderNumber };
             }
         }
@@ -140,6 +165,7 @@ async function getProductFromCatalogue(spokenProductName) {
 /    return: resolvedProductName, resolvedProductID
 */
 async function getProductFromOrderGuide(customerID, spokenProductName) {
+
     var foodData = await Util.getJSON("products.json");
     var resolvedProductInfo;
     for (var key in foodData.products) {
@@ -160,7 +186,7 @@ async function getProductFromOrderGuide(customerID, spokenProductName) {
 }
 
 /*
-/    Gets an order item from a pending order off the order number and the
+/    Gets an order item from an existing order based on the order number and the
 /    spoken product name
 /    
 /    args: orderNumber, spokenProductName
@@ -169,12 +195,16 @@ async function getProductFromOrderGuide(customerID, spokenProductName) {
 */
 async function getOrderItemFromOrder(orderNumber, productID) {
     var customerID = 1;
-    var orderData = await Util.getJSON("orders.json");
+     var orderData = await Util.getJSON("orders.json");
+    console.log("looking for " + productID);
     let foundOrder = false;
     for (var key in orderData.orders) {
         if (orderData.orders[key].orderNumber === orderNumber) {
+            console.log("found order ");
             if (orderData.orders[key].orderStatus === 0) {
+                console.log("its pending");
                 for (var key2 in orderData.orders[key].orderItem) {
+                    console.log("lets check");
                     if (orderData.orders[key].orderItem[key2].productID === productID) {
                         console.log("found product in order");
                         return orderData.orders[key].orderItem[key2];
@@ -186,7 +216,6 @@ async function getOrderItemFromOrder(orderNumber, productID) {
     console.log("couldnt find product/customer ");
     return null;
 }
-
 
 /*
 /    Gets all the order numbers for the customers next delivery
@@ -216,12 +245,15 @@ async function getNextDeliveryOrderNumbers(customerID) {
 /    return: true if successful, false if not
 */
 async function updateQuantity(orderNumber, productID, newQuantity) {
+    console.log("my info is " + orderNumber + " " + productID + " " + newQuantity);
     var orderData = await Util.getJSON("orders.json");
     var foundProduct = false;
     for (var key in orderData.orders) {
         if (orderData.orders[key].orderNumber === orderNumber) {
+            console.log("found order");
             for (var key2 in orderData.orders[key].orderItem) {
                 if (orderData.orders[key].orderItem[key2].productID === productID) {
+                    console.log("found product");
                     orderData.orders[key].orderItem[key2].quantity = newQuantity;
                     foundProduct = true;
                     break;
@@ -236,12 +268,12 @@ async function updateQuantity(orderNumber, productID, newQuantity) {
         return false;
     }
 
-    await Util.uploadJSON("orders.json", orderData);
+    Util.uploadJSON("orders.json", orderData);
     console.log("did updateQuantity");
     return true;
 }
 
-/*  TODO testing not done as of 7/15/2021
+/*
 /    Updates the product in a customer's order to something else.
 /    For example: 10pc chicken tenders -> 10pc chicken nuggets.
 /    
@@ -256,7 +288,7 @@ async function updateProduct(orderNumber, productID, newProductID) {
             for (var key2 in orderData.orders[key].orderItem) {
                 if (orderData.orders[key].orderItem[key2].productID === productID) {
                     orderData.orders[key].orderItem[key2].productID = newProductID;
-                    //   orderData.orders[key].orderItem.splice(key2, 1);
+                 //   orderData.orders[key].orderItem.splice(key2, 1);
                     foundProduct = true;
                     break;
                 }
@@ -275,7 +307,6 @@ async function updateProduct(orderNumber, productID, newProductID) {
     return true;
 }
 
-
 /*
 /    Removes the product from the given order
 /    
@@ -283,15 +314,25 @@ async function updateProduct(orderNumber, productID, newProductID) {
 /    return: success true/false
 */
 async function removeProduct(orderNumber, productID) {
+    console.log("in remove product");
     var orderData = await Util.getJSON("orders.json");
+    console.log("got orderData");
+    console.log(orderData);
+    console.log("000000");
     var foundProduct = false;
     for (var key in orderData.orders) {
+        console.log("here 1 ");
         if (orderData.orders[key].orderNumber === orderNumber) {
+            console.log("here2");
             for (var key2 in orderData.orders[key].orderItem) {
+                console.log("here3");
                 if (orderData.orders[key].orderItem[key2].productID === productID) {
+                    console.log("here4");
                     var array = orderData.orders[key].orderItem;
-                    array.splice(key, 1);
+                    array.splice(key,1);
                     orderData.orders[key].orderItem = array;
+                    
+                    console.log("made change");
                     foundProduct = true;
                     break;
                 }
@@ -304,10 +345,17 @@ async function removeProduct(orderNumber, productID) {
         console.log("didnt find product in update product id");
         return false;
     }
+    console.log("this is orderdata");
+    console.log(orderData);
     await Util.uploadJSON("orders.json", orderData);
     console.log("did updateProduct with id");
     return true;
 }
+
+
+  
+
+
 
 /*
 /    Submits a pending order
@@ -338,14 +386,13 @@ async function submitOrder(orderNumber, customerID) {
         return null;
     }
 
-    //do other things to submit for real
+    //do other things to submit
+    //
 
     await Util.uploadJSON("orders.json", orderData);
-    console.log("submitted order");
     var confirmation = true;
     return deliveryDate;
 }
-
 
 /*
 /    Cancels a customers next delivery
@@ -380,31 +427,31 @@ async function cancelNextDelivery(customerID) {
 }
 
 
+
 function calculateDeliveryDay(deliveryDays) {
-    let currentDay = new Date().getDay();
-    let nextDay = -1;
+  let currentDay = new Date().getDay();
+  let nextDay = -1;
 
-    for (let day in deliveryDays) {
-        if (deliveryDays[day] >= currentDay) {
-            nextDay = deliveryDays[day];
-            break;
-        }
-    }
-    let offset;
-    if (nextDay !== -1) {
-        offset = nextDay - currentDay;
-    } else {
-        nextDay = deliveryDays[0];
-        offset = 7 - currentDay + nextDay;
-    }
-    var nextDate = new Date();
-    nextDate.setDate(nextDate.getDate() + offset);
-    nextDate.setHours(0, 0, 0, 0);
-    nextDate = nextDate.toISOString();
-    //console.log("CALCULATE DATE: next date is" + nextDate);
-    return nextDate;
+  for (let day in deliveryDays) {
+      if (deliveryDays[day] >= currentDay) {
+          nextDay = deliveryDays[day];
+          break;
+      }
+  }
+  let offset;
+  if (nextDay !== -1) {
+      offset = nextDay - currentDay;
+  } else {
+      nextDay = deliveryDays[0];
+      offset = 7 - currentDay + nextDay;
+  }
+  var nextDate = new Date();
+  nextDate.setDate(nextDate.getDate() + offset);
+  nextDate.setHours(0, 0, 0, 0);
+  nextDate = nextDate.toISOString();
+  console.log("next date" + nextDate);
+  return nextDate;
 }
-
 
 /*
 /    Gets upcoming delivery dates for a customer
@@ -428,7 +475,7 @@ async function getNextDeliveryDate(customerID) {
     }
 
     var nextDeliveryDate = calculateDeliveryDay(deliveryDates);
-    //console.log("got getNextDeliveryDate " + nextDeliveryDate);
+    console.log("got getNextDeliveryDate " + nextDeliveryDate);
     return nextDeliveryDate;
 }
 
@@ -439,7 +486,6 @@ async function getNextDeliveryDate(customerID) {
 /    return: associated orderItem in the delivery (includes full product name, quantity, etc.)
 */
 async function getOrderItemFromNextDelivery(customerID, spokenProductName) {
-    console.log("in getorderitemfromnextdelivery");
     var orderData = await Util.getJSON("orders.json");
     var date = await getNextDeliveryDate(customerID);
     let foundOrder = false;
@@ -455,7 +501,7 @@ async function getOrderItemFromNextDelivery(customerID, spokenProductName) {
             }
         }
     }
-    console.log("couldnt find product/customer in getOrderItemFromNextDelivery ");
+    console.log("couldnt find product/customer ");
     return null;
 }
 
@@ -466,26 +512,35 @@ async function getOrderItemFromNextDelivery(customerID, spokenProductName) {
 /    return: list of orderItems
 */
 async function getOrderContents(orderNumber) {
-    console.log("in getOrderContents");
     var orderData = await Util.getJSON("orders.json");
     var allItems = [];
     var foundSomething = false;
+    //   console.log("checking for orderNumber: " + orderNumber);
+    console.log("error 1");
     for (var key in orderData.orders) {
+          console.log("error 2");
+        // console.log("orderNumber: " + orderData.orders[key].orderNumber);
         if (orderData.orders[key].orderNumber === orderNumber) {
-            for (var key2 in orderData.orders[key].orderItem) {
-                allItems.push(orderData.orders[key].orderItem[key2]);
-                foundSomething = true;
+              console.log("error 3");
+            for(var key2 in orderData.orders[key].orderItem){
+                  console.log("error 4");
+                    allItems.push(orderData.orders[key].orderItem[key2]);
+                    foundSomething = true;
+                    console.log("error 5");
+                    
             }
+            
         }
     }
-    if (!foundSomething) {
-        console.log("couldnt find product/customer in get order contents");
-        return null;
-    }
-    console.log("found items in getOrderContents");
-    return allItems;
-
-
+        console.log("checking here");
+        if(!foundSomething){
+            console.log("couldnt find product/customer in get order contents");
+            return null;
+        }
+            console.log("found items in getOrderContents");
+        return allItems;
+        
+    
 }
 
 /*
@@ -495,31 +550,32 @@ async function getOrderContents(orderNumber) {
 /    return: list of orderItems
 */
 async function getNextDeliveryContents(customerID) {
-    console.log("in getNextDeliveryContents");
+
     var orderData = await Util.getJSON("orders.json");
     var date = await getNextDeliveryDate(customerID);
     let foundOrder = false;
     var allItems = [];
     for (var key in orderData.orders) {
         if (orderData.orders[key].customerID === customerID) {
-            if (orderData.orders[key].deliveryDate == date) {
-                if (orderData.orders[key].orderStatus !== 0) {
-                    for (var key2 in orderData.orders[key].orderItem) {
-                        allItems.push(orderData.orders[key].orderItem[key2]);
-                        foundOrder = true;
-                    }
+            if (orderData.orders[key].deliveryDate === date) {
+                if(orderData.orders[key.orderStatus !== 0 ]){
+                for(var key2 in orderData.orders[key].orderItem){
+                    allItems.push(orderData.orders[key].orderItem[key2]);
+                    foundOrder = true;
+                }
                 }
             }
         }
     }
-    if (!foundOrder) {
-        console.log("couldnt find product/customer");
-        return null;
-    }
+            console.log(debugViewOrders());
+           if(!foundOrder){
+            console.log("couldnt find product/customer");
+            return null;
+        }
 
-    console.log("found items in getNextDeliveryContents");
-    return allItems;
-
+        console.log("found items in getNextDeliveryContents");
+        return allItems;
+        
 }
 
 
