@@ -204,6 +204,45 @@
             "view pending orders",
             "What is my next order"
           ]
+        },
+        {
+          "name": "RemoveItemIntent",
+          "slots": [
+            {
+              "name": "spokenProductName",
+              "type": "AMAZON.Food"
+            }
+          ],
+          "samples": [
+            "I don\u0027t want {spokenProductName} ",
+            "go ahead and remove {spokenProductName} from my order",
+            "actually just remove {spokenProductName} from my cart",
+            "can I remove an item from my cart",
+            "I\u0027d like to remove an item",
+            "remove an item from my cart",
+            "I don\u0027t want {spokenProductName} in my order anymore",
+            "actually remove {spokenProductName} from my order",
+            "take {spokenProductName} out of my order",
+            "remove {spokenProductName} from my order",
+            "I don\u0027t want {spokenProductName} anymore",
+            "actually I don\u0027t want {spokenProductName} anymore",
+            "actually take {spokenProductName} out of my cart",
+            "take {spokenProductName} out of my cart",
+            "remove {spokenProductName} from my cart",
+            "remove {spokenProductName}"
+          ]
+        },
+        {
+          "name": "ClearOrderContentsIntent",
+          "slots": [],
+          "samples": [
+            "remove everything from my order",
+            "clear my order",
+            "remove everything in my cart",
+            "get rid of everything in my cart",
+            "clear my cart",
+            "remove all items from my cart"
+          ]
         }
       ],
       "types": [
@@ -355,5 +394,5 @@
       }
     ]
   },
-  "version": "12"
+  "version": "16"
 }
