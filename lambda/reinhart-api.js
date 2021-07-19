@@ -537,11 +537,11 @@ async function getNextDeliveryContents(customerID) {
     for (var key in orderData.orders) {
         if (orderData.orders[key].customerID === customerID) {
             if (orderData.orders[key].deliveryDate === date) {
-                if(orderData.orders[key.orderStatus !== 0 ]){
-                for(var key2 in orderData.orders[key].orderItem){
-                    allItems.push(orderData.orders[key].orderItem[key2]);
-                    foundOrder = true;
-                }
+                if(orderData.orders[key].orderStatus !== 0 ){
+                    for(var key2 in orderData.orders[key].orderItem){
+                        allItems.push(orderData.orders[key].orderItem[key2]);
+                        foundOrder = true;
+                    }
                 }
             }
         }
