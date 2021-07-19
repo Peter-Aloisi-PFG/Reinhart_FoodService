@@ -290,7 +290,7 @@ async function updateProduct(orderNumber, productID, newProductID) {
 /*
 /    Removes the product from the given order
 /    
-/    args: orderNumber, productID, newProductID 
+/    args: orderNumber, productID
 /    return: success true/false
 */
 async function removeProduct(orderNumber, productID) {
@@ -320,6 +320,36 @@ async function removeProduct(orderNumber, productID) {
     console.log("completed remove product");
     return true;
 }
+
+/*
+/    Clears all contents of a given order
+/    
+/    args: orderNumber
+/    return: success true/false
+*/
+async function clearOrderContents(orderNumber) {
+    console.log("entered clear order");
+    var orderData = await Util.getJSON("orders.json");
+    console.log("order number to clear: " + orderNumber);
+    var foundOrder = false;
+    for (var key in orderData.orders) {
+        if (orderData.orders[key].orderNumber === orderNumber) {
+            console.log("found an order number match");
+            orderData.orders[key].orderItem = [];
+            foundOrder = true;
+            break;
+        }
+    }
+
+    if (!foundOrder) {
+        console.log("could not find order--unable to clear order contents");
+        return false;
+    }
+    await Util.uploadJSON("orders.json", orderData);
+    console.log("completed clear order contents");
+    return true;
+}
+
 
 /*
 /    Submits a pending order
@@ -534,4 +564,4 @@ function sleep(ms) {
 }
 
 
-module.exports = { startOrder, addToOrder, getPendingOrderInfo, getProductFromCatalogue, getProductFromOrderGuide, getOrderItemFromOrder, getNextDeliveryOrderNumbers, updateQuantity, updateProduct, removeProduct, submitOrder, cancelNextDelivery, calculateDeliveryDay, getNextDeliveryDate, getOrderItemFromNextDelivery, getOrderContents, getNextDeliveryContents };
+module.exports = { startOrder, addToOrder, getPendingOrderInfo, getProductFromCatalogue, getProductFromOrderGuide, getOrderItemFromOrder, getNextDeliveryOrderNumbers, updateQuantity, updateProduct, removeProduct, clearOrderContents, submitOrder, cancelNextDelivery, calculateDeliveryDay, getNextDeliveryDate, getOrderItemFromNextDelivery, getOrderContents, getNextDeliveryContents };

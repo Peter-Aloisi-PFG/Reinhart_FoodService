@@ -1,5 +1,9 @@
 /* *
  * This file contains the handlers for all skill Intents
+ *
+ * TODO:
+ *   Remove Item from cart Intent
+ *   Remove all Items from cart Intent
  * */
 const Alexa = require('ask-sdk-core');
 const reinhart = require('reinhart-api.js');
@@ -324,6 +328,262 @@ const Complete_SubmitOrderIntentHandler = {
     }
 }
 
+
+
+//====================================================================================================================================================
+//---===============================================================---------Remove Item---------===================================-------------------
+//====================================================================================================================================================
+
+
+/**
+ * User asks to remove an item from their order without stating an item in their cart to remove
+ * */
+const ProductNotGiven_RemoveItemIntentHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === "IntentRequest"
+      && handlerInput.requestEnvelope.request.intent.name === "RemoveItemIntent"
+      && !handlerInput.requestEnvelope.request.intent.slots.spokenProductName.value
+  },
+  async handle(handlerInput) {
+    const customerID = 1;
+    var pendingOrder = await reinhart.getPendingOrderInfo(customerID);
+    if(pendingOrder === null){
+        return handlerInput.responseBuilder
+         .speak("You do not have any items in your shopping cart to remove. What else can I help you with today?")
+         .reprompt("What else can I help you with today?")
+         .getResponse();
+    } 
+    
+    const allItems = await reinhart.getOrderContents(pendingOrder.orderNumber);
+    if (allItems === null) {
+        return handlerInput.responseBuilder
+         .speak("You do not have any items in your shopping cart to remove. What else can I help you with today?")
+         .reprompt("What else can I help you with today?")
+         .getResponse();
+    }
+
+    return handlerInput.responseBuilder
+      .addElicitSlotDirective('spokenProductName')
+      .speak("Which item in your cart do you want to remove?")
+      .reprompt('If you would like to me list the items in your shopping cart, say view my shopping cart, otherwise state the name of the product you wish to remove.')
+      .getResponse();
+  }
+};
+
+/**
+ * User has provided a product in their cart that they wish to remove
+ * */
+const ProductGiven_RemoveItemIntentHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === "IntentRequest"
+      && handlerInput.requestEnvelope.request.intent.name === "RemoveItemIntent"
+      && handlerInput.requestEnvelope.request.intent.slots.spokenProductName.value
+      && handlerInput.requestEnvelope.request.intent.slots.spokenProductName.confirmationStatus === "NONE"
+  },
+  async handle(handlerInput) {
+    const customerID = 1; 
+    const slots = handlerInput.requestEnvelope.request.intent.slots;
+    const spokenProductName = slots.spokenProductName.value;
+    const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+    
+    var pendingOrder = await reinhart.getPendingOrderInfo(customerID);
+    if(pendingOrder === null){
+        return handlerInput.responseBuilder
+         .speak("You do not have any items in your shopping cart to remove. What else can I help you with today?")
+         .reprompt("What else can I help you with today?")
+         .getResponse();
+    } 
+    
+    const allItems = await reinhart.getOrderContents(pendingOrder.orderNumber);
+    if (allItems === null) {
+        return handlerInput.responseBuilder
+         .speak("You do not have any items in your shopping cart to remove. What else can I help you with today?")
+         .reprompt("What else can I help you with today?")
+         .getResponse();
+    }
+
+    var resolvedProduct =  await reinhart.getProductFromCatalogue(spokenProductName);
+    if(resolvedProduct !== null){
+        var productInCart = await reinhart.getOrderItemFromOrder(sessionAttributes.orderNumber,resolvedProduct.resolvedProductID);
+    }
+    
+    if (resolvedProduct === null || productInCart === null) {
+        
+        return handlerInput.responseBuilder
+          .addElicitSlotDirective('spokenProductName',
+                {
+                    name: 'RemoveItemIntent',
+                    confirmationStatus: 'NONE',
+                    slots: {
+                        spokenProductName: {
+                            name: "spokenProductName",
+                            value: undefined,
+                            confirmationStatus: "NONE"
+                        }
+                    }
+                })
+          .speak("I'm sorry, I was not able to find a product matching " + spokenProductName + " in your shopping cart. Please state a new product or try being more specific.")
+          .reprompt("Try to be as specific as possible. Which item in your cart do you want to edit?")
+          .getResponse();
+    }
+    
+    sessionAttributes.resolvedProduct = resolvedProduct;
+    sessionAttributes.orderNumber = pendingOrder.orderNumber;
+    
+    let speechOutput = "";
+    if(productInCart.quantity > 1) {
+        speechOutput += "I was able to find " + productInCart.quantity + " cases of " + productInCart.productName + " in your cart. Is this the item you wish to remove?";
+    } else {
+        speechOutput += "I was able to find " + productInCart.quantity + " case of " + productInCart.productName + " in your cart. Is this the item you wish to remove?";
+    }
+    
+    return handlerInput.responseBuilder
+      .addConfirmSlotDirective('spokenProductName')
+      .speak(speechOutput)
+      .reprompt(speechOutput)
+      .getResponse();
+  }
+};
+
+/**
+ * User has provided a product they would like to remove from their cart and confirmed whether
+ * or not the product we retrieved from their cart is the one they would like to remove.
+ * We will check whether or not they confirmed or denied the product here.
+ * */
+const ProductConfirmation_RemoveItemIntentHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === "IntentRequest"
+      && handlerInput.requestEnvelope.request.intent.name === "RemoveItemIntent"
+      && handlerInput.requestEnvelope.request.intent.slots.spokenProductName.value
+      && handlerInput.requestEnvelope.request.intent.slots.spokenProductName.confirmationStatus !== "NONE"
+  },
+  async handle(handlerInput) {
+    const intent = handlerInput.requestEnvelope.request.intent;
+    const spokenProductName = intent.slots.spokenProductName.value;
+    const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+
+    if (intent.slots.spokenProductName.confirmationStatus === "DENIED") {
+        return handlerInput.responseBuilder
+          .speak("Okay, which item in your cart would you like to remove then?")
+          .reprompt("Try to be as specific as possible. Which item in your cart would you like to remove?")
+          .addElicitSlotDirective('spokenProductName',
+                {
+                    name: 'EditOrderIntent',
+                    confirmationStatus: 'NONE',
+                    slots: {
+                        spokenProductName: {
+                            name: "spokenProductName",
+                            value: undefined,
+                            confirmationStatus: "NONE"
+                        }
+                    }
+                })
+          .getResponse();
+    } 
+ 
+    let speechOutput = "";
+    const removeProductResult = await reinhart.removeProduct(sessionAttributes.orderNumber, sessionAttributes.resolvedProduct.resolvedProductID); 
+    if (removeProductResult) {
+        speechOutput += "Okay, I removed " + sessionAttributes.resolvedProduct.resolvedProductName + " from your cart. What else can I help you with today?";
+    } else {
+        speechOutput += "I'm sorry, something went wrong when I tried removing the item from your cart. Please try going online to complete the removal process.";
+    }
+    
+    return handlerInput.responseBuilder
+      .speak(speechOutput)
+      .reprompt(speechOutput)
+      .getResponse();
+    
+  }
+};
+
+
+//====================================================================================================================================================
+//---===============================================================---------Clear Order Contents---------===================================---------
+//====================================================================================================================================================
+
+/**
+ * Customer wants to remove all items from their cart
+ * */
+const Start_ClearOrderContentsIntentHandler = {
+    canHandle(handlerInput) {
+        return handlerInput.requestEnvelope.request.type === "IntentRequest"
+        && handlerInput.requestEnvelope.request.intent.name === "ClearOrderContentsIntent"
+        && handlerInput.requestEnvelope.request.intent.confirmationStatus === "NONE";
+    },
+    async handle(handlerInput) {
+        const customerID = 1;
+        var pendingOrder = await reinhart.getPendingOrderInfo(customerID);
+        if(pendingOrder === null){
+            return handlerInput.responseBuilder
+             .speak("You do not have any items in your shopping cart to remove. What else can I help you with today?")
+             .reprompt("What else can I help you with today?")
+             .getResponse();
+        } 
+        
+        const allItems = await reinhart.getOrderContents(pendingOrder.orderNumber);
+        if (allItems === null) {
+            return handlerInput.responseBuilder
+             .speak("You do not have any items in your shopping cart to remove. What else can I help you with today?")
+             .reprompt("What else can I help you with today?")
+             .getResponse();
+        }
+        
+        const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+        sessionAttributes.orderNumber = pendingOrder.orderNumber;
+        const numberOfItems = allItems.length;
+        
+        let speechOutput = "";
+        if (numberOfItems > 1) {
+            speechOutput += "You have " + numberOfItems + " items in your cart. Are you sure you would like to remove them all?";
+        } else {
+            speechOutput += "You have " + numberOfItems + " item in your cart. Are you sure you would like to remove it?";
+        }
+        
+        return handlerInput.responseBuilder
+          .addConfirmIntentDirective("ClearOrderContentsIntent")
+          .speak(speechOutput)
+          .reprompt(speechOutput)
+          .getResponse();
+    }
+}
+
+/**
+ * customer has confirmed that they would like to remove all items from their cart
+ **/
+const Complete_ClearOrderContentsIntentHandler = {
+    canHandle(handlerInput) {
+        return handlerInput.requestEnvelope.request.type === "IntentRequest"
+        && handlerInput.requestEnvelope.request.intent.name === "ClearOrderContentsIntent"
+        && handlerInput.requestEnvelope.request.intent.confirmationStatus !== "NONE";
+    },
+    async handle(handlerInput) {
+        const intent = handlerInput.requestEnvelope.request.intent;
+        const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+        
+        let speechOutput = "";
+        if (intent.confirmationStatus === "DENIED") {
+            speechOutput += "Okay, I did not clear your cart. What else can I help you with today?"
+        } else {
+            console.log("entering clear order");
+            console.log(sessionAttributes.orderNumber);
+            const clearOrderResult = await reinhart.clearOrderContents(sessionAttributes.orderNumber);
+            if (clearOrderResult) {
+                speechOutput += "Okay, I have removed all items from your cart. What else can I help you with today?"
+            } else {
+                speechOutput += "I'm sorry, something went wrong when I tried to clear your cart. Please try going online to complete this process."
+            }
+        }
+        
+        return handlerInput.responseBuilder
+          .speak(speechOutput)
+          .reprompt("What else can I help you with today?")
+          .getResponse();
+    }
+}
+
+
+
 //====================================================================================================================================================
 //---===============================================================---------yes no intent---------===================================-------------------
 //====================================================================================================================================================
@@ -528,7 +788,7 @@ const YesNoIntentHandler = {
 //====================================================================================================================================================
 
 /**
- * User asks to edit their order without an item in their cart to edit
+ * User asks to edit their order without stating an item in their cart to edit
  * */
 const ProductNotGiven_EditOrderIntentHandler = {
   canHandle(handlerInput) {
@@ -539,12 +799,12 @@ const ProductNotGiven_EditOrderIntentHandler = {
   async handle(handlerInput) {
     const customerID = 1;
     var pendingOrder = await reinhart.getPendingOrderInfo(customerID);
-    if(pendingOrder === null){
+    if (pendingOrder === null) {
         return handlerInput.responseBuilder
          .speak("You do not have any items in your shopping cart to edit. What else can I help you with today?")
          .reprompt("What else can I help you with today?")
          .getResponse();
-    } 
+    }
     
     const allItems = await reinhart.getOrderContents(pendingOrder.orderNumber);
     if (allItems === null) {
@@ -553,9 +813,6 @@ const ProductNotGiven_EditOrderIntentHandler = {
          .reprompt("What else can I help you with today?")
          .getResponse();
     }
-    
-    const sessionAttributes = handlerInput.attributesManager.getSessionAttributes(); 
-    sessionAttributes.orderNumber = pendingOrder.orderNumber
 
     return handlerInput.responseBuilder
       .addElicitSlotDirective('spokenProductName')
@@ -577,15 +834,30 @@ const ProductGiven_EditOrderIntentHandler = {
   },
   async handle(handlerInput) {
     const customerID = 1; 
-     
     const slots = handlerInput.requestEnvelope.request.intent.slots;
     const spokenProductName = slots.spokenProductName.value;
     const newQuantity = slots.NewQuantity.value;
     const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+    
+    var pendingOrder = await reinhart.getPendingOrderInfo(customerID);
+    if(pendingOrder === null){
+        return handlerInput.responseBuilder
+         .speak("You do not have any items in your shopping cart to edit. What else can I help you with today?")
+         .reprompt("What else can I help you with today?")
+         .getResponse();
+    } 
+    
+    const allItems = await reinhart.getOrderContents(pendingOrder.orderNumber);
+    if (allItems === null) {
+        return handlerInput.responseBuilder
+         .speak("You do not have any items in your shopping cart to edit. What else can I help you with today?")
+         .reprompt("What else can I help you with today?")
+         .getResponse();
+    }
 
     var resolvedProduct =  await reinhart.getProductFromCatalogue(spokenProductName);
     if(resolvedProduct !== null){
-        var productInCart = await reinhart.getOrderItemFromOrder(sessionAttributes.orderNumber,resolvedProduct.resolvedProductID);
+        var productInCart = await reinhart.getOrderItemFromOrder(pendingOrder.orderNumber, resolvedProduct.resolvedProductID);
     }
     
     if (resolvedProduct === null || productInCart === null) {
@@ -613,6 +885,7 @@ const ProductGiven_EditOrderIntentHandler = {
     }
     
     sessionAttributes.resolvedProduct = resolvedProduct;
+    sessionAttributes.orderNumber = pendingOrder.orderNumber;
     
     let speechOutput = "";
     if(productInCart.quantity > 1) {
@@ -738,17 +1011,24 @@ const ProductQuantityGiven_EditOrderIntentHandler = {
     }
     
     let speechOutput = "";
-    if (intent.slots.NewQuantity.value != 0){
-        await reinhart.updateQuantity(sessionAttributes.orderNumber, sessionAttributes.resolvedProduct.resolvedProductID, intent.slots.NewQuantity.value);
-        if (intent.slots.NewQuantity.value > 1) {
-            speechOutput += "Okay, your cart now contains " + intent.slots.NewQuantity.value + " cases of " + sessionAttributes.resolvedProduct.resolvedProductName + ". Would you like to edit anything else in your cart?"
+    if (intent.slots.NewQuantity.value != 0) {
+        const updateQuantityResult = await reinhart.updateQuantity(sessionAttributes.orderNumber, sessionAttributes.resolvedProduct.resolvedProductID, intent.slots.NewQuantity.value);
+        if (updateQuantityResult) {
+            if (intent.slots.NewQuantity.value > 1) {
+                speechOutput += "Okay, your cart now contains " + intent.slots.NewQuantity.value + " cases of " + sessionAttributes.resolvedProduct.resolvedProductName + ". Would you like to edit anything else in your cart?"
+            } else {
+                speechOutput += "Okay, your cart now contains " + intent.slots.NewQuantity.value + " case of " + sessionAttributes.resolvedProduct.resolvedProductName + ". Would you like to edit anything else in your cart?"
+            }
         } else {
-            speechOutput += "Okay, your cart now contains " + intent.slots.NewQuantity.value + " case of " + sessionAttributes.resolvedProduct.resolvedProductName + ". Would you like to edit anything else in your cart?"
+            speechOutput += "I'm sorry, something went wrong when I tried editing your cart. Please try going online to finish editing your cart."
         }
-     
     } else {
-        await reinhart.removeProduct(sessionAttributes.orderNumber, sessionAttributes.resolvedProduct.resolvedProductID); 
-        speechOutput += "Okay, I removed " + sessionAttributes.resolvedProduct.resolvedProductName + " from your cart. Would you like to edit anything else in your cart?";
+        const removeProductResult = await reinhart.removeProduct(sessionAttributes.orderNumber, sessionAttributes.resolvedProduct.resolvedProductID); 
+        if (removeProductResult) {
+            speechOutput += "Okay, I removed " + sessionAttributes.resolvedProduct.resolvedProductName + " from your cart. Would you like to edit anything else in your cart?";
+        } else {
+            speechOutput += "I'm sorry, something went wrong when I tried removing the item from your cart. Please try going online to complete the removal process.";
+        }
     }
     
     sessionAttributes.yesNoKey = "editMore";
@@ -807,7 +1087,7 @@ const ViewPendingOrderContentsIntentHandler = {
         var speakOutput;
 
         if(pendingOrder === null){
-            speakOutput = 'I was not able to find any items in your cart. Start an order to add to your shopping cart.';
+            speakOutput = 'Your shopping cart is currently empty, start an order to begin adding to it. What else can I do for you today?';
 
         }else{
 
@@ -816,7 +1096,7 @@ const ViewPendingOrderContentsIntentHandler = {
             if(allItems !== null){
                   speakOutput = 'In your shopping cart you have, ' + stringifyItemList(allItems) + ". What else can I help you with today?";
             }else{
-                  speakOutput = 'I was not able to find any items in your cart. Start an order to start adding to your shopping cart. What else can I help you with today?';
+                  speakOutput = 'Your shopping cart is currently empty, start an order to begin adding to it. What else can I do for you today?';
             }
          
         }
@@ -1033,6 +1313,13 @@ exports.handler = Alexa.SkillBuilders.custom()
         
         Complete_SubmitOrderIntentHandler,
         Start_SubmitOrderIntentHandler,
+        
+        ProductNotGiven_RemoveItemIntentHandler,
+        ProductGiven_RemoveItemIntentHandler,
+        ProductConfirmation_RemoveItemIntentHandler,
+        
+        Start_ClearOrderContentsIntentHandler,
+        Complete_ClearOrderContentsIntentHandler,
         
         YesNoIntentHandler,
 
