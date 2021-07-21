@@ -1,0 +1,24 @@
+{
+    "length": 3,
+    "customers": [
+        {
+            "customerID": 1,
+            "numOrders": 0,
+            "deliveryDays" : [1,5]
+        },
+        {
+            "customerID": 2,
+            "numOrders": 0,
+            "deliveryDays" : [0, 1, 2 , 3 , 4 , 5 , 6]
+        },
+        {
+            "customerID": 3,
+            "numOrders": 0,
+            "deliveryDays" : [4]
+        }
+    ]
+}
+
+
+
+
