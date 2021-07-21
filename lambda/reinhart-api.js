@@ -1,3 +1,4 @@
+
 //V .8
 
 
@@ -63,9 +64,9 @@ async function addToOrder(orderNumber, product, quantity) {
         await sleep(1000);
         orderData = await Util.getJSON("orders.json");
     }
- 
-    if(!foundOrder){
-        console.log("foundOrder is false");
+
+    if (!foundOrder) {
+        console.log("did not find a matching order--unable to add product to order");
         return false;
     }
 
@@ -84,7 +85,6 @@ async function addToOrder(orderNumber, product, quantity) {
 */
 async function getPendingOrderInfo(customerNumber) {
     var orderData = await Util.getJSON("orders.json");
-    console.log("orderData is valid", orderData);
     for (var key in orderData.orders) {
         if (orderData.orders[key].orderStatus === 0) {
             if (orderData.orders[key].customerNumber === customerNumber) {
@@ -172,14 +172,14 @@ async function getOrderItemFromOrder(orderNumber, productNumber) {
             if (orderData.orders[key].orderStatus === 0) {
                 for (var key2 in orderData.orders[key].orderItem) {
                     if (orderData.orders[key].orderItem[key2].ProductNumber === productNumber) {
-                        console.log("found product in order");
+                        console.log("found orderItem from order");
                         return orderData.orders[key].orderItem[key2];
                     }
                 }
             }
         }
     }
-    console.log("couldnt find product/customer ");
+    console.log("couldn't find the product and/or customer--unable to get orderItem from order'");
     return null;
 }
 
@@ -230,12 +230,12 @@ async function updateQuantity(orderNumber, productNumber, newQuantity) {
     }
 
     if (!foundProduct) {
-        console.log("didnt find product in update quantity");
+        console.log("could not find product in order--unable to update quantity");
         return false;
     }
 
     Util.uploadJSON("orders.json", orderData);
-    console.log("did updateQuantity");
+    console.log("completed updateQuantity");
     return true;
 }
 
@@ -254,9 +254,8 @@ async function removeProduct(orderNumber, productNumber) {
             for (var key2 in orderData.orders[key].orderItem) {
                 if (orderData.orders[key].orderItem[key2].ProductNumber === productNumber) {
                     var array = orderData.orders[key].orderItem;
-                    array.splice(key,1);
+                    array.splice(key2, 1);
                     orderData.orders[key].orderItem = array;
-                    console.log("removed item");
                     foundProduct = true;
                     break;
                 }
@@ -266,11 +265,40 @@ async function removeProduct(orderNumber, productNumber) {
     }
 
     if (!foundProduct) {
-        console.log("didnt find product in update product id");
+        console.log("could not find product and/or order--unable to remove product");
         return false;
     }
     await Util.uploadJSON("orders.json", orderData);
     console.log("did remove product");
+    return true;
+}
+
+/*
+/    Clears all contents of a given order
+/    
+/    args: orderNumber
+/    return: success true/false
+*/
+async function clearOrderContents(orderNumber) {
+    console.log("entered clear order");
+    var orderData = await Util.getJSON("orders.json");
+    console.log("order number to clear: " + orderNumber);
+    var foundOrder = false;
+    for (var key in orderData.orders) {
+        if (orderData.orders[key].orderNumber === orderNumber) {
+            console.log("found an order number match");
+            orderData.orders[key].orderItem = [];
+            foundOrder = true;
+            break;
+        }
+    }
+
+    if (!foundOrder) {
+        console.log("could not find order--unable to clear order contents");
+        return false;
+    }
+    await Util.uploadJSON("orders.json", orderData);
+    console.log("completed clear order contents");
     return true;
 }
 
@@ -289,7 +317,7 @@ async function submitOrder(orderNumber, customerID) {
     for (var key in orderData.orders) {
         if (orderData.orders[key].orderNumber === orderNumber) {
             if (orderData.orders[key].orderStatus !== 0) {
-                console.log("error order already submitted or archived")
+                console.log("error order already submitted or archived--unable to submit order")
                 return false;
             }
             orderData.orders[key].orderStatus = 1;
@@ -300,7 +328,7 @@ async function submitOrder(orderNumber, customerID) {
     }
 
     if (!foundOrder) {
-        console.log("did not find order in submit order");
+        console.log("could not find matching order--unable to submit order");
         return null;
     }
 
@@ -308,7 +336,7 @@ async function submitOrder(orderNumber, customerID) {
     //
 
     await Util.uploadJSON("orders.json", orderData);
-    var confirmation = true;
+    console.log("completed submit order");
     return deliveryDate;
 }
 
@@ -321,9 +349,7 @@ async function submitOrder(orderNumber, customerID) {
 */
 async function cancelNextDelivery(customerID) {
     var orderData = await Util.getJSON("orders.json");
-
     var nextDeliv = await getNextDeliveryDate(customerID);
-
     var foundOrder = false;
     for (var key in orderData.orders) {
         if (orderData.orders[key].customerID === customerID) {
@@ -335,40 +361,40 @@ async function cancelNextDelivery(customerID) {
     }
 
     if (!foundOrder) {
-        console.log("couldnt find next delivery");
+        console.log("could not find next delivery--unable to cancel next delivery");
         return false;
     }
 
     Util.uploadJSON("orders.json", orderData);
-    console.log("success in cancelling delivery");
+    console.log("completed cancel next delivery");
     return true;
 }
 
 
 
 function calculateDeliveryDay(deliveryDays) {
-  let currentDay = new Date().getDay();
-  let nextDay = -1;
+    let currentDay = new Date().getDay();
+    let nextDay = -1;
 
-  for (let day in deliveryDays) {
-      if (deliveryDays[day] >= currentDay) {
-          nextDay = deliveryDays[day];
-          break;
-      }
-  }
-  let offset;
-  if (nextDay !== -1) {
-      offset = nextDay - currentDay;
-  } else {
-      nextDay = deliveryDays[0];
-      offset = 7 - currentDay + nextDay;
-  }
-  var nextDate = new Date();
-  nextDate.setDate(nextDate.getDate() + offset);
-  nextDate.setHours(0, 0, 0, 0);
-  nextDate = nextDate.toISOString();
-  console.log("next date" + nextDate);
-  return nextDate;
+    for (let day in deliveryDays) {
+        if (deliveryDays[day] >= currentDay) {
+            nextDay = deliveryDays[day];
+            break;
+        }
+    }
+    let offset;
+    if (nextDay !== -1) {
+        offset = nextDay - currentDay;
+    } else {
+        nextDay = deliveryDays[0];
+        offset = 7 - currentDay + nextDay;
+    }
+    var nextDate = new Date();
+    nextDate.setDate(nextDate.getDate() + offset);
+    nextDate.setHours(0, 0, 0, 0);
+    nextDate = nextDate.toISOString();
+    //console.log("next date" + nextDate);
+    return nextDate;
 }
 
 /*
@@ -388,12 +414,12 @@ async function getNextDeliveryDate(customerID) {
     }
 
     if (!foundCustomer) {
-        console.log("did not find customer ");
+        console.log("did not find customer--unable to get next delivery date");
         return null;
     }
 
     var nextDeliveryDate = calculateDeliveryDay(deliveryDates);
-    console.log("got getNextDeliveryDate " + nextDeliveryDate);
+    console.log("completed get next delivery date");
     return nextDeliveryDate;
 }
 
@@ -412,53 +438,42 @@ async function getOrderItemFromNextDelivery(customerID, spokenProductName) {
             if (orderData.orders[key].deliveryDate === date) {
                 for (var key2 in orderData.orders[key].orderItem) {
                     if (orderData.orders[key].orderItem[key2].productName === spokenProductName) {
-                        console.log("found product in next delivery");
+                        console.log("completed get orderItem from next delivery");
                         return orderData.orders[key].orderItem[key2];
                     }
                 }
             }
         }
     }
-    console.log("couldnt find product/customer ");
+    console.log("couldnt find product and/or customer--unable to get orderItem from next delivery");
     return null;
 }
 
 /*
 /    Gets the contents of a customers order based on the order number
 /    
-/    parameters: orderNumber
+/    args: orderNumber
 /    return: list of orderItems
 */
 async function getOrderContents(orderNumber) {
     var orderData = await Util.getJSON("orders.json");
     var allItems = [];
     var foundSomething = false;
-    //   console.log("checking for orderNumber: " + orderNumber);
-    console.log("error 1");
     for (var key in orderData.orders) {
-          console.log("error 2");
-        // console.log("orderNumber: " + orderData.orders[key].orderNumber);
         if (orderData.orders[key].orderNumber === orderNumber) {
-              console.log("error 3");
-            for(var key2 in orderData.orders[key].orderItem){
-                  console.log("error 4");
-                    allItems.push(orderData.orders[key].orderItem[key2]);
-                    foundSomething = true;
-                    console.log("error 5");
-                    
+            for (var key2 in orderData.orders[key].orderItem) {
+                allItems.push(orderData.orders[key].orderItem[key2]);
+                foundSomething = true;
             }
-            
+
         }
     }
-        console.log("checking here");
-        if(!foundSomething){
-            console.log("couldnt find product/customer in get order contents");
-            return null;
-        }
-            console.log("found items in getOrderContents");
-        return allItems;
-        
-    
+    if (!foundSomething) {
+        console.log("could not find product and/or customer--unable to get order contents");
+        return null;
+    }
+    console.log("completed get order contents");
+    return allItems;
 }
 
 /*
@@ -476,24 +491,24 @@ async function getNextDeliveryContents(customerID) {
     for (var key in orderData.orders) {
         if (orderData.orders[key].customerID === customerID) {
             if (orderData.orders[key].deliveryDate === date) {
-                if(orderData.orders[key.orderStatus !== 0 ]){
-                for(var key2 in orderData.orders[key].orderItem){
-                    allItems.push(orderData.orders[key].orderItem[key2]);
-                    foundOrder = true;
-                }
+                if (orderData.orders[key.orderStatus] !== 0) {
+                    for (var key2 in orderData.orders[key].orderItem) {
+                        allItems.push(orderData.orders[key].orderItem[key2]);
+                        foundOrder = true;
+                    }
                 }
             }
         }
     }
-            console.log(debugViewOrders());
-           if(!foundOrder){
-            console.log("couldnt find product/customer");
-            return null;
-        }
+    console.log(debugViewOrders());
+    if (!foundOrder) {
+        console.log("couldnt find product and/or customer--unable to get next delivery contents");
+        return null;
+    }
 
-        console.log("found items in getNextDeliveryContents");
-        return allItems;
-        
+    console.log("completed get next delivery contents");
+    return allItems;
+
 }
 
 
@@ -504,4 +519,4 @@ function sleep(ms) {
 }
 
 
-module.exports = { startOrder, addToOrder, getPendingOrderInfo, getProductFromCatalogue, getProductFromOrderGuide, getOrderItemFromOrder, getNextDeliveryOrderNumbers, updateQuantity, updateProduct, removeProduct, submitOrder, cancelNextDelivery, calculateDeliveryDay, getNextDeliveryDate, getOrderItemFromNextDelivery, getOrderContents, getNextDeliveryContents };
+module.exports = { startOrder, addToOrder, getPendingOrderInfo, getProductFromCatalogue, getProductFromOrderGuide, getOrderItemFromOrder, getNextDeliveryOrderNumbers, updateQuantity, updateProduct, removeProduct, clearOrderContents, submitOrder, cancelNextDelivery, calculateDeliveryDay, getNextDeliveryDate, getOrderItemFromNextDelivery, getOrderContents, getNextDeliveryContents };

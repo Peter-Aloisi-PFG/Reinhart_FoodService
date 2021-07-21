@@ -1,7 +1,7 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "this is the bad batch unique",
+      "invocationName": "chris foodservice",
       "intents": [
         {
           "name": "AMAZON.CancelIntent",
@@ -52,6 +52,8 @@
             }
           ],
           "samples": [
+            "order me {quantity} cases of {spokenProductName}",
+            "order me {spokenProductName}",
             "can I get {quantity} {spokenProductName}",
             "can I have {spokenProductName}",
             "can I have {quantity} cases of {spokenProductName}",
@@ -92,34 +94,40 @@
           "slots": [
             {
               "name": "spokenProductName",
-              "type": "AMAZON.Food",
-              "samples": [
-                "{spokenProductName}"
-              ]
+              "type": "AMAZON.Food"
             },
             {
-              "name": "NewQuantity",
+              "name": "newQuantity",
               "type": "AMAZON.NUMBER"
             }
           ],
           "samples": [
-            "change {spokenProductName} to {NewQuantity} cases",
-            "edit {spokenProductName} to {NewQuantity}",
-            "edit {spokenProductName} to {NewQuantity} cases",
-            "actually I want it to be {NewQuantity}",
-            "edit my quantity to be {NewQuantity}",
-            "wait change that to {NewQuantity}",
-            "make my quantity for {spokenProductName} to {NewQuantity}",
-            "please change {spokenProductName} to {NewQuantity} cases",
-            "please change the quantity for {spokenProductName} to {NewQuantity}",
+            "edit pending order",
+            "edit my cart",
+            "edit cart",
+            "wait I only want {newQuantity} cases of {spokenProductName}",
+            "edit {spokenProductName}",
+            "actually I only want {newQuantity} cases of {spokenProductName}",
+            "edit my cart to only have {newQuantity} cases of {spokenProductName}",
+            "I need to edit my cart",
+            "edit what\u0027s in my cart",
+            "change {spokenProductName} to {newQuantity} cases",
+            "edit {spokenProductName} to {newQuantity}",
+            "edit {spokenProductName} to {newQuantity} cases",
+            "actually I want it to be {newQuantity}",
+            "edit my quantity to be {newQuantity}",
+            "wait change that to {newQuantity}",
+            "make my quantity for {spokenProductName} to {newQuantity}",
+            "please change {spokenProductName} to {newQuantity} cases",
+            "please change the quantity for {spokenProductName} to {newQuantity}",
             "please edit my order",
-            "Can I have {NewQuantity} cases intead for {spokenProductName}",
-            "make {NewQuantity} the amount of cases for {spokenProductName}",
-            "edit my quantity for {spokenProductName} to be {NewQuantity}",
-            "Change my cases of {spokenProductName} to {NewQuantity}",
-            "Can I change my {spokenProductName} cases to {NewQuantity}",
-            "Change {spokenProductName} to {NewQuantity} in my cart",
-            "edit my order for {spokenProductName} to be {NewQuantity}",
+            "Can I have {newQuantity} cases intead for {spokenProductName}",
+            "make {newQuantity} the amount of cases for {spokenProductName}",
+            "edit my quantity for {spokenProductName} to be {newQuantity}",
+            "Change my cases of {spokenProductName} to {newQuantity}",
+            "Can I change my {spokenProductName} cases to {newQuantity}",
+            "Change {spokenProductName} to {newQuantity} in my cart",
+            "edit my order for {spokenProductName} to be {newQuantity}",
             "edit order",
             "edit unsubmitted order",
             "edit",
@@ -133,6 +141,18 @@
           "name": "ViewNextDeliveryContents",
           "slots": [],
           "samples": [
+            "list the contents of my next delivery",
+            "view what\u0027s coming in my next delivery",
+            "what do I have coming in my next delivery",
+            "what\u0027s all in my next delivery",
+            "what are the contents in my next delivery",
+            "what are my next delivery contents",
+            "check what is in my next delivery",
+            "hey what\u0027s in my next delivery",
+            "tell me what is in my next delivery",
+            "can you tell me what\u0027s in my next delivery",
+            "check what\u0027s in my next delivery",
+            "What\u0027s in my next delivery",
             "view next delivery",
             "what is my next delivery",
             "what items are in my next delivery",
@@ -157,6 +177,12 @@
           "name": "SubmitOrderIntent",
           "slots": [],
           "samples": [
+            "I need to submit",
+            "I want to submit what\u0027s in my cart",
+            "submit my cart",
+            "submit the cart",
+            "submit what is in my cart",
+            "submit what\u0027s in my cart",
             "submit the order",
             "please submit",
             "I wanna submit",
@@ -171,9 +197,59 @@
           "name": "ViewPendingOrderContents",
           "slots": [],
           "samples": [
+            "what\u0027s in my cart",
+            "show me my shopping cart",
+            "show me my pending order",
+            "view my cart",
+            "what\u0027s in my pending order",
+            "what\u0027s in my order",
+            "what\u0027s in my shopping cart",
             "what is in my cart",
             "view pending orders",
-            "What is my next ofder"
+            "What is my next order"
+          ]
+        },
+        {
+          "name": "RemoveItemIntent",
+          "slots": [
+            {
+              "name": "spokenProductName",
+              "type": "AMAZON.Food"
+            }
+          ],
+          "samples": [
+            "I need to remove something from my cart",
+            "delete an item from my cart",
+            "delete {spokenProductName} from my cart",
+            "I don\u0027t want {spokenProductName} ",
+            "go ahead and remove {spokenProductName} from my order",
+            "actually just remove {spokenProductName} from my cart",
+            "can I remove an item from my cart",
+            "I\u0027d like to remove an item",
+            "remove an item from my cart",
+            "I don\u0027t want {spokenProductName} in my order anymore",
+            "actually remove {spokenProductName} from my order",
+            "take {spokenProductName} out of my order",
+            "remove {spokenProductName} from my order",
+            "I don\u0027t want {spokenProductName} anymore",
+            "actually I don\u0027t want {spokenProductName} anymore",
+            "actually take {spokenProductName} out of my cart",
+            "take {spokenProductName} out of my cart",
+            "remove {spokenProductName} from my cart",
+            "remove {spokenProductName}"
+          ]
+        },
+        {
+          "name": "ClearOrderContentsIntent",
+          "slots": [],
+          "samples": [
+            "delete all items from my cart",
+            "remove everything from my order",
+            "clear my order",
+            "remove everything in my cart",
+            "get rid of everything in my cart",
+            "clear my cart",
+            "remove all items from my cart"
           ]
         }
       ],
@@ -252,20 +328,16 @@
             {
               "name": "spokenProductName",
               "type": "AMAZON.Food",
-              "elicitationRequired": true,
+              "elicitationRequired": false,
               "confirmationRequired": false,
-              "prompts": {
-                "elicitation": "Elicit.Slot.670601812336.281805026272"
-              }
+              "prompts": {}
             },
             {
-              "name": "NewQuantity",
+              "name": "newQuantity",
               "type": "AMAZON.NUMBER",
-              "elicitationRequired": true,
+              "elicitationRequired": false,
               "confirmationRequired": false,
-              "prompts": {
-                "elicitation": "Elicit.Slot.670601812336.1618120151253"
-              }
+              "prompts": {}
             }
           ],
           "delegationStrategy": "SKILL_RESPONSE"
@@ -330,5 +402,5 @@
       }
     ]
   },
-  "version": "14"
+  "version": "18"
 }
