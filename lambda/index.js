@@ -737,8 +737,8 @@ const YesNoIntentHandler = {
                             value: undefined,
                             confirmationStatus: "NONE"
                         },
-                        NewQuantity: {
-                            name: "NewQuantity",
+                        newQuantity: {
+                            name: "newQuantity",
                             value: undefined
                         }
                     }                      
@@ -836,7 +836,7 @@ const ProductGiven_EditOrderIntentHandler = {
     const customerID = 1; 
     const slots = handlerInput.requestEnvelope.request.intent.slots;
     const spokenProductName = slots.spokenProductName.value;
-    const newQuantity = slots.NewQuantity.value;
+    const newQuantity = slots.newQuantity.value;
     const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
     
     var pendingOrder = await reinhart.getPendingOrderInfo(customerID);
@@ -873,8 +873,8 @@ const ProductGiven_EditOrderIntentHandler = {
                             value: undefined,
                             confirmationStatus: "NONE"
                         },
-                        NewQuantity: {
-                            name: "NewQuantity",
+                        newQuantity: {
+                            name: "newQuantity",
                             value: newQuantity
                         }
                     }
@@ -902,6 +902,7 @@ const ProductGiven_EditOrderIntentHandler = {
   }
 };
 
+
 /**
  * User has provided a product they would like to edit in their cart and confirmed whether
  * or not the product we retrieved from their cart is the one they would like to edit.
@@ -912,12 +913,12 @@ const ProductConfirmation_EditOrderIntentHandler = {
     return handlerInput.requestEnvelope.request.type === "IntentRequest"
       && handlerInput.requestEnvelope.request.intent.name === "EditOrderIntent"
       && handlerInput.requestEnvelope.request.intent.slots.spokenProductName.value
-      && !handlerInput.requestEnvelope.request.intent.slots.NewQuantity.value
+      && !handlerInput.requestEnvelope.request.intent.slots.newQuantity.value
   },
   handle(handlerInput) {
     const intent = handlerInput.requestEnvelope.request.intent;
     const spokenProductName = intent.slots.spokenProductName.value;
-    const newQuantity = intent.slots.NewQuantity.value;
+    const newQuantity = intent.slots.newQuantity.value;
     const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
 
     if (intent.slots.spokenProductName.confirmationStatus === "DENIED") {
@@ -934,8 +935,8 @@ const ProductConfirmation_EditOrderIntentHandler = {
                             value: undefined,
                             confirmationStatus: "NONE"
                         },
-                        NewQuantity: {
-                            name: "NewQuantity",
+                        newQuantity: {
+                            name: "newQuantity",
                             value: newQuantity,
                             confirmationStatus: "NONE"
                         }
@@ -948,7 +949,7 @@ const ProductConfirmation_EditOrderIntentHandler = {
         return handlerInput.responseBuilder
           .speak("Please state a new quantity for " + sessionAttributes.resolvedProduct.resolvedProductName + " or say zero to remove to remove the item from your cart.")
           .reprompt("Please state a number for the new quantity for " + sessionAttributes.resolvedProduct.resolvedProductName + " or say zero to remove the item from your cart.")
-          .addElicitSlotDirective('NewQuantity',
+          .addElicitSlotDirective('newQuantity',
                 {
                     name: 'EditOrderIntent',
                     confirmationStatus: 'NONE',
@@ -958,8 +959,8 @@ const ProductConfirmation_EditOrderIntentHandler = {
                             value: intent.slots.spokenProductName.value,
                             confirmationStatus: "CONFIRMED"
                         },
-                        NewQuantity: {
-                            name: "NewQuantity",
+                        newQuantity: {
+                            name: "newQuantity",
                             value: newQuantity
                         }
                     }
@@ -979,19 +980,19 @@ const ProductQuantityGiven_EditOrderIntentHandler = {
      return handlerInput.requestEnvelope.request.type === "IntentRequest"
       && handlerInput.requestEnvelope.request.intent.name === "EditOrderIntent"
       && handlerInput.requestEnvelope.request.intent.slots.spokenProductName.value
-      && handlerInput.requestEnvelope.request.intent.slots.NewQuantity.value
+      && handlerInput.requestEnvelope.request.intent.slots.newQuantity.value
       && handlerInput.requestEnvelope.request.intent.slots.spokenProductName.confirmationStatus === "CONFIRMED";
   },
   async handle(handlerInput) {
     const intent = handlerInput.requestEnvelope.request.intent;
     const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-    const newQuantity = intent.slots.NewQuantity.value;
+    const newQuantity = intent.slots.newQuantity.value;
     
     if (isNaN(newQuantity) || !Number.isInteger(parseInt(newQuantity)) || newQuantity < 0 || newQuantity > 100) {
         return handlerInput.responseBuilder
           .speak(newQuantity + " is not a valid quantity. Please provide a new quantity between 0 and 100 cases")
           .reprompt("Please state a number for the new quantity for " + sessionAttributes.resolvedProduct.resolvedProductName + " or say zero to remove the item from your cart.")
-          .addElicitSlotDirective("NewQuantity", 
+          .addElicitSlotDirective("newQuantity", 
                 {
                     name: 'EditOrderIntent',
                     confirmationStatus: 'NONE',
@@ -1001,8 +1002,8 @@ const ProductQuantityGiven_EditOrderIntentHandler = {
                             value: intent.slots.spokenProductName.value,
                             confirmationStatus: "CONFIRMED"
                         },
-                        NewQuantity: {
-                            name: "NewQuantity",
+                        newQuantity: {
+                            name: "newQuantity",
                             value: undefined
                         }
                     }
@@ -1011,16 +1012,16 @@ const ProductQuantityGiven_EditOrderIntentHandler = {
     }
     
     let speechOutput = "";
-    if (intent.slots.NewQuantity.value != 0) {
-        const updateQuantityResult = await reinhart.updateQuantity(sessionAttributes.orderNumber, sessionAttributes.resolvedProduct.resolvedProductID, intent.slots.NewQuantity.value);
+    if (parseInt(intent.slots.newQuantity.value) !== 0) {
+        const updateQuantityResult = await reinhart.updateQuantity(sessionAttributes.orderNumber, sessionAttributes.resolvedProduct.resolvedProductID, intent.slots.newQuantity.value);
         if (updateQuantityResult) {
-            if (intent.slots.NewQuantity.value > 1) {
-                speechOutput += "Okay, your cart now contains " + intent.slots.NewQuantity.value + " cases of " + sessionAttributes.resolvedProduct.resolvedProductName + ". Would you like to edit anything else in your cart?"
+            if (intent.slots.newQuantity.value > 1) {
+                speechOutput += "Okay, your cart now contains " + intent.slots.newQuantity.value + " cases of " + sessionAttributes.resolvedProduct.resolvedProductName + ". Would you like to edit anything else in your cart?";
             } else {
-                speechOutput += "Okay, your cart now contains " + intent.slots.NewQuantity.value + " case of " + sessionAttributes.resolvedProduct.resolvedProductName + ". Would you like to edit anything else in your cart?"
+                speechOutput += "Okay, your cart now contains " + intent.slots.newQuantity.value + " case of " + sessionAttributes.resolvedProduct.resolvedProductName + ". Would you like to edit anything else in your cart?";
             }
         } else {
-            speechOutput += "I'm sorry, something went wrong when I tried editing your cart. Please try going online to finish editing your cart."
+            speechOutput += "I'm sorry, something went wrong when I tried editing your cart. Please try going online to finish editing your cart.";
         }
     } else {
         const removeProductResult = await reinhart.removeProduct(sessionAttributes.orderNumber, sessionAttributes.resolvedProduct.resolvedProductID); 
@@ -1043,8 +1044,8 @@ const ProductQuantityGiven_EditOrderIntentHandler = {
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//---===============================================================---------Small Functions---------===================================-------------------
-//=====~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//---===============================================================---------Small Functions---------===================================---------
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 const ViewNextDeliveryContentsIntentHandler = {
@@ -1062,7 +1063,6 @@ const ViewNextDeliveryContentsIntentHandler = {
 
            speakOutput = 'I did not find any items in your next delivery. What else can I help you with today?';
         }else{
-
            speakOutput = 'In your next delivery you have ' + stringifyItemList(allItems) + ". What else can I help you with today?";
         }
 
@@ -1086,16 +1086,16 @@ const ViewPendingOrderContentsIntentHandler = {
 
         var speakOutput;
 
-        if(pendingOrder === null){
+        if (pendingOrder === null) {
             speakOutput = 'Your shopping cart is currently empty, start an order to begin adding to it. What else can I do for you today?';
 
-        }else{
+        }else {
 
             var allItems = await reinhart.getOrderContents(pendingOrder.orderNumber);
 
-            if(allItems !== null){
+            if (allItems !== null) {
                   speakOutput = 'In your shopping cart you have, ' + stringifyItemList(allItems) + ". What else can I help you with today?";
-            }else{
+            }else {
                   speakOutput = 'Your shopping cart is currently empty, start an order to begin adding to it. What else can I do for you today?';
             }
          
@@ -1255,7 +1255,7 @@ const SessionEndedRequestHandler = {
     handle(handlerInput) {
         console.log(`~~~~ Session ended: ${JSON.stringify(handlerInput.requestEnvelope)}`);
         // Any cleanup logic goes here.
-        return handlerInput.responseBuilder.speak("Thank you for shopping with Reinhart. Please come again!").getResponse(); // notice we send an empty response
+        return handlerInput.responseBuilder.tell("Thank you for shopping with Reinhart. Please come again!"); // notice we send an empty response
     }
 };
 /* *
@@ -1288,7 +1288,7 @@ const ErrorHandler = {
     },
     handle(handlerInput, error) {
         const speakOutput = 'Sorry, I had trouble doing what you asked. Please try again.';
-        console.log(`~~~~ Error handled: ${JSON.stringify(error)}`);
+        console.log(`~~~~ Error handled: ${JSON.stringify(error)}` + speakOutput);
 
         return handlerInput.responseBuilder
             .speak(speakOutput)

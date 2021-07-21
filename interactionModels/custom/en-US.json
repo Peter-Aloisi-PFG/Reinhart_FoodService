@@ -97,7 +97,7 @@
               "type": "AMAZON.Food"
             },
             {
-              "name": "NewQuantity",
+              "name": "newQuantity",
               "type": "AMAZON.NUMBER"
             }
           ],
@@ -105,29 +105,29 @@
             "edit pending order",
             "edit my cart",
             "edit cart",
-            "wait I only want {NewQuantity} cases of {spokenProductName}",
+            "wait I only want {newQuantity} cases of {spokenProductName}",
             "edit {spokenProductName}",
-            "actually I only want {NewQuantity} cases of {spokenProductName}",
-            "edit my cart to only have {NewQuantity} cases of {spokenProductName}",
+            "actually I only want {newQuantity} cases of {spokenProductName}",
+            "edit my cart to only have {newQuantity} cases of {spokenProductName}",
             "I need to edit my cart",
             "edit what\u0027s in my cart",
-            "change {spokenProductName} to {NewQuantity} cases",
-            "edit {spokenProductName} to {NewQuantity}",
-            "edit {spokenProductName} to {NewQuantity} cases",
-            "actually I want it to be {NewQuantity}",
-            "edit my quantity to be {NewQuantity}",
-            "wait change that to {NewQuantity}",
-            "make my quantity for {spokenProductName} to {NewQuantity}",
-            "please change {spokenProductName} to {NewQuantity} cases",
-            "please change the quantity for {spokenProductName} to {NewQuantity}",
+            "change {spokenProductName} to {newQuantity} cases",
+            "edit {spokenProductName} to {newQuantity}",
+            "edit {spokenProductName} to {newQuantity} cases",
+            "actually I want it to be {newQuantity}",
+            "edit my quantity to be {newQuantity}",
+            "wait change that to {newQuantity}",
+            "make my quantity for {spokenProductName} to {newQuantity}",
+            "please change {spokenProductName} to {newQuantity} cases",
+            "please change the quantity for {spokenProductName} to {newQuantity}",
             "please edit my order",
-            "Can I have {NewQuantity} cases intead for {spokenProductName}",
-            "make {NewQuantity} the amount of cases for {spokenProductName}",
-            "edit my quantity for {spokenProductName} to be {NewQuantity}",
-            "Change my cases of {spokenProductName} to {NewQuantity}",
-            "Can I change my {spokenProductName} cases to {NewQuantity}",
-            "Change {spokenProductName} to {NewQuantity} in my cart",
-            "edit my order for {spokenProductName} to be {NewQuantity}",
+            "Can I have {newQuantity} cases intead for {spokenProductName}",
+            "make {newQuantity} the amount of cases for {spokenProductName}",
+            "edit my quantity for {spokenProductName} to be {newQuantity}",
+            "Change my cases of {spokenProductName} to {newQuantity}",
+            "Can I change my {spokenProductName} cases to {newQuantity}",
+            "Change {spokenProductName} to {newQuantity} in my cart",
+            "edit my order for {spokenProductName} to be {newQuantity}",
             "edit order",
             "edit unsubmitted order",
             "edit",
@@ -197,6 +197,10 @@
           "name": "ViewPendingOrderContents",
           "slots": [],
           "samples": [
+            "what\u0027s in my cart",
+            "show me my shopping cart",
+            "show me my pending order",
+            "view my cart",
             "what\u0027s in my pending order",
             "what\u0027s in my order",
             "what\u0027s in my shopping cart",
@@ -214,6 +218,9 @@
             }
           ],
           "samples": [
+            "I need to remove something from my cart",
+            "delete an item from my cart",
+            "delete {spokenProductName} from my cart",
             "I don\u0027t want {spokenProductName} ",
             "go ahead and remove {spokenProductName} from my order",
             "actually just remove {spokenProductName} from my cart",
@@ -236,6 +243,7 @@
           "name": "ClearOrderContentsIntent",
           "slots": [],
           "samples": [
+            "delete all items from my cart",
             "remove everything from my order",
             "clear my order",
             "remove everything in my cart",
@@ -325,7 +333,7 @@
               "prompts": {}
             },
             {
-              "name": "NewQuantity",
+              "name": "newQuantity",
               "type": "AMAZON.NUMBER",
               "elicitationRequired": false,
               "confirmationRequired": false,
@@ -394,5 +402,5 @@
       }
     ]
   },
-  "version": "16"
+  "version": "18"
 }
