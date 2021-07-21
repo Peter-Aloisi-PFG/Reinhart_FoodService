@@ -310,9 +310,9 @@ async function clearOrderContents(orderNumber) {
 /
 /    return: the delivery date for the order if successful, null if unsuccessful
 */
-async function submitOrder(orderNumber, customerID) {
+async function submitOrder(orderNumber, customerNumber) {
     var orderData = await Util.getJSON("orders.json");
-    const deliveryDate = await getNextDeliveryDate(customerID);
+    const deliveryDate = await getNextDeliveryDate(customerNumber);
     var foundOrder = false;
     for (var key in orderData.orders) {
         if (orderData.orders[key].orderNumber === orderNumber) {
@@ -347,12 +347,12 @@ async function submitOrder(orderNumber, customerID) {
 /
 /    return: true if successful, false if not
 */
-async function cancelNextDelivery(customerID) {
+async function cancelNextDelivery(customerNumber) {
     var orderData = await Util.getJSON("orders.json");
-    var nextDeliv = await getNextDeliveryDate(customerID);
+    var nextDeliv = await getNextDeliveryDate(customerNumber);
     var foundOrder = false;
     for (var key in orderData.orders) {
-        if (orderData.orders[key].customerID === customerID) {
+        if (orderData.orders[key].customerNumber === customerNumber) {
             if (orderData.orders[key].deliveryDate === nextDeliv) {
                 orderData.orders.splice(key, 1);
                 foundOrder = true;
@@ -371,7 +371,7 @@ async function cancelNextDelivery(customerID) {
 }
 
 
-
+//private helper method
 function calculateDeliveryDay(deliveryDays) {
     let currentDay = new Date().getDay();
     let nextDay = -1;
@@ -403,11 +403,11 @@ function calculateDeliveryDay(deliveryDays) {
 /    parameters: customerID 
 /    return: the customer's nextDeliveryDate in ISO format
 */
-async function getNextDeliveryDate(customerID) {
+async function getNextDeliveryDate(customerNumber) {
     let customerData = await Util.getJSON("customers.json");
     let foundCustomer = false;
     for (var key in customerData.customers) {
-        if (customerData.customers[key].customerID === customerID) {
+        if (customerData.customers[key].CustomerNumber === customerNumber) {
             foundCustomer = true;
             var deliveryDates = customerData.customers[key].deliveryDays;
         }
@@ -429,15 +429,15 @@ async function getNextDeliveryDate(customerID) {
 /    parameters: customerID, spokenProductName 
 /    return: associated orderItem in the delivery (includes full product name, quantity, etc.)
 */
-async function getOrderItemFromNextDelivery(customerID, spokenProductName) {
+async function getOrderItemFromNextDelivery(customerNumber, productNumber) {
     var orderData = await Util.getJSON("orders.json");
-    var date = await getNextDeliveryDate(customerID);
+    var date = await getNextDeliveryDate(customerNumber);
     let foundOrder = false;
     for (var key in orderData.orders) {
-        if (orderData.orders[key].customerID === customerID) {
+        if (orderData.orders[key].customerNumber === customerNumber) {
             if (orderData.orders[key].deliveryDate === date) {
                 for (var key2 in orderData.orders[key].orderItem) {
-                    if (orderData.orders[key].orderItem[key2].productName === spokenProductName) {
+                    if (orderData.orders[key].orderItem[key2].ProductNumber === productNumber) {
                         console.log("completed get orderItem from next delivery");
                         return orderData.orders[key].orderItem[key2];
                     }
@@ -482,14 +482,14 @@ async function getOrderContents(orderNumber) {
 /    parameters: customerID
 /    return: list of orderItems
 */
-async function getNextDeliveryContents(customerID) {
+async function getNextDeliveryContents(customerNumber) {
 
     var orderData = await Util.getJSON("orders.json");
-    var date = await getNextDeliveryDate(customerID);
+    var date = await getNextDeliveryDate(customerNumber);
     let foundOrder = false;
     var allItems = [];
     for (var key in orderData.orders) {
-        if (orderData.orders[key].customerID === customerID) {
+        if (orderData.orders[key].customerNumber === customerNumber) {
             if (orderData.orders[key].deliveryDate === date) {
                 if (orderData.orders[key.orderStatus] !== 0) {
                     for (var key2 in orderData.orders[key].orderItem) {

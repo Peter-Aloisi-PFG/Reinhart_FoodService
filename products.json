@@ -1,255 +1,1647 @@
-{
-  "length": 50,
-  "products": [
-    {
-      "productName": "10 pc. chicken",
-      "ID": 1,
-      "commonName": "chicken"
-    },
-    {
-      "productName": "15 pc. pork tenderloin",
-      "ID": 2,
-      "commonName": "pork"
-    },
-    {
-      "productName": "10 pc. fish fillets",
-      "ID": 3,
-      "commonName": "fish"
-    },
-    {
-      "productName": "4 pc. rhino horn",
-      "ID": 4,
-      "commonName": "rhino"
-    },
-    {
-      "productName": "2 pc. penguin wings",
-      "ID": 5,
-      "commonName": "penguin"
-    },
-    {
-      "productName": "6 pc. lamb chop",
-      "ID": 6,
-      "commonName": "lamb"
-    },
-    {
-      "productName": "5 lbs. ground beef",
-      "ID": 7,
-      "commonName": "beef"
-    },
-    {
-      "productName": "3 pc. turkey legs",
-      "ID": 8,
-      "commonName": "turkey"
-    },
-    {
-      "productName": "3 lbs. shaved ham",
-      "ID": 9,
-      "commonName": "ham"
-    },
-    {
-      "productName": "10 lbs. honeycrisp apples",
-      "ID": 10,
-      "commonName": "apples"
-    },
-    {
-      "productName": "5 lbs. oranges",
-      "ID": 11,
-      "commonName": "oranges"
-    },
-    {
-      "productName": "2 lbs. unripened bananas",
-      "ID": 12,
-      "commonName": "bananas"
-    },
-    {
-      "productName": "5 pc. graham crackers",
-      "ID": 13,
-      "commonName": "crackers"
-    },
-    {
-      "productName": "3 loafs whole wheat bread",
-      "ID": 14,
-      "commonName": "bread"
-    },
-    {
-      "productName": "4 pack(6 count) blueberry bagels",
-      "ID": 15,
-      "commonName": "bagels"
-    },
-    {
-      "productName": "7 pack(8 count) spinach tortillas",
-      "ID": 16,
-      "commonName": "tortillas"
-    },
-    {
-      "productName": "5 pack dark roast coffee",
-      "ID": 17,
-      "commonName": "coffee"
-    },
-    {
-      "productName": "2 pack(12 count) chocolate chip granola bars",
-      "ID": 18,
-      "commonName": "granola bars"
-    },
-    {
-      "productName": "6 pack lucky charms cereal",
-      "ID": 19,
-      "commonName": "cereal"
-    },
-    {
-      "productName": "2 lbs. american cheese",
-      "ID": 20,
-      "commonName": "cheese"
-    },
-    {
-      "productName": "5 lbs pre-cooked shrimp",
-      "ID": 21,
-      "commonName": "shrimp"
-    },
-    {
-      "productName": "4 pc. lobster tail",
-      "ID": 22,
-      "commonName": "lobster"
-    },
-    {
-      "productName": "6 lbs. crab claws",
-      "ID": 23,
-      "commonName": "crab"
-    },
-    {
-      "productName": "10 lbs. white rice",
-      "ID": 24,
-      "commonName": "rice"
-    },
-    {
-      "productName": "2 lbs. unsalted butter",
-      "ID": 25,
-      "commonName": "butter"
-    },
-    {
-      "productName": "1 lb. salt",
-      "ID": 26,
-      "commonName": "salt"
-    },
-    {
-      "productName": "2 pack spaghetti noodles",
-      "ID": 27,
-      "commonName": "noodles"
-    },
-    {
-      "productName": "5 pack(10 count) sugar cookies",
-      "ID": 28,
-      "commonName": "cookies"
-    },
-    {
-      "productName": "3 pack heads of lettuce",
-      "ID": 29,
-      "commonName": "lettuce"
-    },
-    {
-      "productName": "4 lbs. baby carrots",
-      "ID": 30,
-      "commonName": "carrots"
-    },
-    {
-      "productName": "8 lbs. red potatoes",
-      "ID": 31,
-      "commonName": "potatoe"
-    },
-    {
-      "productName": "5 lbs. tomato soup",
-      "ID": 32,
-      "commonName": "soup"
-    },
-    {
-      "productName": "5 pack brown beans",
-      "ID": 33,
-      "commonName": "beans"
-    },
-    {
-      "productName": "6 pack(12 count) eggs",
-      "ID": 34,
-      "commonName": "eggs"
-    },
-    {
-      "productName": "8 lbs. green grapes",
-      "ID": 35,
-      "commonName": "grapes"
-    },
-    {
-      "productName": "5 lbs. antelope",
-      "ID": 36,
-      "commonName": "antelope"
-    },
-    {
-      "productName": "4 pc. alligator tail",
-      "ID": 37,
-      "commonName": "alligator"
-    },
-    {
-      "productName": "4 lbs. bison",
-      "ID": 38,
-      "commonName": "bison"
-    },
-    {
-      "productName": "8 lbs. brown bear",
-      "ID": 39,
-      "commonName": "bear"
-    },
-    {
-      "productName": "4 lbs. deer tenderloin",
-      "ID": 40,
-      "commonName": "deer"
-    },
-    {
-      "productName": "7 lbs. calamari",
-      "ID": 41,
-      "commonName": "calamari"
-    },
-    {
-      "productName": "2 lbs. shark",
-      "ID": 42,
-      "commonName": "shark"
-    },
-    {
-      "productName": "5 pc. duck breast",
-      "ID": 43,
-      "commonName": "duck"
-    },
-    {
-      "productName": "6 pack gnocchi",
-      "ID": 44,
-      "commonName": "gnocchi"
-    },
-    {
-      "productName": "8 packs(5 count) hot dogs",
-      "ID": 45,
-      "commonName": "hot dogs"
-    },
-    {
-      "productName": "8 packs(5 count) brats",
-      "ID": 46,
-      "commonName": "brats"
-    },
-    {
-      "productName": "4 pack jelly",
-      "ID": 47,
-      "commonName": "jelly"
-    },
-    {
-      "productName": "10 lbs. moose",
-      "ID": 48,
-      "commonName": "moose"
-    },
-    {
-      "productName": "5 pc.(1 gallon each) whole milk",
-      "ID": 49,
-      "commonName": "milk"
-    },
-    {
-      "productName": "4 lbs. pepperoni",
-      "ID": 50,
-      "commonName": "pepperoni"
-    }
-  ]
-}
+Skip to content
+Search or jump to…
+
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@Peter-Aloisi-PFG 
+Peter-Aloisi-PFG
+/
+Reinhart_FoodService
+Private
+1
+10
+Code
+Issues
+Pull requests
+Actions
+Projects
+Security
+Insights
+Settings
+Reinhart_FoodService/products.json
+@Chris-Hoffman-PFG
+Chris-Hoffman-PFG Rename ProductJSON.json to products.json
+Latest commit f45adf7 2 hours ago
+ History
+ 2 contributors
+@Chris-Hoffman-PFG@Peter-Aloisi-PFG
+1602 lines (1602 sloc)  42.4 KB
+  
+[
+ {
+   "ProductNumber": "P9252",
+   "LongDescription": "APPLE DEL RED ORGNC80-88cnt FRESH",
+   "PackAmount": null,
+   "SizeAmount": "36",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "MCL 4 EARTH"
+ },
+ {
+   "ProductNumber": "NA246",
+   "LongDescription": "APPLESAUCE STRBY UNSWTN4.5 OZ CUP",
+   "PackAmount": null,
+   "SizeAmount": "96",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "PETERSON FARMS"
+ },
+ {
+   "ProductNumber": "V6000",
+   "LongDescription": "APPLESAUCE UNSWEETENEDCANNED",
+   "PackAmount": "6",
+   "SizeAmount": "#10",
+   "UnitOfMeasure": "CAN",
+   "BrandDescription": "KENTUCKY USDA (SCHOOL COMMODITY)"
+ },
+ {
+   "ProductNumber": "10630",
+   "LongDescription": "APRICOT HLVS I/ LTSYRPUNPEELED CH 86-108 CNT",
+   "PackAmount": "6",
+   "SizeAmount": "#10",
+   "UnitOfMeasure": "CAN",
+   "BrandDescription": "BOUNTIFUL HARVEST"
+ },
+ {
+   "ProductNumber": "W9116",
+   "LongDescription": "ARCOROC BALLON GOBLET11.5 GLASS",
+   "PackAmount": null,
+   "SizeAmount": "36",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "CARDINAL"
+ },
+ {
+   "ProductNumber": "NA226",
+   "LongDescription": "ARM RNCH FILET STY STK CH4oz FZ SHONEY'S",
+   "PackAmount": "80",
+   "SizeAmount": "4",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "STAMPEDE MEAT"
+ },
+ {
+   "ProductNumber": "HN070",
+   "LongDescription": "AVOCADO FLAT FRPOTBELLY'S",
+   "PackAmount": null,
+   "SizeAmount": "30",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "DEL MONTE"
+ },
+ {
+   "ProductNumber": "NA210",
+   "LongDescription": "BACON BULK SL 9-13 HRDWDSMKD HNY CURED RTFZ",
+   "PackAmount": null,
+   "SizeAmount": "15",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "HORMEL FOODS"
+ },
+ {
+   "ProductNumber": "ER700",
+   "LongDescription": "BACON LAYOUT THCK 10-14APPSMK GAS FLUSH FRFZ",
+   "PackAmount": null,
+   "SizeAmount": "15",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "FARM PROMISE"
+ },
+ {
+   "ProductNumber": "54920",
+   "LongDescription": "BACON SINGLE SHNGL 13-17REG NATURAL CHOICE REF",
+   "PackAmount": "2",
+   "SizeAmount": "7.5",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "NATURAL CHOICE"
+ },
+ {
+   "ProductNumber": "WC016",
+   "LongDescription": "BACON UNCURED LAYOUT13-15 FZ",
+   "PackAmount": null,
+   "SizeAmount": "10",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "BLACKRIVER"
+ },
+ {
+   "ProductNumber": "NA216",
+   "LongDescription": "BAG CATR INSL FD CARRIERSPASAV LARGE BLACK",
+   "PackAmount": null,
+   "SizeAmount": "1",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "STERNO"
+ },
+ {
+   "ProductNumber": "MP930",
+   "LongDescription": "BAG CHICK NUGGET HALLOW2018",
+   "PackAmount": "4",
+   "SizeAmount": "500",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "BURGER KING"
+ },
+ {
+   "ProductNumber": "CT008",
+   "LongDescription": "BAG PAPER SNK MINI4.25x2.5x3.75\" NAT BROWN",
+   "PackAmount": null,
+   "SizeAmount": "250",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "AMERICAN METALCRAFT"
+ },
+ {
+   "ProductNumber": "59860",
+   "LongDescription": "BAG PLST POLY 15.5x24PLAIN",
+   "PackAmount": "",
+   "SizeAmount": "500",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "HONEY BAKED HAM"
+ },
+ {
+   "ProductNumber": "J6408",
+   "LongDescription": "BAR MESH MATTING 12x2SOFT LINER RD",
+   "PackAmount": "",
+   "SizeAmount": "1",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "CARLISLE"
+ },
+ {
+   "ProductNumber": "J1972",
+   "LongDescription": "BASS STRPD WLD FIL 3-5lbBNLS SKON REF",
+   "PackAmount": null,
+   "SizeAmount": "10",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "INDIAN RIDGE PROVISIONS"
+ },
+ {
+   "ProductNumber": "AT478",
+   "LongDescription": "BEAN BAKED VEGETABLEPREPARED FZ",
+   "PackAmount": "2",
+   "SizeAmount": "5",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "HANS KISSLE"
+ },
+ {
+   "ProductNumber": "ER732",
+   "LongDescription": "BEEF DRIED NORTHWOODSBERRIES 1 OZ STRIP",
+   "PackAmount": "4",
+   "SizeAmount": "24",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "SIMPLY SNACKIN"
+ },
+ {
+   "ProductNumber": "ER730",
+   "LongDescription": "BEEF DRIED ORCHARD W/APP & CHER 1 OZ STRIP",
+   "PackAmount": "4",
+   "SizeAmount": "24",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "SIMPLY SNACKIN"
+ },
+ {
+   "ProductNumber": "NA214",
+   "LongDescription": "BEEF GR PTY ANG CHBLD 4-180/20 TDRFM 3/8\"THK RW RF",
+   "PackAmount": null,
+   "SizeAmount": "10",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "SCHWEID & SONS"
+ },
+ {
+   "ProductNumber": "HW732",
+   "LongDescription": "BEEF GR PTY W/ APLWD BAC2-1 80/20 RW REF",
+   "PackAmount": "20",
+   "SizeAmount": "8",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "EXCEPTIONAL FOODS, INC."
+ },
+ {
+   "ProductNumber": "99814",
+   "LongDescription": "BEEF GR STEAKBURGER CABBULK FRFZ",
+   "PackAmount": "2",
+   "SizeAmount": "10",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "WOLVERINE PACKING CO"
+ },
+ {
+   "ProductNumber": "HW752",
+   "LongDescription": "BEEF LOIN TENDER CHSM/OFF SKND 190A REF",
+   "PackAmount": null,
+   "SizeAmount": "4",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "REVERE MEAT COMPANY"
+ },
+ {
+   "ProductNumber": "CT020",
+   "LongDescription": "BEEF RST 5UP CKD MED 20%FRFZ",
+   "PackAmount": "2",
+   "SizeAmount": "5",
+   "UnitOfMeasure": "UP",
+   "BrandDescription": "BERKS PACKAGING"
+ },
+ {
+   "ProductNumber": "J2058",
+   "LongDescription": "BEEF SALISBURY STK PATRAW SEAS W/ ONN & PEP FZ",
+   "PackAmount": "40",
+   "SizeAmount": "4",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "PRAIRIE CREEK"
+ },
+ {
+   "ProductNumber": "P4726",
+   "LongDescription": "BEEF TENDERLOIN CH PSMOBNLS RAW 189A REF",
+   "PackAmount": "4",
+   "SizeAmount": "5+",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "STOCKYARDS"
+ },
+ {
+   "ProductNumber": "V6040",
+   "LongDescription": "BLUEGILL FIL PBI SKONFRWTR CHA IQF FARMED",
+   "PackAmount": null,
+   "SizeAmount": "11",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "ENDEAVOR SEAFOOD"
+ },
+ {
+   "ProductNumber": "NA198",
+   "LongDescription": "BOX PAPR BARN W/ HNDL8x6x8 FRESH FLAVOR B&W",
+   "PackAmount": null,
+   "SizeAmount": "100",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "INNOPAK"
+ },
+ {
+   "ProductNumber": "NA200",
+   "LongDescription": "BOX PAPR BARN W/ HNDL9.5X5X5 FRESH FLAVOR B&W",
+   "PackAmount": null,
+   "SizeAmount": "100",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "INNOPAK"
+ },
+ {
+   "ProductNumber": "NA202",
+   "LongDescription": "BOX PAPR DELI 9x5x3 FRESHFLAVOR K W/ WHITE PRNT",
+   "PackAmount": null,
+   "SizeAmount": "250",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "INNOPAK"
+ },
+ {
+   "ProductNumber": "HW740",
+   "LongDescription": "BRATWURST PRK  SMKD JALPCHD LINK 3.2 OZ N/C FZ",
+   "PackAmount": "4",
+   "SizeAmount": "5",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "MANEA'S MEAT"
+ },
+ {
+   "ProductNumber": "HW742",
+   "LongDescription": "BRATWURST SMKD WLD RICEBLB 3.2 OZ LINK N/C FZ",
+   "PackAmount": "4",
+   "SizeAmount": "5",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "MANEA'S MEAT"
+ },
+ {
+   "ProductNumber": "17936",
+   "LongDescription": "BREAD GARLIC LOAF PARBKD16 oz FZ",
+   "PackAmount": null,
+   "SizeAmount": "12",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "BRICKFIRE BAKERY"
+ },
+ {
+   "ProductNumber": "92956",
+   "LongDescription": "BREAD SOURDOUGH 3/4\" SL32oz 19 SL FZ",
+   "PackAmount": null,
+   "SizeAmount": "8",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "ALPHA BAKING"
+ },
+ {
+   "ProductNumber": "NA212",
+   "LongDescription": "BRIOSSA FORK DNR 7.875\"XHVYWT 18/8 SS",
+   "PackAmount": null,
+   "SizeAmount": "12",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "WORLD TABLEWARE INC."
+ },
+ {
+   "ProductNumber": "NA230",
+   "LongDescription": "BRISKET 7up BNLS FC FZFAMOUS DAVE'S",
+   "PackAmount": null,
+   "SizeAmount": "4",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "FAMOUS DAVE'S"
+ },
+ {
+   "ProductNumber": "W9170",
+   "LongDescription": "BUN HAMBURGER 4\" 2 OZSL BKD FZ",
+   "PackAmount": "12",
+   "SizeAmount": "8",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "GOLDEN HOME BAKERY PRODUCTS"
+ },
+ {
+   "ProductNumber": "W9174",
+   "LongDescription": "BUN HOT DOG 6\" 1.5 OZSL BKD FZ",
+   "PackAmount": "12",
+   "SizeAmount": "8",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "GOLDEN HOME BAKERY PRODUCTS"
+ },
+ {
+   "ProductNumber": "HN050",
+   "LongDescription": "BUN HTDG 100% WWT  6\" SLFZ MSR",
+   "PackAmount": "8",
+   "SizeAmount": "12",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "EUROPEAN BAKER'S"
+ },
+ {
+   "ProductNumber": "61232",
+   "LongDescription": "CAKE CARROT GRANDMA'S 9\"14 SL FZ",
+   "PackAmount": "2",
+   "SizeAmount": "72",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "DIANNES FINE DESSERTS"
+ },
+ {
+   "ProductNumber": "ER706",
+   "LongDescription": "CAKE CR LAYER 10\" SL 12TS ICED & DEC FZ",
+   "PackAmount": "2",
+   "SizeAmount": "112",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "FAIR MARKET INCORPORATED"
+ },
+ {
+   "ProductNumber": "V3982",
+   "LongDescription": "CAMCHILLER VERA BUFFET SZCOLD BLUE",
+   "PackAmount": null,
+   "SizeAmount": "1",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "CAMBRO MANUFACTURING"
+ },
+ {
+   "ProductNumber": "HN116",
+   "LongDescription": "CANDY M&M'S  MLK CHOC2.8 OZ",
+   "PackAmount": "24",
+   "SizeAmount": "6",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "M&M / MARS COMPANY"
+ },
+ {
+   "ProductNumber": "HN088",
+   "LongDescription": "CANLINER  CLEAR 33x40 33GAL COMPOSTABLE",
+   "PackAmount": null,
+   "SizeAmount": "200",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "NATURE BAG"
+ },
+ {
+   "ProductNumber": "W9108",
+   "LongDescription": "CEREAL MRSHMLLW MATEYSSNGL SERV",
+   "PackAmount": "96",
+   "SizeAmount": "1",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "POST CEREAL"
+ },
+ {
+   "ProductNumber": "HN048",
+   "LongDescription": "CHEESE AM YEL 32 SL RIBEZP REF",
+   "PackAmount": "4",
+   "SizeAmount": "5",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "SCHREIBER"
+ },
+ {
+   "ProductNumber": "HN104",
+   "LongDescription": "CHEESE CHED HABANERO HOTPEPPER BAR REF",
+   "PackAmount": "12",
+   "SizeAmount": "8",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "CABOT CREAMERY"
+ },
+ {
+   "ProductNumber": "72194",
+   "LongDescription": "CHEESE GOUDA LOAF SMKDNAT REF DOMESTIC",
+   "PackAmount": "2",
+   "SizeAmount": "7+",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "COBBLESTREET MARKET"
+ },
+ {
+   "ProductNumber": "P4134",
+   "LongDescription": "CHEESE GOUDA RED WAX REF",
+   "PackAmount": "",
+   "SizeAmount": "9.5+",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "POLDER"
+ },
+ {
+   "ProductNumber": "D2872",
+   "LongDescription": "CHEESE HAVARTI W/ DILLDNSH REF",
+   "PackAmount": "",
+   "SizeAmount": "9+",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "PACKER"
+ },
+ {
+   "ProductNumber": "A0344",
+   "LongDescription": "CHEESE MAHON YOUNG REF",
+   "PackAmount": "",
+   "SizeAmount": "8+",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "QUEAMA"
+ },
+ {
+   "ProductNumber": "F9270",
+   "LongDescription": "CHEESE PEPPER JACK CUBE200/1oz I/W REF",
+   "PackAmount": "200",
+   "SizeAmount": "1",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "LAND O'LAKES"
+ },
+ {
+   "ProductNumber": "ER708",
+   "LongDescription": "CHEESECAKE CHOC CHER 10\"10 SL TS ICED & DEC FZ",
+   "PackAmount": "2",
+   "SizeAmount": "80",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "FAIR MARKET INCORPORATED"
+ },
+ {
+   "ProductNumber": "ER710",
+   "LongDescription": "CHEESECAKE CONFETTI 10\"SL 10 TS ICED & DEC FZ",
+   "PackAmount": "2",
+   "SizeAmount": "117",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "FAIR MARKET INCORPORATED"
+ },
+ {
+   "ProductNumber": "CT012",
+   "LongDescription": "CHICK BRST 10 OZ DN SPLITBN/IN SKON FRFZ",
+   "PackAmount": null,
+   "SizeAmount": "40",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "MAR-JAC POULTRY"
+ },
+ {
+   "ProductNumber": "J1434",
+   "LongDescription": "CHICK BRST BRD GAR PARMAVG 5 OZ N/BNSK FZ",
+   "PackAmount": "12",
+   "SizeAmount": "10.5",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "BELL & EVANS"
+ },
+ {
+   "ProductNumber": "A1772",
+   "LongDescription": "CHICK BRST BRD S/SEL FCAVG 40/4oz FZ",
+   "PackAmount": "2",
+   "SizeAmount": "5",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "BRAKEBUSH"
+ },
+ {
+   "ProductNumber": "ER726",
+   "LongDescription": "CHICK BRST DRIED BLKBNSLSA 1 OZ STRIP",
+   "PackAmount": "4",
+   "SizeAmount": "24",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "SIMPLY SNACKIN"
+ },
+ {
+   "ProductNumber": "ER728",
+   "LongDescription": "CHICK BRST DRIED CHER &BBQ 1 OZ STRIP",
+   "PackAmount": "4",
+   "SizeAmount": "24",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "SIMPLY SNACKIN"
+ },
+ {
+   "ProductNumber": "ER722",
+   "LongDescription": "CHICK WING 1&2JTSAVG 8-12/LB RAW CVP FRFZ",
+   "PackAmount": "4",
+   "SizeAmount": "10",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "KOCH POULTRY"
+ },
+ {
+   "ProductNumber": "NA220",
+   "LongDescription": "CHICKEN 8 CT 1.75-2.25 LBMARI RAW CVP REF",
+   "PackAmount": "12",
+   "SizeAmount": "2",
+   "UnitOfMeasure": "HD",
+   "BrandDescription": "PILGRIM'S PRIDE"
+ },
+ {
+   "ProductNumber": "WB352",
+   "LongDescription": "CHICKEN THIGH BNLS SKNLSREF",
+   "PackAmount": null,
+   "SizeAmount": "40",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "MURRAY'S CHICKEN"
+ },
+ {
+   "ProductNumber": "B4378",
+   "LongDescription": "CHIP PITA SIMPLY NAKEDW/SEA SALT",
+   "PackAmount": "24",
+   "SizeAmount": "1.375",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "STACY'S"
+ },
+ {
+   "ProductNumber": "W8974",
+   "LongDescription": "CHIP TRTLA CORN BLEND4 CUT UNFRIED",
+   "PackAmount": null,
+   "SizeAmount": "28.5",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "DON CARLOS"
+ },
+ {
+   "ProductNumber": "MP938",
+   "LongDescription": "CHUCK SHOULDER CLODBNLS CH 114 REF",
+   "PackAmount": "2",
+   "SizeAmount": "1",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "EXCEL"
+ },
+ {
+   "ProductNumber": "K8136",
+   "LongDescription": "CLEANER ALL PURPOSE RTUGRN PROD",
+   "PackAmount": "6",
+   "SizeAmount": "32",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "SPURRIER CHEMICAL COMPANY"
+ },
+ {
+   "ProductNumber": "NA208",
+   "LongDescription": "CNTR FLAP 8.75x6.75x2.75COMPOST-A-PAK 64oz UBPLFB",
+   "PackAmount": "4",
+   "SizeAmount": "50",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "WORLD CENTRIC"
+ },
+ {
+   "ProductNumber": "NA194",
+   "LongDescription": "COFFEE GR DARK MAGICFRACPK",
+   "PackAmount": "50",
+   "SizeAmount": "2.2",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "GREEN MOUNTAIN COFFEE"
+ },
+ {
+   "ProductNumber": "NA196",
+   "LongDescription": "COFFEE GR DECAF VERMONTCOUNTRY BLEND FRACPK",
+   "PackAmount": "50",
+   "SizeAmount": "2.2",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "GREEN MOUNTAIN COFFEE"
+ },
+ {
+   "ProductNumber": "NA192",
+   "LongDescription": "COFFEE GR FAIRTD HSEBLNDFRACPK ORGANIC",
+   "PackAmount": "50",
+   "SizeAmount": "2.5",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "GREEN MOUNTAIN COFFEE"
+ },
+ {
+   "ProductNumber": "MP916",
+   "LongDescription": "COLESLAW CABG & CRFRESH",
+   "PackAmount": "4",
+   "SizeAmount": "5",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "RAISING CANE'S"
+ },
+ {
+   "ProductNumber": "HW758",
+   "LongDescription": "CONTAINER PAPR SNDWCH 4X4HINGED RED PLAID",
+   "PackAmount": "4",
+   "SizeAmount": "125",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "SUPERIOR QUALITY PRODUCTS"
+ },
+ {
+   "ProductNumber": "T2674",
+   "LongDescription": "CONTAINER PLST 26 OZ HNGDCLMSHL BLK W/ CLR LID",
+   "PackAmount": null,
+   "SizeAmount": "100",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "ANCHOR PACKAGING"
+ },
+ {
+   "ProductNumber": "MP946",
+   "LongDescription": "CONTAINER PLST 4oz TAMEVSQ CLR",
+   "PackAmount": "4",
+   "SizeAmount": "100",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "DART CONTAINER"
+ },
+ {
+   "ProductNumber": "CG274",
+   "LongDescription": "COOKIE CHOC BROWNIE 3.5OZ FZ",
+   "PackAmount": "96",
+   "SizeAmount": "3.5",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "POTBELLY SANDWICH WORKS"
+ },
+ {
+   "ProductNumber": "CG276",
+   "LongDescription": "COOKIE OATML CHOC CHIP3.5 OZ FZ",
+   "PackAmount": "96",
+   "SizeAmount": "3.5",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "POTBELLY SANDWICH WORKS"
+ },
+ {
+   "ProductNumber": "W7148",
+   "LongDescription": "CORN SWEET BI-COLOR FRESH",
+   "PackAmount": "",
+   "SizeAmount": "12",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "PRODUCE EXPRESS"
+ },
+ {
+   "ProductNumber": "B0724",
+   "LongDescription": "CORNED BEEF BRISKET BNLSMILD SEASONED IN BAG REF",
+   "PackAmount": "2",
+   "SizeAmount": "10",
+   "UnitOfMeasure": "UP",
+   "BrandDescription": "ARCTIC PANTRY"
+ },
+ {
+   "ProductNumber": "G9824",
+   "LongDescription": "CRAB MEAT BACK FIN LUMPPSTRZD REF",
+   "PackAmount": "12",
+   "SizeAmount": "1",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "HOUMAN FISH PACKER"
+ },
+ {
+   "ProductNumber": "AC832",
+   "LongDescription": "CRAB RED KING LEG & CLAW20+ FZ WILD",
+   "PackAmount": "",
+   "SizeAmount": "20",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "MARINE TREASURES"
+ },
+ {
+   "ProductNumber": "J9226",
+   "LongDescription": "CROCK PLST SAN 1.2 QTCLASSIC W/ LID RDBRN",
+   "PackAmount": null,
+   "SizeAmount": "1",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "CARLISLE"
+ },
+ {
+   "ProductNumber": "W9094",
+   "LongDescription": "CUP FOAM 44 OZ STRAIGHTWALL PLANET NUTRITION",
+   "PackAmount": "10",
+   "SizeAmount": "25",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "WINCUP HOLDINGS"
+ },
+ {
+   "ProductNumber": "NA204",
+   "LongDescription": "CUP PAPR SOUFFLE 2oz CMPSUNBLEACHED PLANT FIBER",
+   "PackAmount": "40",
+   "SizeAmount": "50",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "WORLD CENTRIC"
+ },
+ {
+   "ProductNumber": "E5676",
+   "LongDescription": "CUPCAKE RDVEL 4 OZ FBUNDEC FZ",
+   "PackAmount": "60",
+   "SizeAmount": "4",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "BAKE N JOY FOODS"
+ },
+ {
+   "ProductNumber": "ER702",
+   "LongDescription": "CUTLERY KIT FRK SPN STWNAP PLST P/P I/W WHTE MED",
+   "PackAmount": null,
+   "SizeAmount": "1000",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "BERKLEY SQUARE"
+ },
+ {
+   "ProductNumber": "T2936",
+   "LongDescription": "DAIRY BLENDED BEV BASEORGANIC",
+   "PackAmount": "12",
+   "SizeAmount": "32",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "PACIFIC FOODS OF OREGON"
+ },
+ {
+   "ProductNumber": "H7608",
+   "LongDescription": "DECANTER CARAFE 1 LITERGL",
+   "PackAmount": null,
+   "SizeAmount": "12",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "LIBBEY GLASS"
+ },
+ {
+   "ProductNumber": "CB770",
+   "LongDescription": "DELIMER TABLETCHIPOTLE",
+   "PackAmount": null,
+   "SizeAmount": "96",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "KAY CHEMICAL"
+ },
+ {
+   "ProductNumber": "91324",
+   "LongDescription": "DOUGH CKY P/BUTR 1.5 OZPR/P BS FZ GOURMET",
+   "PackAmount": null,
+   "SizeAmount": "210",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "RICH'S PRODUCTS"
+ },
+ {
+   "ProductNumber": "HN072",
+   "LongDescription": "DRESSING VNGRT BLUSHWINE",
+   "PackAmount": "4",
+   "SizeAmount": "2",
+   "UnitOfMeasure": "QT",
+   "BrandDescription": "BRIANNAS"
+ },
+ {
+   "ProductNumber": "28442",
+   "LongDescription": "DRINK PUNCH ARTFLV 8+1BGBX",
+   "PackAmount": null,
+   "SizeAmount": "3",
+   "UnitOfMeasure": "GAL",
+   "BrandDescription": "CARBOTROL"
+ },
+ {
+   "ProductNumber": "ER734",
+   "LongDescription": "EGG LQ WHL W/A W/ CTRACDCAGE FREE PSTRZD CRTN REF",
+   "PackAmount": "15",
+   "SizeAmount": "2",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "ABBOTSFORD FARMS"
+ },
+ {
+   "ProductNumber": "CT004",
+   "LongDescription": "FENWICK BOWL 5 OZ INSLONYX BLK",
+   "PackAmount": null,
+   "SizeAmount": "48",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "DINEX INTERNATIONAL"
+ },
+ {
+   "ProductNumber": "10838",
+   "LongDescription": "FILLING PIE APPLE",
+   "PackAmount": "6",
+   "SizeAmount": "#10",
+   "UnitOfMeasure": "CAN",
+   "BrandDescription": "KATY'S KITCHEN"
+ },
+ {
+   "ProductNumber": "HN102",
+   "LongDescription": "FLAVORING MAPLE NAT &NAT&ARTFLV",
+   "PackAmount": null,
+   "SizeAmount": "1",
+   "UnitOfMeasure": "GAL",
+   "BrandDescription": "DAWN DISTRIBUTORS ADVANTAGE"
+ },
+ {
+   "ProductNumber": "W7136",
+   "LongDescription": "FRANK TURKEY 10-1 NO CSNGFC FZ",
+   "PackAmount": "2",
+   "SizeAmount": "5",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "BUTTERBALL (TURKEY)"
+ },
+ {
+   "ProductNumber": "HW722",
+   "LongDescription": "FRENCH TOAST CINN GLZ2.9 OZ FC I/W FZ MSR",
+   "PackAmount": null,
+   "SizeAmount": "110",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "SUNNY FRESH FOODS"
+ },
+ {
+   "ProductNumber": "61584",
+   "LongDescription": "FRIES SHOESTR 1/4\" FCYCLRCT F/O ZTF STEALTH FZ",
+   "PackAmount": "6",
+   "SizeAmount": "6",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "LAMB WESTON"
+ },
+ {
+   "ProductNumber": "CA754",
+   "LongDescription": "GANACHE DARK CHOCOLATENAT&ARTFLV FZ",
+   "PackAmount": null,
+   "SizeAmount": "21",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "J.W. ALLEN"
+ },
+ {
+   "ProductNumber": "BG628",
+   "LongDescription": "GLOVE DISP SHLDR LENGTH",
+   "PackAmount": "",
+   "SizeAmount": "100",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "NON FOOD PACKER"
+ },
+ {
+   "ProductNumber": "W9118",
+   "LongDescription": "GRANOLA BAR CHEWY 1.2 OZDARK MOCHA ALMOND",
+   "PackAmount": null,
+   "SizeAmount": "48",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "KASHI"
+ },
+ {
+   "ProductNumber": "NA234",
+   "LongDescription": "HAM PROSCIUTTO 3oz NATSLCD NAE REF",
+   "PackAmount": "12",
+   "SizeAmount": "3",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "APPLEGATE"
+ },
+ {
+   "ProductNumber": "V9308",
+   "LongDescription": "ICE CREAM JELLY DONUT FZ",
+   "PackAmount": "",
+   "SizeAmount": "3",
+   "UnitOfMeasure": "GAL",
+   "BrandDescription": "HP HOOD LLC"
+ },
+ {
+   "ProductNumber": "JB246",
+   "LongDescription": "JELLY ASSORTED 120 GRAPE80 MIXED FRUIT",
+   "PackAmount": "200",
+   "SizeAmount": "0.5",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "AMERICANA"
+ },
+ {
+   "ProductNumber": "HW734",
+   "LongDescription": "JUICE CRANBERRY COCKTAIL5% FZ",
+   "PackAmount": "96",
+   "SizeAmount": "4",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "CITRUS SUN"
+ },
+ {
+   "ProductNumber": "W9178",
+   "LongDescription": "JUICE GUAVA 100% RTDASEP",
+   "PackAmount": "6",
+   "SizeAmount": "33.81",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "SUNBERRY FARMS"
+ },
+ {
+   "ProductNumber": "MP922",
+   "LongDescription": "KIWI SLICE SK/OFF TRAYFRESH",
+   "PackAmount": "2",
+   "SizeAmount": "5",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "ROBERT'S PRECUT VEGGIES"
+ },
+ {
+   "ProductNumber": "B7184",
+   "LongDescription": "LAMB GR PTY 8-1 SLIDERLIDSTOCK REF",
+   "PackAmount": "",
+   "SizeAmount": "10",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "CEDAR SPRINGS"
+ },
+ {
+   "ProductNumber": "ER696",
+   "LongDescription": "LEAF HIBISCUS GIANT FIREFRESH",
+   "PackAmount": null,
+   "SizeAmount": "50",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "FRESH ORIGINS"
+ },
+ {
+   "ProductNumber": "M0446",
+   "LongDescription": "LID CONTAINER PLST COLD3oz CLEAR",
+   "PackAmount": null,
+   "SizeAmount": "1000",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "INTERNATIONAL PAPER"
+ },
+ {
+   "ProductNumber": "NA206",
+   "LongDescription": "LID PAPR F/ 2oz SUFLE CUPUNBLEACHED PLANT FIBER",
+   "PackAmount": "40",
+   "SizeAmount": "50",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "WORLD CENTRIC"
+ },
+ {
+   "ProductNumber": "CG256",
+   "LongDescription": "LID PLST COFFEE CUP F/12-16-20 -24 OZ",
+   "PackAmount": null,
+   "SizeAmount": "1200",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "GRAPHIC PACKAGING"
+ },
+ {
+   "ProductNumber": "CA760",
+   "LongDescription": "LID SUGAR CANE FIBER CLRF/ 6-8 OZ CMPS CLR",
+   "PackAmount": "12",
+   "SizeAmount": "50",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "ECO PRODUCTS"
+ },
+ {
+   "ProductNumber": "99804",
+   "LongDescription": "MEATBALL BEEF .5 OZ SEASCHARB FZ",
+   "PackAmount": "2",
+   "SizeAmount": "5",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "PRIMA ADVANCE"
+ },
+ {
+   "ProductNumber": "J2034",
+   "LongDescription": "MEATBALL BF O/B .5 OZ W/ONN & BRDCRMB W/ TVP FZ",
+   "PackAmount": "2",
+   "SizeAmount": "5",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "PRAIRIE CREEK"
+ },
+ {
+   "ProductNumber": "HN100",
+   "LongDescription": "MUSHROOM SHIITAKE STDDRIED",
+   "PackAmount": null,
+   "SizeAmount": "1",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "D'ALLESANDRO"
+ },
+ {
+   "ProductNumber": "CJ998",
+   "LongDescription": "NAPKIN DNR 1 PLY 17x17\"1/4 FLD WHTE",
+   "PackAmount": "16",
+   "SizeAmount": "250",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "MORCON"
+ },
+ {
+   "ProductNumber": "CT014",
+   "LongDescription": "OLIVE RIPE SLICED BLACKIMPORT",
+   "PackAmount": "6",
+   "SizeAmount": "#10",
+   "UnitOfMeasure": "CAN",
+   "BrandDescription": "PACKER"
+ },
+ {
+   "ProductNumber": "ER718",
+   "LongDescription": "OYSTER WHL IN SHELL SELRW ATL GREAT WHTE REF",
+   "PackAmount": null,
+   "SizeAmount": "100",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "SEATTLE FISH PACKER"
+ },
+ {
+   "ProductNumber": "ER720",
+   "LongDescription": "OYSTER WHL IN SHELL SELRW ATL STELLAR BAY REF",
+   "PackAmount": null,
+   "SizeAmount": "60",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "SEATTLE FISH PACKER"
+ },
+ {
+   "ProductNumber": "G2700",
+   "LongDescription": "PAN FOOD PLST 1/2 SZ 2.5\"DP HH ONYX X-PAN",
+   "PackAmount": null,
+   "SizeAmount": "6",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "CAMBRO MANUFACTURING"
+ },
+ {
+   "ProductNumber": "CT024",
+   "LongDescription": "PEAR DICED IN EXTRALIGHT SYRUP CUP",
+   "PackAmount": "48",
+   "SizeAmount": "4.4",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "DEL MONTE"
+ },
+ {
+   "ProductNumber": "N9128",
+   "LongDescription": "PERCH OCEAN FIL SKON8-12cnt FZ",
+   "PackAmount": "4",
+   "SizeAmount": "10",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "FISHER KING SEAFOODS"
+ },
+ {
+   "ProductNumber": "NA228",
+   "LongDescription": "PHILLY STK BF RIBEYE SLCD4oz FZ SHONEY'S",
+   "PackAmount": "40",
+   "SizeAmount": "4",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "STAMPEDE MEAT"
+ },
+ {
+   "ProductNumber": "21998",
+   "LongDescription": "PICKLE KSHR SPEARAVG 375-425 CNT REF",
+   "PackAmount": null,
+   "SizeAmount": "5",
+   "UnitOfMeasure": "GAL",
+   "BrandDescription": "COBBLESTREET MARKET"
+ },
+ {
+   "ProductNumber": "27324",
+   "LongDescription": "PINEAPPLE SPEARS PRS/FFRESH",
+   "PackAmount": null,
+   "SizeAmount": "8",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "MARKON READY-SET-SERVE"
+ },
+ {
+   "ProductNumber": "C8746",
+   "LongDescription": "PIZZA CHSE 100% MOZZ 5\"RND WHLWHT RTB FZ",
+   "PackAmount": "60",
+   "SizeAmount": "5.9",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "NARDONE BROS"
+ },
+ {
+   "ProductNumber": "65712",
+   "LongDescription": "PIZZA SAUS/PEPRN 5\" BULK50/50 DELUXE FZ",
+   "PackAmount": null,
+   "SizeAmount": "60",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "TONY'S"
+ },
+ {
+   "ProductNumber": "BG374",
+   "LongDescription": "PLACEMAT W/ NAP DNR PAPRCOMBO HALLOWEEN",
+   "PackAmount": "2",
+   "SizeAmount": "250",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "LAPACO"
+ },
+ {
+   "ProductNumber": "JB244",
+   "LongDescription": "POLLOCK WDG BRD CRHYWHLGRN 3.6 OZ FZ WILD MSR",
+   "PackAmount": null,
+   "SizeAmount": "10",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "TRIDENT SEAFOODS"
+ },
+ {
+   "ProductNumber": "66744",
+   "LongDescription": "PORK BACK RIB 2.25upBN/IN POLY 422 FZ",
+   "PackAmount": "12",
+   "SizeAmount": "2.25",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "PACKER"
+ },
+ {
+   "ProductNumber": "L9796",
+   "LongDescription": "PORK LOIN 1up BNLS ICORGANIC REF",
+   "PackAmount": "6",
+   "SizeAmount": "1",
+   "UnitOfMeasure": "UP",
+   "BrandDescription": "ORGANIC PRAIRIE"
+ },
+ {
+   "ProductNumber": "MP936",
+   "LongDescription": "PORK RIBEYE STK 8oz BNLSPRMRSV ALLNAT FZ",
+   "PackAmount": "16",
+   "SizeAmount": "8",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "HATFIELD QUALITY MEATS"
+ },
+ {
+   "ProductNumber": "ER724",
+   "LongDescription": "PORTERHOUSE STK US CH1173 REF",
+   "PackAmount": "8",
+   "SizeAmount": "8",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "THOMPSON PACKERS"
+ },
+ {
+   "ProductNumber": "G6068",
+   "LongDescription": "POT STOCK 9 QT 8 5/8\" DPALUM",
+   "PackAmount": null,
+   "SizeAmount": "2",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "VOLLRATH"
+ },
+ {
+   "ProductNumber": "CG260",
+   "LongDescription": "POTATO #2 RUS IDAHOBURBANK FR",
+   "PackAmount": null,
+   "SizeAmount": "50",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "SUN SUPREME"
+ },
+ {
+   "ProductNumber": "HN060",
+   "LongDescription": "POTATO MEDLEY OVENROASTED FZ",
+   "PackAmount": "3",
+   "SizeAmount": "5",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "LAMB WESTON"
+ },
+ {
+   "ProductNumber": "CG262",
+   "LongDescription": "POTATO RUS IDAH BURBANKAVG 120 CNT FR",
+   "PackAmount": null,
+   "SizeAmount": "50",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "SUN SUPREME"
+ },
+ {
+   "ProductNumber": "CG264",
+   "LongDescription": "POTATO RUS IDAHO BURBANKAVG 100 CNT FR",
+   "PackAmount": null,
+   "SizeAmount": "50",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "SUN SUPREME"
+ },
+ {
+   "ProductNumber": "CG270",
+   "LongDescription": "POTATO RUS IDAHO BURBANKAVG 60 CNT FR",
+   "PackAmount": null,
+   "SizeAmount": "50",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "SUN SUPREME"
+ },
+ {
+   "ProductNumber": "CG258",
+   "LongDescription": "POTATO RUS IDAHO BURBANKAVG 70 CNT FR",
+   "PackAmount": null,
+   "SizeAmount": "50",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "SUN SUPREME"
+ },
+ {
+   "ProductNumber": "CG268",
+   "LongDescription": "POTATO RUS IDAHO BURBANKAVG 80 CNT FR",
+   "PackAmount": null,
+   "SizeAmount": "50",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "SUN SUPREME"
+ },
+ {
+   "ProductNumber": "CG266",
+   "LongDescription": "POTATO RUS IDAHO BURBANKAVG 90 CNT FR",
+   "PackAmount": null,
+   "SizeAmount": "50",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "SUN SUPREME"
+ },
+ {
+   "ProductNumber": "JB218",
+   "LongDescription": "POTATO TRI COLOR CRISPCUT REF",
+   "PackAmount": "4",
+   "SizeAmount": "5",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "RESER'S FINE FOODS"
+ },
+ {
+   "ProductNumber": "T3580",
+   "LongDescription": "PREM16 DC SUPER#3 PRPL13067",
+   "PackAmount": null,
+   "SizeAmount": "200",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "BURGER KING"
+ },
+ {
+   "ProductNumber": "HW724",
+   "LongDescription": "RAISIN GLDN SOUR STRBY1.33 OZ",
+   "PackAmount": "24",
+   "SizeAmount": "6",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "SUN MAID"
+ },
+ {
+   "ProductNumber": "32056",
+   "LongDescription": "RIBEYE LT BN/IN CH LIP ON109 REF",
+   "PackAmount": "2",
+   "SizeAmount": "1",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "DEMKOTA RANCH BEEF"
+ },
+ {
+   "ProductNumber": "NA222",
+   "LongDescription": "RIBEYE STK BNLS SELL/O 10oz FZ SHONEY'S",
+   "PackAmount": "16",
+   "SizeAmount": "10",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "STAMPEDE MEAT"
+ },
+ {
+   "ProductNumber": "HN090",
+   "LongDescription": "RISOTTO W/ VEGETABLEBROTH PAR COOKED",
+   "PackAmount": "2",
+   "SizeAmount": "6",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "ROLAND FOODS"
+ },
+ {
+   "ProductNumber": "NA236",
+   "LongDescription": "SALAD POTATO HORSERADISHREF",
+   "PackAmount": null,
+   "SizeAmount": "5",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "HANS KISSLE"
+ },
+ {
+   "ProductNumber": "HW750",
+   "LongDescription": "SALMON CHIL ATL PCT 7 OZN/BNSK FARM REF",
+   "PackAmount": null,
+   "SizeAmount": "10",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "BOSTON FISH MARKET"
+ },
+ {
+   "ProductNumber": "17912",
+   "LongDescription": "SALMON WHOLE SMKD 6-8lbHD ON REF",
+   "PackAmount": null,
+   "SizeAmount": "1",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "SCHWARZ FISH"
+ },
+ {
+   "ProductNumber": "KF048",
+   "LongDescription": "SALT GRMT SALISH FINEALLNAT DR 3D",
+   "PackAmount": null,
+   "SizeAmount": "19",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "ARTISAN SALT CO DIRECT SHIP"
+ },
+ {
+   "ProductNumber": "J2038",
+   "LongDescription": "SANITIZER FOAM HANDLUXURY MOISTURIZE",
+   "PackAmount": "2",
+   "SizeAmount": "1.2",
+   "UnitOfMeasure": "L",
+   "BrandDescription": "KLEENEX"
+ },
+ {
+   "ProductNumber": "K8922",
+   "LongDescription": "SAUCE TARTAR RETAIL REF",
+   "PackAmount": "8",
+   "SizeAmount": "18",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "BIG BOY"
+ },
+ {
+   "ProductNumber": "HW748",
+   "LongDescription": "SAUSAGE ITALIAN CRUMBLEMEATLESS",
+   "PackAmount": "2",
+   "SizeAmount": "5",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "BEYOND MEAT"
+ },
+ {
+   "ProductNumber": "W0604",
+   "LongDescription": "SAUSAGE LINK SMKD 6.5\"4-1 SKNLS FC FZ",
+   "PackAmount": "2",
+   "SizeAmount": "5",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "BRYAN"
+ },
+ {
+   "ProductNumber": "CB758",
+   "LongDescription": "SEAFOOD SENSATION IMITCRABMEAT FZ",
+   "PackAmount": "20",
+   "SizeAmount": "1",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "SUBWAY"
+ },
+ {
+   "ProductNumber": "HW746",
+   "LongDescription": "SERVER SYRUP PLST PLYETH16OZ JAR W/ CHPMT",
+   "PackAmount": null,
+   "SizeAmount": "12",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "VOLLRATH"
+ },
+ {
+   "ProductNumber": "CA770",
+   "LongDescription": "SHRIMP WHTE CKD PLD TL/ON16-20 FZ",
+   "PackAmount": "5",
+   "SizeAmount": "2",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "AQUA STAR"
+ },
+ {
+   "ProductNumber": "CA774",
+   "LongDescription": "SHRIMP WHTE RAW 21-25HDLS SHL/ON BLOCK FZ",
+   "PackAmount": "6",
+   "SizeAmount": "4",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "AQUA STAR"
+ },
+ {
+   "ProductNumber": "CA778",
+   "LongDescription": "SHRIMP WHTE RAW P&D 26-30N/TL IQF",
+   "PackAmount": "5",
+   "SizeAmount": "2",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "AQUA STAR"
+ },
+ {
+   "ProductNumber": "CA776",
+   "LongDescription": "SHRIMP WHTE RAW P&D 31-40N/TL IQF",
+   "PackAmount": "5",
+   "SizeAmount": "2",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "AQUA STAR"
+ },
+ {
+   "ProductNumber": "CA772",
+   "LongDescription": "SHRIMP WHTE RAW P&D13-15 TL/ON FZ",
+   "PackAmount": "5",
+   "SizeAmount": "2",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "AQUA STAR"
+ },
+ {
+   "ProductNumber": "CA780",
+   "LongDescription": "SHRIMP WHTE RW P&D 16-20TL/ON IQF",
+   "PackAmount": "5",
+   "SizeAmount": "2",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "AQUA STAR"
+ },
+ {
+   "ProductNumber": "32044",
+   "LongDescription": "SIRLOIN TOP BUTT 5up BNLSCH HRT 184B REF",
+   "PackAmount": "8",
+   "SizeAmount": "1",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "DEMKOTA RANCH BEEF"
+ },
+ {
+   "ProductNumber": "JB240",
+   "LongDescription": "SMOOTHIE MIX CRMLMACFRAPPE 1+1 CONC FZ",
+   "PackAmount": "4",
+   "SizeAmount": "1",
+   "UnitOfMeasure": "GAL",
+   "BrandDescription": "BARFRESH"
+ },
+ {
+   "ProductNumber": "CT010",
+   "LongDescription": "SMOOTHIE MIX INTSE GRNAPPLE FLV",
+   "PackAmount": "6",
+   "SizeAmount": "64",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "DA VINCI"
+ },
+ {
+   "ProductNumber": "G8836",
+   "LongDescription": "SMOOTHIE MIX MANGO FLAVOR",
+   "PackAmount": "12",
+   "SizeAmount": "32",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "BURGER KING"
+ },
+ {
+   "ProductNumber": "JB236",
+   "LongDescription": "SMOOTHIE MIX MNG P/APLENSA 1+1 CONC FZ",
+   "PackAmount": "4",
+   "SizeAmount": "1",
+   "UnitOfMeasure": "GAL",
+   "BrandDescription": "BARFRESH"
+ },
+ {
+   "ProductNumber": "JB238",
+   "LongDescription": "SMOOTHIE MIX MNG P/APLEYOG NSA 1+1 CONC FZ",
+   "PackAmount": "4",
+   "SizeAmount": "1",
+   "UnitOfMeasure": "GAL",
+   "BrandDescription": "BARFRESH"
+ },
+ {
+   "ProductNumber": "JB234",
+   "LongDescription": "SMOOTHIE MIX STRBYBAN NSA1+1 CONC FZ",
+   "PackAmount": "4",
+   "SizeAmount": "1",
+   "UnitOfMeasure": "GAL",
+   "BrandDescription": "BARFRESH"
+ },
+ {
+   "ProductNumber": "JB232",
+   "LongDescription": "SMOOTHIE MIX STRBYBAN YOGNSA 1+1 CONC FZ",
+   "PackAmount": "4",
+   "SizeAmount": "1",
+   "UnitOfMeasure": "GAL",
+   "BrandDescription": "BARFRESH"
+ },
+ {
+   "ProductNumber": "MP942",
+   "LongDescription": "SNACK MIX ALMOND HONEYGLAZE",
+   "PackAmount": "18",
+   "SizeAmount": "1.5",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "SAHALE"
+ },
+ {
+   "ProductNumber": "MP944",
+   "LongDescription": "SNACK MIX CASHEW PMGRTGLAZE",
+   "PackAmount": "18",
+   "SizeAmount": "1.5",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "SAHALE"
+ },
+ {
+   "ProductNumber": "MP940",
+   "LongDescription": "SNACK MIX CLASSIC FRUIT& NUT",
+   "PackAmount": "18",
+   "SizeAmount": "1.5",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "SAHALE"
+ },
+ {
+   "ProductNumber": "P5290",
+   "LongDescription": "SNACK MOONPIE VAN 2.75ozDOUBLE DECKER",
+   "PackAmount": "6",
+   "SizeAmount": "9",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "CHATTANOOGA BAKERY"
+ },
+ {
+   "ProductNumber": "WC014",
+   "LongDescription": "STRIPLOIN 13up BNLS 0X1ANG 180 REF",
+   "PackAmount": null,
+   "SizeAmount": "13",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "MEYER NATURAL ANGUS"
+ },
+ {
+   "ProductNumber": "C7022",
+   "LongDescription": "SUGGESTIVE SELL DISPKIT A",
+   "PackAmount": "",
+   "SizeAmount": "1",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "FLASHRIGHT DISPLAYS"
+ },
+ {
+   "ProductNumber": "J2212",
+   "LongDescription": "SUPP TBFD ISOSOURCE 1.5CAL LQ UNFLV TETRA",
+   "PackAmount": "24",
+   "SizeAmount": "250",
+   "UnitOfMeasure": "ML",
+   "BrandDescription": "ISOSOURCE"
+ },
+ {
+   "ProductNumber": "HN092",
+   "LongDescription": "TABLERUNNER PLST13.5\"x200'  WH&GD SNOFLK",
+   "PackAmount": null,
+   "SizeAmount": "1",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "HOFFMASTER"
+ },
+ {
+   "ProductNumber": "CJ996",
+   "LongDescription": "T-BONE 16-18 OZ AVG STKCH 1174 RF",
+   "PackAmount": null,
+   "SizeAmount": "9",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "REVERE MEAT COMPANY"
+ },
+ {
+   "ProductNumber": "HW744",
+   "LongDescription": "TEA HIBISCUS FLAVOREDW/ FILTERS",
+   "PackAmount": "16",
+   "SizeAmount": "2",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "LUZIANNE"
+ },
+ {
+   "ProductNumber": "18234",
+   "LongDescription": "TENDERLOIN BF 12oz STKCH CC CTRM 1190A BEELOW'S",
+   "PackAmount": "13",
+   "SizeAmount": "12",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "LEGACY 72 BY EAGLE RIDGE"
+ },
+ {
+   "ProductNumber": "HN058",
+   "LongDescription": "TENDERLOIN BF 8 OZ STKNR CC CLEAN 1190B FRFZ",
+   "PackAmount": "20",
+   "SizeAmount": "8",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "MEATS BY LINZ"
+ },
+ {
+   "ProductNumber": "18270",
+   "LongDescription": "TENDERLOIN BF 8oz STK CHCC CTRM 1190A BEELOW'S",
+   "PackAmount": "20",
+   "SizeAmount": "8",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "LEGACY 72 BY EAGLE RIDGE"
+ },
+ {
+   "ProductNumber": "NA218",
+   "LongDescription": "TOMATO WHL PLD ORGANICIN JUICE W/ BASIL",
+   "PackAmount": "6",
+   "SizeAmount": "#10",
+   "UnitOfMeasure": "CAN",
+   "BrandDescription": "DINAPOLI"
+ },
+ {
+   "ProductNumber": "92792",
+   "LongDescription": "TRAY ALUM PIZ RND14x12\" WIDE RIM",
+   "PackAmount": null,
+   "SizeAmount": "1",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "AMERICAN METALCRAFT"
+ },
+ {
+   "ProductNumber": "12682",
+   "LongDescription": "TRAY PAPER FOOD 5 LBWINDSCAPES II",
+   "PackAmount": null,
+   "SizeAmount": "500",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "PROPAK"
+ },
+ {
+   "ProductNumber": "31408",
+   "LongDescription": "TURKEY BRST BRWNDCARVER COLLECTION FRFZ",
+   "PackAmount": "2",
+   "SizeAmount": "9",
+   "UnitOfMeasure": "UP",
+   "BrandDescription": "SARA LEE"
+ },
+ {
+   "ProductNumber": "N7260",
+   "LongDescription": "TURKEY BRST SLCD O/RST.74 OZ ALL NATURAL FZ",
+   "PackAmount": "6",
+   "SizeAmount": "2",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "JENNIE-O"
+ },
+ {
+   "ProductNumber": "NA238",
+   "LongDescription": "TURKEY GR PTY 5.33 OZORIG NAE FZ",
+   "PackAmount": "9",
+   "SizeAmount": "6",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "JENNIE-O"
+ },
+ {
+   "ProductNumber": "HN086",
+   "LongDescription": "TURKEY GROUND 93/7 RWALL NAT NO ANTIBIOTICS FZ",
+   "PackAmount": "2",
+   "SizeAmount": "10",
+   "UnitOfMeasure": "LB",
+   "BrandDescription": "BUTTERBALL (TURKEY)"
+ },
+ {
+   "ProductNumber": "ER716",
+   "LongDescription": "UNDERLINER WOOD 12\"FOR SIZZLING PLATTER",
+   "PackAmount": null,
+   "SizeAmount": "1",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "WINCO"
+ },
+ {
+   "ProductNumber": "35082",
+   "LongDescription": "VEAL STRIPLOIN 3.5up BNLS1x1 344 REBOX FZ",
+   "PackAmount": "3",
+   "SizeAmount": "1",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "LEGACY 72 BY EAGLE RIDGE"
+ },
+ {
+   "ProductNumber": "10828",
+   "LongDescription": "VEGETABLE FOR STEW FANCYCR PTO CL PEA ONN",
+   "PackAmount": "6",
+   "SizeAmount": "#10",
+   "UnitOfMeasure": "CAN",
+   "BrandDescription": "BOUNTIFUL HARVEST"
+ },
+ {
+   "ProductNumber": "B7592",
+   "LongDescription": "WATER ENHANCED TROP MANGO5+1 BGBX YIELD 18gal",
+   "PackAmount": null,
+   "SizeAmount": "3",
+   "UnitOfMeasure": "GAL",
+   "BrandDescription": "ORCHARD SPLASH"
+ },
+ {
+   "ProductNumber": "KB304",
+   "LongDescription": "WOOD PLANK GRILLING MTMESQ OVAL 5x7\" DR 3D",
+   "PackAmount": null,
+   "SizeAmount": "50",
+   "UnitOfMeasure": "CNT",
+   "BrandDescription": "FLAME GRILLING PRODUCTS DIRECT SHIP"
+ },
+ {
+   "ProductNumber": "J8038",
+   "LongDescription": "YOGURT GREEK STRAWBERRYREF",
+   "PackAmount": "24",
+   "SizeAmount": "4",
+   "UnitOfMeasure": "OZ",
+   "BrandDescription": "CHOBANI"
+ }
+]
+© 2021 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+Loading complete
