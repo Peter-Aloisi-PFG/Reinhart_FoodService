@@ -403,14 +403,10 @@ const ProductGiven_RemoveItemIntentHandler = {
          .getResponse();
     }
 
-    var resolvedProduct =  await reinhart.getProductFromCatalogue(spokenProductName);
-    console.log(resolvedProduct);
-    if(resolvedProduct !== null){
-        var productInCart = await reinhart.getOrderItemFromOrder(pendingOrder.orderNumber, resolvedProduct.ProductNumber);
-        console.log(productInCart);
-    }
+    let productInCart = await reinhart.getOrderItemFromOrder(pendingOrder.orderNumber, spokenProductName);
+    console.log("product in cart: " + productInCart);
     
-    if (resolvedProduct === null || productInCart === null) {
+    if (productInCart === null) {
         
         return handlerInput.responseBuilder
           .addElicitSlotDirective('spokenProductName',
@@ -863,12 +859,9 @@ const ProductGiven_EditOrderIntentHandler = {
          .getResponse();
     }
 
-    var resolvedProduct =  await reinhart.getProductFromCatalogue(spokenProductName);
-    if(resolvedProduct !== null){
-        var productInCart = await reinhart.getOrderItemFromOrder(pendingOrder.orderNumber, resolvedProduct.ProductNumber);
-    }
+    let productInCart = await reinhart.getOrderItemFromOrder(pendingOrder.orderNumber, spokenProductName);
     
-    if (resolvedProduct === null || productInCart === null) {
+    if (productInCart === null) {
         
         return handlerInput.responseBuilder
           .addElicitSlotDirective('spokenProductName',
@@ -1105,7 +1098,7 @@ const ViewPendingOrderContentsIntentHandler = {
             var allItems = await reinhart.getOrderContents(pendingOrder.orderNumber);
 
             if (allItems !== null) {
-                  speakOutput = 'In your shopping cart you have, ' + stringifyItemList(allItems) + ". What else can I help you with today?";
+                  speakOutput = 'In your shopping cart you have ' + stringifyItemList(allItems) + ". What else can I help you with today?";
             }else {
                   speakOutput = 'Your shopping cart is currently empty, start an order to begin adding to it. What else can I do for you today?';
             }
@@ -1202,14 +1195,41 @@ const stringifyProduct = (product) => {
     let parsedPackSize = parsePackSize(packSize);
 
     if (parsedPackSize.length === 2) {
-        toReturn += parsedPackSize[0] + " " + parsedPackSize[1] + " ";
+        toReturn += parsedPackSize[0] + " " + mapUnit(parsedPackSize[1]) + " ";
     } else {
-        toReturn += parsedPackSize[0] + " pack " + parsedPackSize[1] + " " + parsedPackSize[2] + " ";
+        toReturn += parsedPackSize[0] + " pack " + parsedPackSize[1] + " " + mapUnit(parsedPackSize[2]) + " ";
     }
     
     toReturn += descriptionTranslated + " from " + brandTranslated;
     toReturn = toReturn.toLowerCase();
     return toReturn;
+}
+
+const mapUnit = (unit) => {
+    switch(unit.toUpperCase()) {
+        case "CNT":
+            return "count";
+        case "LB":
+            return "pound";
+        case "GAL":
+            return "gallon";
+        case "OZ":
+            return "ounce";
+        case "ML":
+            return "millileter";
+        case "DZ":
+            return "dozen";
+        case "LBS":
+            return "pound";
+        case "GM":
+            return "gram";
+        case "L":
+            return "liter";
+        case "UP":
+            return "unit price";
+        default:
+            return unit;
+    }
 }
 
 const parsePackSize = (packSize) => {
@@ -1255,7 +1275,7 @@ const HelpIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
     },
     handle(handlerInput) {
-        const speakOutput = 'You can say, start order or add order to add to your cart, say submit order to schedule your delivery for your next delivery date, and you can ask to view cart to see whats in your cart and you can ask what items are in my next delivery to see what items have been added to your next delivery ?';
+        const speakOutput = 'You can say, start order or add order to add to your cart, say submit order to schedule your delivery for your next delivery date, and you can ask to view cart to see whats in your cart and you can ask what items are in my next delivery to see what items have been added to your next delivery.';
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
