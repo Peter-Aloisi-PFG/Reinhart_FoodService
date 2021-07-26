@@ -1,7 +1,7 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "chris foodservice",
+      "invocationName": "reinhart foodservice",
       "intents": [
         {
           "name": "AMAZON.CancelIntent",
@@ -645,3 +645,4 @@
   },
   "version": "19"
 }
+
