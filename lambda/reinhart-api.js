@@ -550,7 +550,8 @@ function search(spokenProductDescription, products) {
     }
     for (let i = 0; i < products.length; i++) {
         let product = products[i];
-        let productString = product.DescriptionTranslated + " " + product.PackSize + " " + product.BrandTranslated;
+        let productArray = product.DescriptionTranslated.split(" ");
+        let productString = productArray[0] + " " + productArray[1];
         let score = diceCoefficient(spokenProductDescription, productString);
         if (score > chosenProduct.score) {
             chosenProduct.product = product;
