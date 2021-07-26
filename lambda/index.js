@@ -1223,6 +1223,8 @@ const mapUnit = (unit) => {
             return "pound";
         case "GM":
             return "gram";
+        case "L":
+            return "liter";
         case "UP":
             return "unit price";
         default:
