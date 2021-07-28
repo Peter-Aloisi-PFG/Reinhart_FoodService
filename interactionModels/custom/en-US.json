@@ -1,7 +1,7 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "reinhart foodservice",
+      "invocationName": "chris foodservice",
       "intents": [
         {
           "name": "AMAZON.CancelIntent",
@@ -52,6 +52,12 @@
             }
           ],
           "samples": [
+            "actually I want {spokenProductName} instead",
+            "wait I want {spokenProductName} instead",
+            "actually I want {spokenProductName}",
+            "wait I want {spokenProductName}",
+            "give me a {spokenProductName} instead",
+            "no I want {spokenProductName}",
             "order a {spokenProductName}",
             "can you give me {spokenProductName} to my order",
             "can you get me {spokenProductName} in my order",
@@ -643,6 +649,5 @@
       }
     ]
   },
-  "version": "19"
+  "version": "31"
 }
-
