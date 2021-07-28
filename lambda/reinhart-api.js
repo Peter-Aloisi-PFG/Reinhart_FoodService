@@ -155,6 +155,7 @@ async function getProductFromCatalogue(spokenProductName) {
 /    return: resolvedProductName, resolvedProductID
 */
 async function getProductFromOrderGuide(customerID, spokenProductName) {
+
     let customerOGFile = "orderGuideCustomer" + customerID + ".json";
     console.log(customerOGFile + " is filename to search for ");
     var orderGuide = await Util.getJSON(customerOGFile);
@@ -612,6 +613,7 @@ function searchByDescription(spokenProductName, orderGuide) {
         let productArray = product.DescriptionTranslated.split(" ");
 
         //split by initial words for more accurate initial search
+
         let firstWord = productArray[0];
         let shortProductString = firstWord + " " + productArray[1] + " " + productArray[2];
         let longProductString = shortProductString + " " + productArray[3] + " " + productArray[4];
@@ -638,7 +640,5 @@ function searchByDescription(spokenProductName, orderGuide) {
     console.log("chosenProducts: " + JSON.stringify(chosenProducts))
     return chosenProducts;
 }
-
-
 
 module.exports = { startOrder, addToOrder, getPendingOrderInfo, getProductFromCatalogue, getProductFromOrderGuide, getProductByKeyword, getOrderItemFromOrder, getNextDeliveryOrderNumbers, updateQuantity, removeProduct, clearOrderContents, submitOrder, cancelNextDelivery, calculateDeliveryDay, getNextDeliveryDate, getOrderItemFromNextDelivery, getOrderContents, getNextDeliveryContents }; //getProductFromOrderGuide
