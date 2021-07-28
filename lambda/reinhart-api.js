@@ -129,15 +129,16 @@ async function getProductByKeyword(spokenProductDescription, customerID) {
 /    parameters: spokenProductDescription
 /    return: the resolved product
 */
-async function getProductFromCatalogue(spokenProductDescription) {
+async function getProductFromCatalogue(spokenProductName) {
     var foodData = await Util.getJSON("products.json");
-    var searchResults = searchByDescription(spokenProductDescription, foodData);
+    console.log(spokenProductName);
+    var searchResults = searchByDescription(spokenProductName, foodData);
     console.log(searchResults);
     if (searchResults[0].score < .1) {
-        console.log("did not find a relatable product (.1 or above) in catalouge");
+        console.log("did not find a relatable product (.1 or above) in catalougue");
         return null;
     }
-    console.log("found products in catalouge");
+    console.log("found products in catalogue");
     let products = [];
     for (let i = 0; i < searchResults.length; i++) {
         products[i] = searchResults[i].product
@@ -162,7 +163,7 @@ async function getProductFromOrderGuide(customerID, spokenProductName) {
     var searchResults = searchByDescription(spokenProductName, orderGuide);
     console.log(searchResults);
     if (searchResults[0].score < .1) {
-        console.log("did not find a relatable product (.25 or above) in catalouge");
+        console.log("did not find a relatable product (.25 or above) in catalogue");
         return null;
     }
     console.log("found products in catalouge");
@@ -581,7 +582,7 @@ function searchByKeyword(spokenProductName, orderGuide) {
         }
     }
 
-    if (chosenProduct.score > .5) {
+    if (chosenProduct.score > .6) {
         console.log("keyword match, searching by product number");
         return searchByProductNumber(chosenProduct.productNumber, orderGuide);
     } else {
@@ -611,13 +612,14 @@ function searchByDescription(spokenProductName, orderGuide) {
         let productArray = product.DescriptionTranslated.split(" ");
 
         //split by initial words for more accurate initial search
-        let shortProductString = productArray[0] + " " + productArray[1];
-        let longProductString = shortProductString + " " + productArray[2] + " " + productArray[3] + productArray[4] + productArray[5];
+        let firstWord = productArray[0];
+        let shortProductString = firstWord + " " + productArray[1] + " " + productArray[2];
+        let longProductString = shortProductString + " " + productArray[3] + " " + productArray[4];
 
-        let shortScore = diceCoefficient(spokenProductName, shortProductString);
+        let shortScore = (diceCoefficient(spokenProductName, firstWord) + diceCoefficient(spokenProductName, shortProductString)) / 2;
         let longScore = -1;
         if (shortScore > .4) {
-            longScore = diceCoefficient(spokenProductName, longProductString);
+            longScore = (shortScore + diceCoefficient(spokenProductName, longProductString)) / 2;
         }
         let score = Math.max(shortScore, longScore);
         for (let j = 0; j < 3; j++) {

@@ -104,11 +104,12 @@ const ProductGiven_MakeOrderIntentHandler = {
     sessionAttributes.resolvedProducts = resolvedProducts;
     sessionAttributes.productDenies = 0;
     sessionAttributes.productIndex = 0;
+    sessionAttributes.orderGuideExhausted = false;
     
     return handlerInput.responseBuilder
       .addConfirmSlotDirective('spokenProductName')
-      .speak("I was able to find " + stringifyProduct(resolvedProducts[sessionAttributes.productIndex]) + ". Is this what you would like to order?")
-      .reprompt("I was able to find " + stringifyProduct(resolvedProducts[sessionAttributes.productIndex]) + ". Is this what you would like to order?")
+      .speak("I was able to find " + stringifyProduct(resolvedProducts[sessionAttributes.productIndex]) + " in your order guide. Is this what you would like to order?")
+      .reprompt("I was able to find " + stringifyProduct(resolvedProducts[sessionAttributes.productIndex]) + " in your order guide. Is this what you would like to order?")
       .getResponse();
   }
 };
@@ -144,54 +145,74 @@ const ProductConfirmation_MakeOrderIntentHandler = {
         sessionAttributes.productDenies++;
         sessionAttributes.productIndex++;
         
-        if (resolvedProducts.length === 1) {
-            // user denied their keyword so we need to grab more search results from the order guide
-            sessionAttributes.productIndex = 0;
-            sessionAttributes.resolvedProducts = await reinhart.getProductFromOrderGuide(customerID, spokenProductName);
-            resolvedProducts = sessionAttributes.resolvedProducts;
-        }
-        
-        if (sessionAttributes.productDenies === 1) {
-            // user has denied the first product so we are going to ask them if they want to hear more related items
-            const itemsLeft = sessionAttributes.resolvedProducts.length - sessionAttributes.productIndex;
-            sessionAttributes.yesNoKey = "relatedItems";
+            // order guide has not yet been exhausted
+            if (resolvedProducts.length === 1 && sessionAttributes.orderGuideExhausted !== true) {
+                // user denied their keyword search result so we need to grab more search results from the order guide
+                sessionAttributes.productIndex = 0;
+                sessionAttributes.resolvedProducts = await reinhart.getProductFromOrderGuide(customerID, spokenProductName);
+                resolvedProducts = sessionAttributes.resolvedProducts;
+            }
+            
+            if (sessionAttributes.productDenies === 1 && sessionAttributes.orderGuideExhausted !== true) {
+                // user has denied the first product so we are going to ask them if they want to hear more related items
+                const itemsLeft = sessionAttributes.resolvedProducts.length - sessionAttributes.productIndex;
+                sessionAttributes.yesNoKey = "relatedOrderGuide";
+                let speakOutput = "";
+                if (sessionAttributes.orderGuideExhausted === true) {
+                    speakOutput += "I was able to find " + itemsLeft + " more items related to " + spokenProductName + " in the catalogue. Would you like me to go through them?";
+                } else {
+                    speakOutput += "I was able to find " + itemsLeft + " more items related to " + spokenProductName + " in your order guide. Would you like me to go through them?";
+                }
+                
+                return handlerInput.responseBuilder
+                  .speak(speakOutput)
+                  .reprompt(speakOutput)
+                  .getResponse();
+            }
+            
+            if (sessionAttributes.productIndex >= resolvedProducts.length) {
+                if (sessionAttributes.orderGuideExhausted === true) {
+                    // user has reached the end of our related products list from the catalogue so we need them to just say a more specific product.
+                    sessionAttributes.orderGuideExhausted = false;
+                    return handlerInput.responseBuilder
+                      .speak("I was not able to find any more items related to " + spokenProductName + " in the catalogue. Please state a new product name for me to search.")
+                      .reprompt("I was not able to find any more items related to " + spokenProductName + " in the catalogue. Please state a new product name for me to search.")
+                          .addElicitSlotDirective('spokenProductName', {
+                            name: 'MakeOrderIntent',
+                            confirmationStatus: 'NONE',
+                            slots: {
+                                spokenProductName: {
+                                    name: "spokenProductName",
+                                    value: undefined,
+                                    confirmationStatus: "NONE"
+                                },
+                                quantity: {
+                                    name: "quantity",
+                                    value: quantity
+                                }
+                            }                      
+                          })
+                      .getResponse();
+                    
+                } else {
+                    // user has reached the end of our related products list from the order guide so we need to ask if we should search the catalogue
+                    sessionAttributes.orderGuideExhausted = true;
+                    sessionAttributes.yesNoKey = "relatedCatalogue";
+                    return handlerInput.responseBuilder
+                      .speak("I was not able to find any more items related to " + spokenProductName + " in your order guide. Would you like me to try searching the catalogue?")
+                      .reprompt("I was not able to find any more items related to " + spokenProductName + " in your order guide. Would you like me to try searching the catalogue?")
+                      .getResponse();
+                }
+            }
+            
+            // read off the next closest related product to the user
             return handlerInput.responseBuilder
-              .speak("I was able to find " + itemsLeft + " more items related to " + spokenProductName + ". Would you like me to go through them?")
-              .reprompt("I was able to find " + itemsLeft + " more items related to " + spokenProductName + ". Would you like me to go through them?")
+              .speak("Okay, how about " + stringifyProduct(resolvedProducts[sessionAttributes.productIndex]) + "?")
+              .reprompt("Okay, how about " + stringifyProduct(resolvedProducts[sessionAttributes.productIndex]) + "?")
+              .addConfirmSlotDirective('spokenProductName')
               .getResponse();
-        }
-        
-        if (sessionAttributes.productIndex >= resolvedProducts.length) {
-            // user has reached the end of our related products list so we need to tell them to be more specific
-            return handlerInput.responseBuilder
-              .speak("I was not able to find any more related items in your order guide. Please state a more specific product name.")
-              .reprompt("Try to be as specific as possible. What would you like to order?")
-              .addElicitSlotDirective('spokenProductName',
-                    {
-                        name: 'MakeOrderIntent',
-                        confirmationStatus: 'NONE',
-                        slots: {
-                            spokenProductName: {
-                                name: "spokenProductName",
-                                value: undefined,
-                                confirmationStatus: "NONE"
-                            },
-                            quantity: {
-                                name: "quantity",
-                                value: quantity,
-                                confirmationStatus: "NONE"
-                            }
-                        }
-                    })
-              .getResponse();
-        }
-        
-        // read off the next closest related product to the user
-        return handlerInput.responseBuilder
-          .speak("Okay, how about " + stringifyProduct(resolvedProducts[sessionAttributes.productIndex]) + "?")
-          .reprompt("Okay, how about " + stringifyProduct(resolvedProducts[sessionAttributes.productIndex]) + "?")
-          .addConfirmSlotDirective('spokenProductName')
-          .getResponse();
+ 
+
     }
 
     const productChosen = resolvedProducts[sessionAttributes.productIndex];
@@ -721,8 +742,6 @@ const YesNoIntentHandler = {
                   .getResponse();
             }
             else if (answer === "no") {
-                // prompt user if they would like to route to submit order intent
-                sessionAttributes.yesNoKey = "submitOrder";
                 return handlerInput.responseBuilder
                   .speak("What would you like to do?")
                   .reprompt("What would you like to do?")
@@ -908,7 +927,7 @@ const YesNoIntentHandler = {
                   .getResponse();
             }
         }
-        else if (key === "relatedItems") {
+        else if (key === "relatedOrderGuide") {
             sessionAttributes.yesNoKey = undefined; // must always switch back to undefined
             if (answer === "yes") {
                 const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
@@ -916,8 +935,8 @@ const YesNoIntentHandler = {
                 
                 // user has indicated they would like to hear more related items in their order guide so we will read the next one off
                 return handlerInput.responseBuilder
-                  .speak("Okay, the next best match I have is " + stringifyProduct(resolvedProducts[sessionAttributes.productIndex]) + ". Is this what you would like to order?")
-                  .reprompt("The next best match I have is " + stringifyProduct(resolvedProducts[sessionAttributes.productIndex]) + ". Is this what you would like to order?")
+                  .speak("Okay, the next best match in your order guide is " + stringifyProduct(resolvedProducts[sessionAttributes.productIndex]) + ". Is this what you would like to order?")
+                  .reprompt("The next best match in your order guide is " + stringifyProduct(resolvedProducts[sessionAttributes.productIndex]) + ". Is this what you would like to order?")
                   .addConfirmSlotDirective("spokenProductName", {
                     name: 'MakeOrderIntent',
                     confirmationStatus: 'NONE',
@@ -1057,6 +1076,91 @@ const YesNoIntentHandler = {
                 return handlerInput.responseBuilder
                   .speak("Okay, what else can I do for you today?")
                   .reprompt("Okay, what else can I do for you today?")
+                  .getResponse();
+            }
+            else {
+                // there was an error--this is here for debugging purposes
+                return handlerInput.responseBuilder
+                  .speak("I'm sorry, something went wrong.")
+                  .getResponse();
+            }
+        }
+        else if (key === "relatedCatalogue") {
+            sessionAttributes.yesNoKey = undefined; // must always switch back to undefined
+            if (answer === "yes") {
+                const customerID = 14445;
+                const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+                const spokenProductName = sessionAttributes.spokenProductName;
+                sessionAttributes.productIndex = 0;
+                sessionAttributes.productDenies = 0;
+                sessionAttributes.resolvedProducts = await reinhart.getProductFromCatalogue(spokenProductName);
+                const resolvedProducts = sessionAttributes.resolvedProducts;
+                console.log("resolvedProducts: " + JSON.stringify(resolvedProducts));
+                
+                if (resolvedProducts === null) {
+                    return handlerInput.responseBuilder
+                      .speak("I'm sorry, I was not able to find any related items in the catalogue. Please state a new product name for me to search.")
+                      .reprompt("I'm sorry, I was not able to find any related items in the catalogue. Please state a new product name for me to search.")
+                      .addElicitSlotDirective('spokenProductName', {
+                        name: 'MakeOrderIntent',
+                        confirmationStatus: 'NONE',
+                        slots: {
+                            spokenProductName: {
+                                name: "spokenProductName",
+                                value: undefined,
+                                confirmationStatus: "NONE"
+                            },
+                            quantity: {
+                                name: "quantity",
+                                value: undefined
+                            }
+                        }                      
+                      })
+                      .getResponse();
+                }
+                console.log("we will now return the first related item from the catalogue");
+                // user has indicated they would like to hear more related items from the catalogue so we will start listing them off
+                return handlerInput.responseBuilder
+                  .speak("Okay, I found " + resolvedProducts.length + " items related to " + spokenProductName + " in the catalogue. The next best match is " + stringifyProduct(resolvedProducts[sessionAttributes.productIndex]) + ". Is this what you would like to order?")
+                  .reprompt("Okay, I found " + resolvedProducts.length + " items related to " + spokenProductName + " in the catalogue. The next best match is " + stringifyProduct(resolvedProducts[sessionAttributes.productIndex]) + ". Is this what you would like to order?")
+                  .addConfirmSlotDirective("spokenProductName", {
+                    name: 'MakeOrderIntent',
+                    confirmationStatus: 'NONE',
+                    slots: {
+                        spokenProductName: {
+                            name: "spokenProductName",
+                            value: spokenProductName,
+                            confirmationStatus: sessionAttributes.productConfirmation
+                        },
+                        quantity: {
+                            name: "quantity",
+                            value: sessionAttributes.quantity
+                        }
+                      } 
+                  })
+                  .getResponse();
+
+            }
+            else if (answer === "no") {
+                // user has indicated they do not want to hear more related items from the catalogue so we will ask them to state a more specific product name
+                return handlerInput.responseBuilder
+                  .speak("Okay, please state a more specific product name for me to search.")
+                  .reprompt('What would you like to order?')
+                  .addElicitSlotDirective('spokenProductName', {
+                    name: 'MakeOrderIntent',
+                    confirmationStatus: 'NONE',
+                    slots: {
+                        spokenProductName: {
+                            name: "spokenProductName",
+                            value: undefined,
+                            confirmationStatus: "NONE"
+                        },
+                        quantity: {
+                            name: "quantity",
+                            value: undefined
+                        }
+                    }                      
+                  })
                   .getResponse();
             }
             else {
@@ -1515,12 +1619,13 @@ const stringifyProduct = (product) => {
     const brandTranslated = product.BrandTranslated;
     
     let parsedDescription = parseDescription(descriptionTranslated);
-    
 
     let toReturn = "";
     let parsedPackSize = parsePackSize(packSize);
 
-    if (parsedPackSize.length === 2) {
+    if (parsedPackSize.length === 1) {
+        toReturn += parsedPackSize[0];
+    } else if (parsedPackSize.length === 2) {
         toReturn += parsedPackSize[0] + " " + mapUnit(parsedPackSize[1]) + " ";
     } else {
         toReturn += parsedPackSize[0] + " pack " + parsedPackSize[1] + " " + mapUnit(parsedPackSize[2]) + " ";
@@ -1528,10 +1633,12 @@ const stringifyProduct = (product) => {
     
     toReturn += parsedDescription + " from " + brandTranslated;
     toReturn = toReturn.toLowerCase();
+    console.log("stringified product: " + toReturn);
     return toReturn;
 }
 
 const mapUnit = (unit) => {
+    console.log("unit to map: " + unit);
     switch(unit.toUpperCase()) {
         case "CNT":
             return "count";
@@ -1581,10 +1688,19 @@ const parsePackSize = (packSize) => {
     const splitCounts = splitNumerics[0].split("/");
     let splitPackSize;
     if (splitCounts[1] === "") {
-        splitPackSize = [splitCounts[0], splitNumerics[1]];
+        if (splitNumerics[1] === undefined) {
+            splitPackSize = [splitCounts[0]];
+        } else {
+            splitPackSize = [splitCounts[0], splitNumerics[1]];
+        }
     } else {
-       splitPackSize = [splitCounts[0], splitCounts[1], splitNumerics[1]];
+        if (splitNumerics[1] === undefined) {
+            splitPackSize = [splitCounts[0], splitCounts[1]];
+        } else {
+            splitPackSize = [splitCounts[0], splitCounts[1], splitNumerics[1]];
+        }
     }
+    console.log("pack size array [" + splitPackSize + "]");
     return splitPackSize;
 }
 
