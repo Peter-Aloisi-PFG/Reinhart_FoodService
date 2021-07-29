@@ -155,13 +155,12 @@ async function getProductFromCatalogue(spokenProductName) {
 /    return: resolvedProductName, resolvedProductID
 */
 async function getProductFromOrderGuide(customerID, spokenProductName) {
-
     let customerOGFile = "orderGuideCustomer" + customerID + ".json";
     console.log(customerOGFile + " is filename to search for ");
     var orderGuide = await Util.getJSON(customerOGFile);
     console.log("order guide is ");
     console.log(orderGuide);
-    var searchResults = searchByDescription(spokenProductName, orderGuide);
+    var searchResults = searchByDescription(spokenProductName, orderGuide.products);
     console.log(searchResults);
     if (searchResults[0].score < .1) {
         console.log("did not find a relatable product (.25 or above) in catalogue");
@@ -198,7 +197,7 @@ async function getOrderItemFromOrder(orderNumber, spokenProductDescription) {
                     console.log("did not find a relatable product (.1 or above) in catalouge");
                     return null;
                 }
-                return searchResult.product;
+                return searchResult[0].product;
             }
         }
     }
@@ -585,35 +584,34 @@ function searchByKeyword(spokenProductName, orderGuide) {
 
     if (chosenProduct.score > .6) {
         console.log("keyword match, searching by product number");
-        return searchByProductNumber(chosenProduct.productNumber, orderGuide);
+        return searchByProductNumber(chosenProduct.productNumber, orderGuide.products);
     } else {
         return null;
     }
 }
 
-function searchByProductNumber(productNumber, orderGuide) {
+function searchByProductNumber(productNumber, products) {
     let results = [];
-    for (let i = 0; i < orderGuide.products.length; i++) {
-        if (orderGuide.products[i].ProductNumber === productNumber) {
-            return orderGuide.products[i];
+    for (let i = 0; i < products.length; i++) {
+        if (products[i].ProductNumber === productNumber) {
+            return products[i];
         }
     }
     return null;
 }
 
-function searchByDescription(spokenProductName, orderGuide) {
+function searchByDescription(spokenProductName, products) {
     let chosenProduct = {
         "score": -1,
         "product": null
     }
     let chosenProducts = [chosenProduct, chosenProduct, chosenProduct];
-    for (let i = 0; i < orderGuide.products.length; i++) {
+    for (let i = 0; i < products.length; i++) {
 
-        let product = orderGuide.products[i];
+        let product = products[i];
         let productArray = product.DescriptionTranslated.split(" ");
 
         //split by initial words for more accurate initial search
-
         let firstWord = productArray[0];
         let shortProductString = firstWord + " " + productArray[1] + " " + productArray[2];
         let longProductString = shortProductString + " " + productArray[3] + " " + productArray[4];
@@ -640,5 +638,7 @@ function searchByDescription(spokenProductName, orderGuide) {
     console.log("chosenProducts: " + JSON.stringify(chosenProducts))
     return chosenProducts;
 }
+
+
 
 module.exports = { startOrder, addToOrder, getPendingOrderInfo, getProductFromCatalogue, getProductFromOrderGuide, getProductByKeyword, getOrderItemFromOrder, getNextDeliveryOrderNumbers, updateQuantity, removeProduct, clearOrderContents, submitOrder, cancelNextDelivery, calculateDeliveryDay, getNextDeliveryDate, getOrderItemFromNextDelivery, getOrderContents, getNextDeliveryContents }; //getProductFromOrderGuide
