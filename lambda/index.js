@@ -16,6 +16,8 @@ const LaunchRequestHandler = {
     handle(handlerInput) {
         const speakOutput = 'Welcome to Reinhart Foodservice. What would you like to do?';
 
+        const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+        sessionAttributes.intentState = 0;
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
@@ -157,6 +159,19 @@ const ProductConfirmation_MakeOrderIntentHandler = {
                 resolvedProducts = sessionAttributes.resolvedProducts;
             }
 
+            if (resolvedProducts === null) {
+                // user has reached the end of our related products list from the order guide so we need to ask if we should search the catalogue
+                sessionAttributes.orderGuideExhausted = true;
+                sessionAttributes.yesNoKey = "relatedCatalogue";
+                return handlerInput.responseBuilder
+                    .speak("I was not able to find any more items related to " + spokenProductName + " in your order guide. Would you like me to try searching the catalogue?")
+                    .reprompt("I was not able to find any more items related to " + spokenProductName + " in your order guide. Would you like me to try searching the catalogue?")
+                    .getResponse();
+            }
+
+
+
+
             if (sessionAttributes.productDenies === 1 && sessionAttributes.orderGuideExhausted !== true) {
                 // user has denied the first product so we are going to ask them if they want to hear more related items
                 const itemsLeft = sessionAttributes.resolvedProducts.length - sessionAttributes.productIndex;
@@ -207,15 +222,14 @@ const ProductConfirmation_MakeOrderIntentHandler = {
                         .reprompt("I was not able to find any more items related to " + spokenProductName + " in your order guide. Would you like me to try searching the catalogue?")
                         .getResponse();
                 }
-            }
 
+            }
             // read off the next closest related product to the user
             return handlerInput.responseBuilder
                 .speak("Okay, how about " + stringifyProduct(resolvedProducts[sessionAttributes.productIndex]) + "?")
                 .reprompt("Okay, how about " + stringifyProduct(resolvedProducts[sessionAttributes.productIndex]) + "?")
                 .addConfirmSlotDirective('spokenProductName')
                 .getResponse();
-
 
         }
 
@@ -1128,6 +1142,7 @@ const YesNoIntentHandler = {
                 sessionAttributes.productIndex = 0;
                 sessionAttributes.productDenies = 0;
                 sessionAttributes.resolvedProducts = await reinhart.getProductFromCatalogue(spokenProductName);
+
                 const resolvedProducts = sessionAttributes.resolvedProducts;
                 console.log("resolvedProducts: " + JSON.stringify(resolvedProducts));
 
@@ -1789,7 +1804,7 @@ const HelpIntentHandler = {
         let speakOutput = 'You can say, start order or add order to add to your cart, say submit order to schedule your delivery for your next delivery date, and you can ask to view cart to see whats in your cart and you can ask what items are in my next delivery to see what items have been added to your next delivery.';
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
 
-        switch (sessionAttributes) {
+        switch (sessionAttributes.intentState) {
             case 0:
                 speakOutput = 'In Reinharts alexa app you can quickly add, edit, view, and remove items from your shopping cart and submit an order for your next delivery date. To do these tasks simply say what you want to do, such as submit order or submit shopping cart and edit my shopping cart and alexa will walk you through the process.  Say stop to stop your current path and exit to quit the app.  Alexa is flexible in how you do these tasks, if you want to start an order either say start order and alexa will walk you through the process or say start order for beef tenderloin and add 5 cases and Alexa will walk you through the process.  This is similar for edit, remove, view etc. Saying help while in the process of one of these tasks will give you more detailed feedback. If you need further help please contact customer support. You cannot remove or edit submitted orders using the alexa app, use the website to do that.';
                 break;
@@ -1812,9 +1827,10 @@ const HelpIntentHandler = {
                 speakOutput = 'error in help';
         }
 
+        sessionAttributes.intentState = 0;
         return handlerInput.responseBuilder
             .speak(speakOutput)
-            .reprompt(speakOutput)
+            .reprompt("What would you like to do?")
             .getResponse();
     }
 };
