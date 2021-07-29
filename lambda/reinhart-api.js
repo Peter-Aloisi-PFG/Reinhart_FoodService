@@ -115,7 +115,7 @@ async function getProductByKeyword(spokenProductDescription, customerID) {
     if (searchResult === null) {
         return null;
     }
-    
+
     console.log("found products in catalouge");
     console.log(searchResult);
     return searchResult;
@@ -163,8 +163,12 @@ async function getProductFromOrderGuide(customerID, spokenProductName) {
     var searchResults = searchByDescription(spokenProductName, orderGuide.products);
     console.log(searchResults);
     if (searchResults[0].score < .1) {
-        console.log("did not find a relatable product (.25 or above) in catalogue");
+        console.log("did not find a relatable product (.1 or above) in catalogue");
         return null;
+    } else if (searchResults[1] < .1) {
+        return [searchResults[0]];
+    } else if (searchResults[1] < .1) {
+        return [searchResults[0], searchResults[1]];
     }
     console.log("found products in catalouge");
     let products = [];
