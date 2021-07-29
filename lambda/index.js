@@ -241,6 +241,7 @@ const ProductConfirmation_MakeOrderIntentHandler = {
             .speak("How many cases of " + stringifyProduct(productChosen) + " would you like to order?")
             .reprompt("How many cases of " + stringifyProduct(productChosen) + " would you like to order?")
             .addElicitSlotDirective('quantity',
+
                 {
                     name: 'MakeOrderIntent',
                     confirmationStatus: 'NONE',
@@ -1835,6 +1836,7 @@ const HelpIntentHandler = {
     }
 };
 
+
 const StopIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
@@ -1856,6 +1858,7 @@ const CancelIntentHandler = {
             && (Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.CancelIntent');
     },
     handle(handlerInput) {
+
         const speakOutput = 'What would you like to do? Say exit to close the app.';
 
         return handlerInput.responseBuilder
