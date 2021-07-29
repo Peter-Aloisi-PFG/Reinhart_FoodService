@@ -110,12 +110,19 @@ async function getProductByKeyword(spokenProductDescription, customerID) {
     var orderGuide = await Util.getJSON(customerOGFile);
     console.log("order guide is ");
     console.log(orderGuide);
-    var searchResult = searchByKeyword(spokenProductDescription, orderGuide);
-    console.log(searchResult);
+    let keywordProductNum = searchByKeyword(spokenProductDescription, orderGuide.keywords);
+    let searchResult = null;
+    if (keywordProductNum === null) {
+        return null;
+    } else {
+        searchResult = searchByProductNumber(orderGuide.products, keywordProductNum);
+    }
+    
     if (searchResult === null) {
         return null;
     }
-    console.log("found products in catalouge");
+    
+    console.log("found products in order guide");
     console.log(searchResult);
     return searchResult;
 }
@@ -168,7 +175,6 @@ async function getProductFromOrderGuide(customerID, spokenProductName) {
         return [searchResults[0]];
     } else if (searchResults[1] < .1) {
         return [searchResults[0], searchResults[1]];
-
     }
     console.log("found products in catalouge");
     let products = [];
@@ -194,7 +200,7 @@ async function getOrderItemFromOrder(orderNumber, spokenProductDescription) {
         if (orderData.orders[key].orderNumber === orderNumber) {
             console.log("found order ");
             if (orderData.orders[key].orderStatus === 0) {
-                var searchResult = searchByDescription(spokenProductDescription, orderData.orders[key].orderItem);
+                let searchResult = searchByDescription(spokenProductDescription, orderData.orders[key].orderItem);
                 console.log(searchResult);
                 console.log("search result was " + searchResult.score + " with answer " + searchResult.product)
                 if (searchResult.score < .1) {
@@ -570,25 +576,23 @@ function diceCoefficient(str1, str2) {
     return (2 * intersect(bigrams1, bigrams2).size) / (bigrams1.size + bigrams2.size);
 }
 
-
-
-function searchByKeyword(spokenProductName, orderGuide) {
+function searchByKeyword(spokenProductName, keywords) {
     let chosenProduct = {
         "score": -1,
         "productNumber": ""
     }
 
-    for (let i = 0; i < orderGuide.keywords.length; i++) {
-        let score = diceCoefficient(spokenProductName, orderGuide.keywords[i].key);
+    for (let i = 0; i < keywords.length; i++) {
+        let score = diceCoefficient(spokenProductName, keywords[i].key);
         if (score > chosenProduct.score) {
             chosenProduct.score = score;
-            chosenProduct.productNumber = orderGuide.keywords[i].ProductNumber;
+            chosenProduct.productNumber = keywords[i].ProductNumber;
         }
     }
 
-    if (chosenProduct.score > .6) {
+    if (chosenProduct.score > .7) {
         console.log("keyword match, searching by product number");
-        return searchByProductNumber(chosenProduct.productNumber, orderGuide.products);
+        return chosenProduct.productNumber;
     } else {
         return null;
     }
