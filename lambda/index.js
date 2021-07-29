@@ -268,9 +268,9 @@ const ProductQuantityGiven_MakeOrderIntentHandler = {
         const quantity = intent.slots.quantity.value;
         const spokenProductName = intent.slots.spokenProductName.value;
 
-        if (isNaN(quantity) || !Number.isInteger(parseInt(quantity)) || quantity < 0 || quantity > 100) {
+        if (isNaN(quantity) || !Number.isInteger(parseInt(quantity)) || quantity < 1 || quantity > 100) {
             return handlerInput.responseBuilder
-                .speak(quantity + " is not a valid quantity. Please provide a new quantity between 0 and 100 cases")
+                .speak(quantity + " is not a valid quantity. Please provide a new quantity between 1 and 100 cases")
                 .reprompt("How many cases of " + stringifyProduct(productToAdd) + " would you like to order?")
                 .addElicitSlotDirective("quantity",
                     {
@@ -1819,22 +1819,36 @@ const HelpIntentHandler = {
     }
 };
 
-const CancelAndStopIntentHandler = {
+const StopIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-            && (Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.CancelIntent'
-                || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
+            && (Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
     },
     handle(handlerInput) {
-        const speakOutput = 'What would you like to do?';
-        const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-        sessionAttributes.intentState = 0;
+        const speakOutput = 'Thank you for shopping with reinhart. Please come again!';
+
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .withShouldEndSession(true)
+            .getResponse();
+    }
+};
+
+const CancelIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && (Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.CancelIntent');
+    },
+    handle(handlerInput) {
+        const speakOutput = 'What would you like to do? Say exit to close the app.';
+
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
             .getResponse();
     }
 };
+
 /* *
  * FallbackIntent triggers when a customer says something that doesn’t map to any intents in your skill
  * It must also be defined in the language model (if the locale supports it)
@@ -1866,7 +1880,7 @@ const SessionEndedRequestHandler = {
     handle(handlerInput) {
         console.log(`~~~~ Session ended: ${JSON.stringify(handlerInput.requestEnvelope)}`);
         // Any cleanup logic goes here.
-        return handlerInput.responseBuilder.tell("Thank you for shopping with Reinhart. Please come again!"); // notice we send an empty response
+        return;
     }
 };
 /* *
@@ -1943,7 +1957,8 @@ exports.handler = Alexa.SkillBuilders.custom()
         ViewPendingOrderContentsIntentHandler,
 
         HelpIntentHandler,
-        CancelAndStopIntentHandler,
+        CancelIntentHandler,
+        StopIntentHandler,
         FallbackIntentHandler,
         SessionEndedRequestHandler,
         IntentReflectorHandler)
