@@ -302,6 +302,27 @@
           "name": "ViewPendingOrderContents",
           "slots": [],
           "samples": [
+            "whats in my cart",
+            "whats in my order",
+            "can I view my cart",
+            "Can i view my order",
+            "I want to view my order",
+            "I want to view my cart",
+            "view my order",
+            "view order",
+            "view cart",
+            "what is on the order",
+            "get the order",
+            "what do i have in the order",
+            "what\u0027s in the cart",
+            "can you get the order",
+            "what\u0027s on my order",
+            "will you show me the order",
+            "what\u0027s on my cart",
+            "whats in the order",
+            "can you tell us the order",
+            "can you show me my order",
+            "can you give us the cart",
             "what is the order",
             "what is my order",
             "what is going on in my order",
@@ -350,8 +371,7 @@
             "what\u0027s in my order",
             "what\u0027s in my shopping cart",
             "what is in my cart",
-            "view pending orders",
-            "What is my next order"
+            "view pending orders"
           ]
         },
         {
@@ -649,5 +669,5 @@
       }
     ]
   },
-  "version": "33"
+  "version": "35"
 }
