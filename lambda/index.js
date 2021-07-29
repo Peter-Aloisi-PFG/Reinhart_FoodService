@@ -1802,24 +1802,24 @@ const HelpIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
     },
     handle(handlerInput) {
-        let speakOutput = 'You can say, start order or add order to add to your cart, say submit order to schedule your delivery for your next delivery date, and you can ask to view cart to see whats in your cart and you can ask what items are in my next delivery to see what items have been added to your next delivery.';
+        let speakOutput;
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
 
         switch (sessionAttributes.intentState) {
             case 0:
-                speakOutput = 'In Reinharts alexa app you can quickly add, edit, view, and remove items from your shopping cart and submit an order for your next delivery date. To do these tasks simply say what you want to do, such as submit order or submit shopping cart and edit my shopping cart and alexa will walk you through the process.  Say stop to stop your current path and exit to quit the app.  Alexa is flexible in how you do these tasks, if you want to start an order either say start order and alexa will walk you through the process or say start order for beef tenderloin and add 5 cases and Alexa will walk you through the process.  This is similar for edit, remove, view etc. Saying help while in the process of one of these tasks will give you more detailed feedback. If you need further help please contact customer support. You cannot remove or edit submitted orders using the alexa app, use the website to do that.';
+                speakOutput = 'In Reinhart\'s Alexa app you can quickly add, edit, view, and remove items from your shopping cart, you can also submit an order for your next delivery date. To do these tasks simply say: add to my order, edit my order, view my order, remove a product in my order, or submit my order. Saying help while in the process of one of these tasks will give you more detailed feedback. If you need further help, please contact customer support. You cannot remove or edit submitted orders using the Alexa app, please use the website to do that.';
                 break;
             case 1:
-                speakOutput = 'Say the keyword or name of the product you want to order, for best results say full product name such as, beef tenderloin needle tenderized 16 oz.  Alexa first searches keywords, then your order guide, if you still dont see your product refine your search or search the reinhart catalogue.  after finding your product, alexa will prompt for a quantity greater than zero.  You can give product name and a quantity in one sentance and alexa will renember the quantity and check the product.  You can only add one product at a time, follow alexas prompts. ';
+                speakOutput = 'Say the keyword or name of the product you want to order, for best results use keywords, but if you don\'t have keywords say the product name for example, beef tenderloin tenderized 16 oz. If Alexa donesn\'t find your product please refine your search with more detail, or search the reinhart catalogue. after finding your product, Alexa will prompt you for a quantity. You can say the product name and a quantity in one sentence as well. You can only add one product at a time, please follow Alexa\'s prompts. ';
                 break;
             case 2:
-                speakOutput = 'To submit this order say submit order or follow along with alexas responses';
+                speakOutput = 'To submit this order say submit order then follow along with Alexa\'s responses';
                 break;
             case 3:
-                speakOutput = 'Say the name of the product you want to edit, alexa will search your shopping cart for that item and ask you if thats the right item.  Then Alexa will ask for a new quantity and say that quantity to change it or say zero to remove it. You cannot remove or edit submitted orders using the alexa app, use the website to do that.';
+                speakOutput = 'Say the product name that you want to edit, Alexa will search your shopping cart for that item and ask you if that\'s the right item. Then Alexa will ask for a new quantity, say \'zero\' to remove the product from your cart. You cannot remove or edit submitted orders using the Alexa app, please use the website to do that.';
                 break;
             case 4:
-                speakOutput = 'Say the name of the product you want to remove, alexa will search your shopping cart and confirm the item.  Then alexa will remove it from your shopping cart.  You cannot remove or edit submitted orders using the alexa app, use the website to do that.';
+                speakOutput = 'Say the keyword or name of the product you want to remove, confirm or deny the item Alexa tells you. Then Alexa will remove it from your shopping cart. You cannot remove or edit submitted orders using the Alexa app, please use the website to do that.';
                 break;
             case 5:
                 speakOutput = 'You shouldnt see this, bad customer!';
