@@ -1,3 +1,4 @@
+
 /* *
  * This file contains the handlers for all skill Intents
  *
@@ -70,6 +71,7 @@ const ProductGiven_MakeOrderIntentHandler = {
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
         sessionAttributes.intentState = 1;
         sessionAttributes.spokenProductName = spokenProductName;
+        sessionAttributes.keywordMatch = false;
 
         let resolvedProducts = [];
         let keywordProduct = await reinhart.getProductByKeyword(spokenProductName, customerID);
@@ -78,6 +80,7 @@ const ProductGiven_MakeOrderIntentHandler = {
             resolvedProducts = await reinhart.getProductFromOrderGuide(customerID, spokenProductName);
         } else {
             resolvedProducts[0] = keywordProduct;
+            sessionAttributes.keywordMatch = true;
         }
 
         console.log("resolved products: " + JSON.stringify(resolvedProducts));
@@ -152,8 +155,9 @@ const ProductConfirmation_MakeOrderIntentHandler = {
             sessionAttributes.productIndex++;
 
             // order guide has not yet been exhausted
-            if (resolvedProducts.length === 1 && sessionAttributes.orderGuideExhausted !== true) {
+            if (sessionAttributes.keywordMatch === true && sessionAttributes.orderGuideExhausted !== true) {
                 // user denied their keyword search result so we need to grab more search results from the order guide
+                sessionAttributes.keywordMatch = false;
                 sessionAttributes.productIndex = 0;
                 sessionAttributes.resolvedProducts = await reinhart.getProductFromOrderGuide(customerID, spokenProductName);
                 resolvedProducts = sessionAttributes.resolvedProducts;
@@ -169,18 +173,24 @@ const ProductConfirmation_MakeOrderIntentHandler = {
                     .getResponse();
             }
 
-
-
-
             if (sessionAttributes.productDenies === 1 && sessionAttributes.orderGuideExhausted !== true) {
                 // user has denied the first product so we are going to ask them if they want to hear more related items
                 const itemsLeft = sessionAttributes.resolvedProducts.length - sessionAttributes.productIndex;
                 sessionAttributes.yesNoKey = "relatedOrderGuide";
                 let speakOutput = "";
                 if (sessionAttributes.orderGuideExhausted === true) {
-                    speakOutput += "I was able to find " + itemsLeft + " more items related to " + spokenProductName + " in the catalogue. Would you like me to go through them?";
+                    if (itemsLeft === 1) {
+                        speakOutput += "I was able to find " + itemsLeft + " other item related to " + spokenProductName + " in the catalogue. Would you like to hear it?";
+                    } else {
+                        speakOutput += "I was able to find " + itemsLeft + " other items related to " + spokenProductName + " in the catalogue. Would you like me to go through them?";
+                    }
+                    
                 } else {
-                    speakOutput += "I was able to find " + itemsLeft + " more items related to " + spokenProductName + " in your order guide. Would you like me to go through them?";
+                    if (itemsLeft === 1) {
+                        speakOutput += "I was able to find " + itemsLeft + " other item related to " + spokenProductName + " in your order guide. Would you like to hear it?";
+                    } else {
+                        speakOutput += "I was able to find " + itemsLeft + " other items related to " + spokenProductName + " in your order guide. Would you like me to go through them?";
+                    }
                 }
 
                 return handlerInput.responseBuilder
@@ -514,7 +524,7 @@ const ProductGiven_RemoveItemIntentHandler = {
                 .getResponse();
         }
 
-        let productInCart = await reinhart.getOrderItemFromOrder(pendingOrder.orderNumber, spokenProductName);
+        let productInCart = await reinhart.getOrderItemFromOrder(pendingOrder.orderNumber, spokenProductName, customerID);
         console.log("product in cart: " + productInCart);
 
         if (productInCart === null) {
@@ -892,12 +902,9 @@ const YesNoIntentHandler = {
             }
             else if (answer === "no") {
                 return handlerInput.responseBuilder
-                    .addDelegateDirective(
-                        {
-                            name: 'SubmitOrderIntent',
-                            confirmationStatus: 'CONFIRMED',
-                            slots: {}
-                        })
+                    .speak("Are you sure you would like to submit?")
+                    .reprompt("Are you sure you would like to submit?")
+                    .addConfirmIntentDirective("SubmitOrderIntent")
                     .getResponse();
             }
             else {
@@ -1328,7 +1335,7 @@ const ProductGiven_EditOrderIntentHandler = {
                 .getResponse();
         }
 
-        let productInCart = await reinhart.getOrderItemFromOrder(pendingOrder.orderNumber, spokenProductName);
+        let productInCart = await reinhart.getOrderItemFromOrder(pendingOrder.orderNumber, spokenProductName, customerID);
 
         if (productInCart === null) {
 
@@ -1688,17 +1695,20 @@ const stringifyProduct = (product) => {
     let parsedDescription = parseDescription(descriptionTranslated);
 
     let toReturn = "";
-    let parsedPackSize = parsePackSize(packSize);
+    
+    // let parsedPackSize = parsePackSize(packSize);
 
-    if (parsedPackSize.length === 1) {
-        toReturn += parsedPackSize[0];
-    } else if (parsedPackSize.length === 2) {
-        toReturn += parsedPackSize[0] + " " + mapUnit(parsedPackSize[1]) + " ";
-    } else {
-        toReturn += parsedPackSize[0] + " pack " + parsedPackSize[1] + " " + mapUnit(parsedPackSize[2]) + " ";
-    }
+    // if (parsedPackSize.length === 1) {
+    //     toReturn += parsedPackSize[0];
+    // } else if (parsedPackSize.length === 2) {
+    //     toReturn += parsedPackSize[0] + " " + mapUnit(parsedPackSize[1]) + " ";
+    // } else {
+    //     toReturn += parsedPackSize[0] + " pack " + parsedPackSize[1] + " " + mapUnit(parsedPackSize[2]) + " ";
+    // }
 
-    toReturn += parsedDescription + " from " + brandTranslated;
+    // toReturn += parsedDescription + " from " + brandTranslated;
+    
+    toReturn += parsedDescription;
     toReturn = toReturn.toLowerCase();
     console.log("stringified product: " + toReturn);
     return toReturn;
@@ -1734,6 +1744,12 @@ const mapUnit = (unit) => {
 
 const parseDescription = (descriptionTranslated) => {
     let toReturn = "";
+    let splitDescription = descriptionTranslated.split(" ");
+    descriptionTranslated = "";
+    for (let j = 0; j < splitDescription.length && j < 4; j++) {
+        descriptionTranslated += splitDescription[j] + " ";
+    }
+    
     for (let i = 0; i < descriptionTranslated.length; i++) {
         switch (descriptionTranslated.charAt(i)) {
             case "\"":

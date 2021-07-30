@@ -383,6 +383,10 @@
             }
           ],
           "samples": [
+            "I want to remove a product",
+            "I want to remove a product from my order",
+            "I want to remove a product from my cart",
+            "remove a product from my cart",
             "i dont want {spokenProductName} anymore",
             "get the {spokenProductName} from my order",
             "take the {spokenProductName} from my order",
@@ -669,5 +673,5 @@
       }
     ]
   },
-  "version": "35"
+  "version": "37"
 }
