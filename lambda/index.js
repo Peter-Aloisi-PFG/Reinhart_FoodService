@@ -1,4 +1,3 @@
-
 /* *
  * This file contains the handlers for all skill Intents
  *
@@ -15,10 +14,11 @@ const LaunchRequestHandler = {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
     handle(handlerInput) {
-        const speakOutput = 'Welcome to Reinhart Foodservice. What would you like to do?';
-
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+        const speakOutput = 'Welcome to Reinhart Foodservice. What would you like to do?';
         sessionAttributes.intentState = 0;
+        sessionAttributes.customerID = 14445; // hardcoded customerID
+                
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
@@ -64,7 +64,6 @@ const ProductGiven_MakeOrderIntentHandler = {
     },
     async handle(handlerInput) {
         console.log("entered product given handler");
-        const customerID = 14445;
         const slots = handlerInput.requestEnvelope.request.intent.slots;
         const spokenProductName = slots.spokenProductName.value;
         const quantity = slots.quantity.value;
@@ -73,39 +72,42 @@ const ProductGiven_MakeOrderIntentHandler = {
         sessionAttributes.spokenProductName = spokenProductName;
         sessionAttributes.keywordMatch = false;
 
-        let resolvedProducts = [];
-        let keywordProduct = await reinhart.getProductByKeyword(spokenProductName, customerID);
-        if (keywordProduct === null) {
-            // did not find a keyword match
-            resolvedProducts = await reinhart.getProductFromOrderGuide(customerID, spokenProductName);
-        } else {
-            resolvedProducts[0] = keywordProduct;
+        const keywordProduct = await reinhart.getProductByKeyword(spokenProductName, sessionAttributes.customerID);
+        if (keywordProduct !== null) {
+            // found a keyword so we're going to grab that product and immediately move on w/o confirmation
+            console.log("keyword result found");
+            sessionAttributes.productToAdd = keywordProduct;
             sessionAttributes.keywordMatch = true;
-        }
-
-        console.log("resolved products: " + JSON.stringify(resolvedProducts));
-
-        if (resolvedProducts === null) {
-
             return handlerInput.responseBuilder
-                .addElicitSlotDirective('spokenProductName',
+              .addDelegateDirective(
                     {
                         name: 'MakeOrderIntent',
                         confirmationStatus: 'NONE',
                         slots: {
                             spokenProductName: {
                                 name: "spokenProductName",
-                                value: undefined,
-                                confirmationStatus: "NONE"
+                                value: spokenProductName,
+                                confirmationStatus: "CONFIRMED"
                             },
                             quantity: {
                                 name: "quantity",
                                 value: quantity
                             }
                         }
-                    })
-                .speak("I'm sorry, I was not able to find any product matching " + spokenProductName + ". Please state a new product or try being more specific.")
-                .reprompt("Try to be as specific as possible. What would you like to order?")
+                    }
+                )
+                .getResponse();
+        }
+
+        // did not find a keyword match
+        const resolvedProducts = await reinhart.getProductFromOrderGuide(spokenProductName, sessionAttributes.customerID);
+        console.log("resolved products: " + JSON.stringify(resolvedProducts));
+
+        if (resolvedProducts === null) {
+            sessionAttributes.yesNoKey = "relatedCatalogue";
+            return handlerInput.responseBuilder
+                .speak("I'm sorry, I was not able to find any product matching " + spokenProductName + " in your order guide. Would you like to me to search the catalogue?")
+                .reprompt("I'm sorry, I was not able to find any product matching " + spokenProductName + " in your order guide. Would you like to me to search the catalogue?")
                 .getResponse();
         }
 
@@ -136,7 +138,6 @@ const ProductConfirmation_MakeOrderIntentHandler = {
     },
     async handle(handlerInput) {
         console.log("entered product confirmation handler");
-        const customerID = 14445;
         const intent = handlerInput.requestEnvelope.request.intent;
         const spokenProductName = intent.slots.spokenProductName.value;
         const quantity = intent.slots.quantity.value;
@@ -154,24 +155,15 @@ const ProductConfirmation_MakeOrderIntentHandler = {
             sessionAttributes.productDenies++;
             sessionAttributes.productIndex++;
 
-            // order guide has not yet been exhausted
-            if (sessionAttributes.keywordMatch === true && sessionAttributes.orderGuideExhausted !== true) {
-                // user denied their keyword search result so we need to grab more search results from the order guide
-                sessionAttributes.keywordMatch = false;
-                sessionAttributes.productIndex = 0;
-                sessionAttributes.resolvedProducts = await reinhart.getProductFromOrderGuide(customerID, spokenProductName);
-                resolvedProducts = sessionAttributes.resolvedProducts;
-            }
-
-            if (resolvedProducts === null) {
-                // user has reached the end of our related products list from the order guide so we need to ask if we should search the catalogue
-                sessionAttributes.orderGuideExhausted = true;
-                sessionAttributes.yesNoKey = "relatedCatalogue";
-                return handlerInput.responseBuilder
-                    .speak("I was not able to find any more items related to " + spokenProductName + " in your order guide. Would you like me to try searching the catalogue?")
-                    .reprompt("I was not able to find any more items related to " + spokenProductName + " in your order guide. Would you like me to try searching the catalogue?")
-                    .getResponse();
-            }
+            // if (resolvedProducts === null) {
+            //     // user has reached the end of our related products list from the order guide so we need to ask if we should search the catalogue
+            //     sessionAttributes.orderGuideExhausted = true;
+            //     sessionAttributes.yesNoKey = "relatedCatalogue";
+            //     return handlerInput.responseBuilder
+            //         .speak("I was not able to find any more items related to " + spokenProductName + " in your order guide. Would you like me to try searching the catalogue?")
+            //         .reprompt("I was not able to find any more items related to " + spokenProductName + " in your order guide. Would you like me to try searching the catalogue?")
+            //         .getResponse();
+            // }
 
             if (sessionAttributes.productDenies === 1 && sessionAttributes.orderGuideExhausted !== true) {
                 // user has denied the first product so we are going to ask them if they want to hear more related items
@@ -243,13 +235,11 @@ const ProductConfirmation_MakeOrderIntentHandler = {
 
         }
 
-        const productChosen = resolvedProducts[sessionAttributes.productIndex];
-        sessionAttributes.productIndex = 0;
-        sessionAttributes.productDenies = 0;
+        sessionAttributes.productToAdd = resolvedProducts[sessionAttributes.productIndex];
         // product confirmation was confirmed
         return handlerInput.responseBuilder
-            .speak("How many cases of " + stringifyProduct(productChosen) + " would you like to order?")
-            .reprompt("How many cases of " + stringifyProduct(productChosen) + " would you like to order?")
+            .speak("How many cases would you like to order?")
+            .reprompt("How many cases would you like to order?")
             .addElicitSlotDirective('quantity',
 
                 {
@@ -285,13 +275,13 @@ const ProductQuantityGiven_MakeOrderIntentHandler = {
             && handlerInput.requestEnvelope.request.intent.slots.spokenProductName.confirmationStatus === "CONFIRMED";
     },
     async handle(handlerInput) {
-        const customerID = 14445;
         const intent = handlerInput.requestEnvelope.request.intent;
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-        sessionAttributes.intentState = 1;
-        const productToAdd = sessionAttributes.resolvedProducts[sessionAttributes.productIndex];
+        console.log(sessionAttributes.productIndex);
+        const productToAdd = sessionAttributes.productToAdd;
         const quantity = intent.slots.quantity.value;
         const spokenProductName = intent.slots.spokenProductName.value;
+        sessionAttributes.intentState = 1;
 
         if (isNaN(quantity) || !Number.isInteger(parseInt(quantity)) || quantity < 1 || quantity > 100) {
             return handlerInput.responseBuilder
@@ -317,11 +307,11 @@ const ProductQuantityGiven_MakeOrderIntentHandler = {
         }
 
         // check if there is a pending order
-        let orderInfo = await reinhart.getPendingOrderInfo(customerID); // hard coded customerID
+        let orderInfo = await reinhart.getPendingOrderInfo(sessionAttributes.customerID); // hard coded customerID
 
         if (orderInfo === null) {
             // there is no pending order so we are going to start one
-            orderInfo = await reinhart.startOrder(customerID); // hard coded customerID
+            orderInfo = await reinhart.startOrder(sessionAttributes.customerID); // hard coded customerID
             if (orderInfo === null) {
                 // start order function ran into an error
                 return handlerInput.responseBuilder
@@ -350,7 +340,7 @@ const ProductQuantityGiven_MakeOrderIntentHandler = {
 
         sessionAttributes.yesNoKey = "orderMore";
         return handlerInput.responseBuilder
-            .speak("Okay, I have added " + intent.slots.quantity.value + " cases of " + stringifyProduct(productToAdd) + " to your order. Would you like to order anything else?")
+            .speak("Okay, I have added " + quantity + " cases of " + stringifyProduct(productToAdd) + " to your order. Would you like to order anything else?")
             .reprompt("Would you like to order anything else?")
             .getResponse();
     }
@@ -370,8 +360,10 @@ const Start_SubmitOrderIntentHandler = {
             && handlerInput.requestEnvelope.request.intent.confirmationStatus === "NONE";
     },
     async handle(handlerInput) {
-        const customerID = 14445;
-        const pendingOrderInfo = await reinhart.getPendingOrderInfo(customerID); // hardcoded customerID
+        const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+        const pendingOrderInfo = await reinhart.getPendingOrderInfo(sessionAttributes.customerID); // hardcoded customerID
+        sessionAttributes.intentState = 2;
+        
         if (pendingOrderInfo === null) {
             // there is no pending order and therefore no items in the customer's cart
             return handlerInput.responseBuilder
@@ -380,13 +372,11 @@ const Start_SubmitOrderIntentHandler = {
                 .getResponse();
         }
 
-        const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-        sessionAttributes.intentState = 2;
-        const deliveryDate = parseDate(await reinhart.getNextDeliveryDate(customerID));
+        const deliveryDate = parseDate(await reinhart.getNextDeliveryDate(sessionAttributes.customerID));
         const orderContents = await reinhart.getOrderContents(pendingOrderInfo.orderNumber);
-        let speechOutput = "";
         const numberOfItems = orderContents.length;
-
+        
+        let speechOutput = "";
         if (numberOfItems === 1) {
             speechOutput += "You have " + numberOfItems + " item in your cart that can be delivered on " + deliveryDate +
                 ". Would you like to hear the contents of this order before submitting?";
@@ -414,16 +404,14 @@ const Complete_SubmitOrderIntentHandler = {
             && handlerInput.requestEnvelope.request.intent.confirmationStatus !== "NONE";
     },
     async handle(handlerInput) {
-        const customerID = 14445;
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-        sessionAttributes.intentState = 0;
         const intent = handlerInput.requestEnvelope.request.intent;
-        const pendingOrderInfo = await reinhart.getPendingOrderInfo(customerID); // hardcoded customerID
+        const pendingOrderInfo = await reinhart.getPendingOrderInfo(sessionAttributes.customerID); // hardcoded customerID
+        sessionAttributes.intentState = 0;
+        
         let speechOutput = "";
-        console.log("order info to submit: " + JSON.stringify(pendingOrderInfo));
-
         if (intent.confirmationStatus === "CONFIRMED") {
-            const submitOrderResult = await reinhart.submitOrder(pendingOrderInfo.orderNumber, customerID); // hardcoded customerID
+            const submitOrderResult = await reinhart.submitOrder(pendingOrderInfo.orderNumber, sessionAttributes.customerID); // hardcoded customerID
             if (submitOrderResult === null) {
                 speechOutput += "I'm sorry, something went wrong when I tried submitting your order. " +
                     "Please try going online to complete your order, or contact customer service for assistance.";
@@ -435,7 +423,7 @@ const Complete_SubmitOrderIntentHandler = {
             }
 
         }
-        sessionAttributes.intentState = 0;
+
         return handlerInput.responseBuilder
             .speak(speechOutput)
             .reprompt("What would you like to do?")
@@ -460,10 +448,10 @@ const ProductNotGiven_RemoveItemIntentHandler = {
             && !handlerInput.requestEnvelope.request.intent.slots.spokenProductName.value
     },
     async handle(handlerInput) {
-        const customerID = 14445;
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+        const pendingOrder = await reinhart.getPendingOrderInfo(sessionAttributes.customerID);
         sessionAttributes.intentState = 4;
-        var pendingOrder = await reinhart.getPendingOrderInfo(customerID);
+        
         if (pendingOrder === null) {
             sessionAttributes.intentState = 0;
             return handlerInput.responseBuilder
@@ -500,13 +488,12 @@ const ProductGiven_RemoveItemIntentHandler = {
             && handlerInput.requestEnvelope.request.intent.slots.spokenProductName.confirmationStatus === "NONE"
     },
     async handle(handlerInput) {
-        const customerID = 14445;
         const slots = handlerInput.requestEnvelope.request.intent.slots;
         const spokenProductName = slots.spokenProductName.value;
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+        const pendingOrder = await reinhart.getPendingOrderInfo(sessionAttributes.customerID);
         sessionAttributes.intentState = 4;
 
-        var pendingOrder = await reinhart.getPendingOrderInfo(customerID);
         if (pendingOrder === null) {
             sessionAttributes.intentState = 0;
             return handlerInput.responseBuilder
@@ -524,8 +511,7 @@ const ProductGiven_RemoveItemIntentHandler = {
                 .getResponse();
         }
 
-        let productInCart = await reinhart.getOrderItemFromOrder(pendingOrder.orderNumber, spokenProductName, customerID);
-        console.log("product in cart: " + productInCart);
+        const productInCart = await reinhart.getOrderItemFromOrder(pendingOrder.orderNumber, spokenProductName, sessionAttributes.customerID);
 
         if (productInCart === null) {
 
@@ -581,9 +567,9 @@ const ProductConfirmation_RemoveItemIntentHandler = {
         const intent = handlerInput.requestEnvelope.request.intent;
         const spokenProductName = intent.slots.spokenProductName.value;
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-        sessionAttributes.intentState = 4;
         const productInCart = sessionAttributes.productInCart;
         const orderNumber = sessionAttributes.orderNumber;
+        sessionAttributes.intentState = 4;
 
         if (intent.slots.spokenProductName.confirmationStatus === "DENIED") {
             return handlerInput.responseBuilder
@@ -635,10 +621,10 @@ const Start_ClearOrderContentsIntentHandler = {
             && handlerInput.requestEnvelope.request.intent.confirmationStatus === "NONE";
     },
     async handle(handlerInput) {
-        const customerID = 14445;
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+        const pendingOrder = await reinhart.getPendingOrderInfo(sessionAttributes.customerID);
         sessionAttributes.intentState = 4;
-        var pendingOrder = await reinhart.getPendingOrderInfo(customerID);
+        
         if (pendingOrder === null) {
             sessionAttributes.intentState = 0;
             return handlerInput.responseBuilder
@@ -655,7 +641,6 @@ const Start_ClearOrderContentsIntentHandler = {
                 .reprompt("What else can I help you with today?")
                 .getResponse();
         }
-
 
         sessionAttributes.orderNumber = pendingOrder.orderNumber;
         const numberOfItems = allItems.length;
@@ -687,15 +672,13 @@ const Complete_ClearOrderContentsIntentHandler = {
     async handle(handlerInput) {
         const intent = handlerInput.requestEnvelope.request.intent;
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-        sessionAttributes.intentState = 0;
         const orderNumber = sessionAttributes.orderNumber;
+        sessionAttributes.intentState = 0;
 
         let speechOutput = "";
         if (intent.confirmationStatus === "DENIED") {
             speechOutput += "Okay, I did not clear your cart. What else can I help you with today?"
         } else {
-            console.log("entering clear order");
-            console.log(sessionAttributes.orderNumber);
             const clearOrderResult = await reinhart.clearOrderContents(orderNumber);
             if (clearOrderResult) {
                 speechOutput += "Okay, I have removed all items from your cart. What else can I help you with today?"
@@ -703,7 +686,7 @@ const Complete_ClearOrderContentsIntentHandler = {
                 speechOutput += "I'm sorry, something went wrong when I tried to clear your cart. Please try going online to complete this process."
             }
         }
-        sessionAttributes.intentState = 0;
+
         return handlerInput.responseBuilder
             .speak(speechOutput)
             .reprompt("What else can I help you with today?")
@@ -1269,11 +1252,10 @@ const ProductNotGiven_EditOrderIntentHandler = {
             && !handlerInput.requestEnvelope.request.intent.slots.spokenProductName.value
     },
     async handle(handlerInput) {
-        const customerID = 14445;
-
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+        const pendingOrder = await reinhart.getPendingOrderInfo(sessionAttributes.customerID);
         sessionAttributes.intentState = 3;
-        var pendingOrder = await reinhart.getPendingOrderInfo(customerID);
+        
         if (pendingOrder === null) {
             sessionAttributes.intentState = 0;
             return handlerInput.responseBuilder
@@ -1310,14 +1292,13 @@ const ProductGiven_EditOrderIntentHandler = {
             && handlerInput.requestEnvelope.request.intent.slots.spokenProductName.confirmationStatus === "NONE"
     },
     async handle(handlerInput) {
-        const customerID = 14445;
         const slots = handlerInput.requestEnvelope.request.intent.slots;
         const spokenProductName = slots.spokenProductName.value;
         const newQuantity = slots.newQuantity.value;
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+        const pendingOrder = await reinhart.getPendingOrderInfo(sessionAttributes.customerID);
         sessionAttributes.intentState = 3;
 
-        var pendingOrder = await reinhart.getPendingOrderInfo(customerID);
         if (pendingOrder === null) {
             sessionAttributes.intentState = 0;
             return handlerInput.responseBuilder
@@ -1335,10 +1316,9 @@ const ProductGiven_EditOrderIntentHandler = {
                 .getResponse();
         }
 
-        let productInCart = await reinhart.getOrderItemFromOrder(pendingOrder.orderNumber, spokenProductName, customerID);
+        const productInCart = await reinhart.getOrderItemFromOrder(pendingOrder.orderNumber, spokenProductName, sessionAttributes.customerID);
 
         if (productInCart === null) {
-
             return handlerInput.responseBuilder
                 .addElicitSlotDirective('spokenProductName',
                     {
@@ -1397,8 +1377,8 @@ const ProductConfirmation_EditOrderIntentHandler = {
         const spokenProductName = intent.slots.spokenProductName.value;
         const newQuantity = intent.slots.newQuantity.value;
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-        sessionAttributes.intentState = 3;
         const productInCart = sessionAttributes.productInCart;
+        sessionAttributes.intentState = 3;
 
         if (intent.slots.spokenProductName.confirmationStatus === "DENIED") {
             return handlerInput.responseBuilder
@@ -1465,10 +1445,10 @@ const ProductQuantityGiven_EditOrderIntentHandler = {
     async handle(handlerInput) {
         const intent = handlerInput.requestEnvelope.request.intent;
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-        sessionAttributes.intentState = 3;
         const productInCart = sessionAttributes.productInCart;
         const orderNumber = sessionAttributes.orderNumber;
         const newQuantity = intent.slots.newQuantity.value;
+        sessionAttributes.intentState = 3;
 
         if (isNaN(newQuantity) || !Number.isInteger(parseInt(newQuantity)) || newQuantity < 0 || newQuantity > 100) {
             return handlerInput.responseBuilder
@@ -1537,9 +1517,8 @@ const ViewNextDeliveryContentsIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'ViewNextDeliveryContents';
     },
     async handle(handlerInput) {
-        const customerID = 14445;
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-        let allItems = await reinhart.getNextDeliveryContents(customerID);
+        let allItems = await reinhart.getNextDeliveryContents(sessionAttributes.customerID);
 
         let speakOutput;
         if (allItems !== null) {
@@ -1571,14 +1550,10 @@ const ViewPendingOrderContentsIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'ViewPendingOrderContents';
     },
     async handle(handlerInput) {
-        const customerID = 14445;
-        let pendingOrder = await reinhart.getPendingOrderInfo(customerID);
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-
-        //optional conditions to ask if user wants to hear the whole list  
+        let pendingOrder = await reinhart.getPendingOrderInfo(sessionAttributes.customerID);
 
         let speakOutput;
-
         if (pendingOrder === null) {
             sessionAttributes.intentState = 0;
             speakOutput = 'Your shopping cart is currently empty, start an order to begin adding to it. What else can I do for you today?';

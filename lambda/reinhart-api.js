@@ -164,13 +164,13 @@ async function getProductFromCatalogue(spokenProductName) {
 /    parameters: customerID, spokenProductName 
 /    return: resolvedProductName, resolvedProductID
 */
-async function getProductFromOrderGuide(customerID, spokenProductName) {
+async function getProductFromOrderGuide(spokenProductDescription, customerID) {
     let customerOGFile = "orderGuideCustomer" + customerID + ".json";
     console.log(customerOGFile + " is filename to search for ");
     var orderGuide = await Util.getJSON(customerOGFile);
     console.log("order guide is ");
     console.log(orderGuide);
-    var searchResults = searchByDescription(spokenProductName, orderGuide.products);
+    var searchResults = searchByDescription(spokenProductDescription, orderGuide.products);
     console.log(searchResults);
     if (searchResults[0].score < .14) {
         console.log("did not find a relatable product (.1 or above) in catalogue");
