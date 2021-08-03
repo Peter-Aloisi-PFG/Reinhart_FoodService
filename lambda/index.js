@@ -25,27 +25,25 @@ const LaunchRequestHandler = {
     }
 };
 
-//=====================================================interceptors===============================================
+//=====================================================interceptors================================================
 const DialogManagementStateInterceptor = {
     process(handlerInput) {
-    console.log("interceptor fired for");
     
         const currentIntent = handlerInput.requestEnvelope.request.intent;
+        console.log("interceptor fired on ");
         console.log(currentIntent);
-   
         if (handlerInput.requestEnvelope.request.type === "IntentRequest"
             && handlerInput.requestEnvelope.request.dialogState !== "COMPLETED") {
-                
-                const attributesManager = handlerInput.attributesManager;
-        const sessionAttributes = attributesManager.getSessionAttributes();
-        
+            
+            const attributesManager = handlerInput.attributesManager;
+            const sessionAttributes = attributesManager.getSessionAttributes();
             
             // If there are no session attributes we've never entered dialog management
             // for this intent before.
             
             if (sessionAttributes[currentIntent.name]) {
                 let savedSlots = sessionAttributes[currentIntent.name].slots;
-            console.log("attributes");
+            
                 for (let key in savedSlots) {
                     // we let the current intent's values override the session attributes
                     // that way the user can override previously given values.
@@ -61,6 +59,31 @@ const DialogManagementStateInterceptor = {
     }
 };
 
+
+
+
+const ItemDescriptionIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'ItemDescriptionIntent';
+    },
+    handle(handlerInput) {
+        let speakOutput;
+        const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+        if(handlerInput.requestEnvelope.request.intent.slots.item.value){
+            speakOutput = 'the story is about ' + handlerInput.requestEnvelope.request.intent.slots.item.value;
+        }else{
+            speakOutput = 'let me tell you a story kid';   
+        }
+    
+        console.log("finished item description handler");
+       // console.log(sessionAttributes[sessionAttributes.lastIntent.name]);
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt("and next?")
+            .getResponse();
+    }
+};
 
 
 
@@ -317,7 +340,8 @@ const ProductQuantityGiven_MakeOrderIntentHandler = {
         const intent = handlerInput.requestEnvelope.request.intent;
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
         console.log(sessionAttributes.productIndex);
-        const productToAdd = sessionAttributes.productToAdd;
+        
+        const productToAdd = sessionAttributes.resolvedProducts[sessionAttributes.productIndex];
         const quantity = intent.slots.quantity.value;
         const spokenProductName = intent.slots.spokenProductName.value;
         sessionAttributes.intentState = 1;
@@ -360,7 +384,7 @@ const ProductQuantityGiven_MakeOrderIntentHandler = {
                     .getResponse();
             }
         }
-
+  
         const addToOrderResult = await reinhart.addToOrder(orderInfo.orderNumber, productToAdd, quantity);
         if (!addToOrderResult) {
             // add to order function ran into an error
@@ -376,7 +400,7 @@ const ProductQuantityGiven_MakeOrderIntentHandler = {
         sessionAttributes.productIndex = undefined;
         sessionAttributes.productDenies = undefined;
         sessionAttributes.productConfirmation = undefined;
-
+        sessionAttributes["MakeOrderIntent"] = undefined;
         sessionAttributes.yesNoKey = "orderMore";
         return handlerInput.responseBuilder
             .speak("Okay, I have added " + quantity + " cases of " + stringifyProduct(productToAdd) + " to your order. Would you like to order anything else?")
@@ -1271,7 +1295,7 @@ const YesNoIntentHandler = {
             sessionAttributes.intentState = 0;
             sessionAttributes.yesNoKey = undefined;
             return handlerInput.responseBuilder
-                .speak("I'm sorry, something went wrong.")
+                .speak("I'm sorry, something went wrong in yes and no.")
                 .getResponse();
         }
     }
@@ -1632,27 +1656,6 @@ const ViewPendingOrderContentsIntentHandler = {
 };
 
 
-const ItemDescriptionIntentHandler = {
-    canHandle(handlerInput) {
-        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'ItemDescriptionIntent';
-    },
-    handle(handlerInput) {
-        let speakOutput;
-        const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-        if(handlerInput.requestEnvelope.request.intent.slots.item.value){
-            speakOutput = 'the story is about ' + handlerInput.requestEnvelope.request.intent.slots.item.value;
-        }else{
-            speakOutput = 'let me tell you a story kid';   
-        }
-    
-        console.log("finished item description handler");
-        return handlerInput.responseBuilder
-            .addDelegateDirective(sessionAttributes.currentIntent)
-            .getResponse();
-    }
-};
-
 
 
 
@@ -1996,7 +1999,10 @@ const ErrorHandler = {
     handle(handlerInput, error) {
         const speakOutput = 'Sorry, I had trouble doing what you asked. Please try again.';
         console.log(`~~~~ Error handled: ${JSON.stringify(error)}` + speakOutput);
-
+        console.log("error:");
+        console.log(error);
+        console.log("input");
+        console.log(handlerInput);
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
