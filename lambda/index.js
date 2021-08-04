@@ -87,7 +87,7 @@ const ItemDescriptionIntentHandler = {
 
 
 
->>>>>>> peter
+
 
 //---===============================================================---------Make Order---------==================================
 //=======================================================================================================================================
@@ -175,7 +175,6 @@ const ProductGiven_MakeOrderIntentHandler = {
         if (keywordProduct !== null) {
             // found a keyword so we're going to grab that product and immediately move on w/o confirmation
             console.log("keyword result found");
-
             const productToAdd = keywordProduct;
             
             slots.spokenProductName.confirmationStatus = "CONFIRMED";
@@ -421,11 +420,9 @@ const ProductQuantityGiven_MakeOrderIntentHandler = {
     async handle(handlerInput) {
         console.log("entered product quantity given handler");
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-
         console.log("i think this is where attributes will all be gone");
         console.log(sessionAttributes);
         const intent = handlerInput.requestEnvelope.request.intent;
-
         const productToAdd = sessionAttributes.resolvedProducts[sessionAttributes.productIndex];
         const quantity = intent.slots.quantity.value;
         const spokenProductName = intent.slots.spokenProductName.value;
@@ -486,6 +483,7 @@ const ProductQuantityGiven_MakeOrderIntentHandler = {
         sessionAttributes.productIndex = undefined;
         sessionAttributes.productDenies = undefined;
         sessionAttributes.productConfirmation = undefined;
+        sessionAttributes.productDescription = undefined;
 
         sessionAttributes.productDescription = undefined;
         sessionAttributes["MakeOrderIntent"] = undefined;
@@ -1858,7 +1856,6 @@ const stringifyProduct = (product) => {
     
     let parsedPackSize = parsePackSize(packSize);
 
-
     if (parsedPackSize.length === 1) {
         toReturn += parsedPackSize[0];
     } else if (parsedPackSize.length === 2) {
@@ -1866,7 +1863,6 @@ const stringifyProduct = (product) => {
     } else {
         toReturn += parsedPackSize[0] + " pack " + parsedPackSize[1] + " " + mapUnit(parsedPackSize[2]) + " ";
     }
-
 
     toReturn += parsedDescription + " from " + brandTranslated;
     
@@ -1905,7 +1901,6 @@ const mapUnit = (unit) => {
     }
 }
 
-
 const getDescriptionLength = (products, index) => {
     let descriptionOne = parseDescription(products[index].DescriptionTranslated, 3);
     for (let i = 0; i < products.length; i++) {
@@ -1918,14 +1913,17 @@ const getDescriptionLength = (products, index) => {
 }
 
 
-
 const parseDescription = (descriptionTranslated, numWords) => {
     let toReturn = "";
     let splitDescription = descriptionTranslated.split(" ");
     descriptionTranslated = "";
-
     for (var j = 0; j < splitDescription.length - 1 && j < numWords - 1; j++) {
             descriptionTranslated += splitDescription[j] + " ";
+    }
+    descriptionTranslated += splitDescription[j];
+    
+    if (j < splitDescription.length - 1 && (!isNaN(splitDescription[j]) || splitDescription[j].toLowerCase() === "and")) {
+        descriptionTranslated += " " + splitDescription[j + 1];
     }
     descriptionTranslated += splitDescription[j];
     
