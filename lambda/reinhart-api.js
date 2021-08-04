@@ -51,6 +51,9 @@ async function addToOrder(orderNumber, product, quantity) {
         for (var key in orderData.orders) {
             if (orderData.orders[key].orderNumber === orderNumber) {
                 console.log("order numbers matched");
+                console.log(orderData);
+                console.log(product);
+                console.log(quantity);
                 product["quantity"] = quantity; //add quantity attribute
                 orderData.orders[key].orderItem.push(product);
                 orderData.orders[key].numItems++;

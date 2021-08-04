@@ -9,11 +9,33 @@
         },
         {
           "name": "AMAZON.HelpIntent",
-          "samples": []
+          "samples": [
+            "tell me what to do",
+            "alexa help",
+            "I\u0027m stuck",
+            "what are my options",
+            "what can i do",
+            "help me",
+            "help"
+          ]
         },
         {
           "name": "AMAZON.StopIntent",
-          "samples": []
+          "samples": [
+            "bye",
+            "no thank you bye",
+            "no thanks bye",
+            "bye-bye",
+            "bye bye",
+            "okay bye",
+            "goodbye",
+            "please stop",
+            "no bye",
+            "bye alexa",
+            "see ya",
+            "nothing else bye",
+            "nothing bye"
+          ]
         },
         {
           "name": "AMAZON.NavigateHomeIntent",
@@ -52,6 +74,12 @@
             }
           ],
           "samples": [
+            "order {quantity} case of {spokenProductName}",
+            "order {quantity} cases of {spokenProductName}",
+            "I want {spokenProductName}",
+            "start order",
+            "yes add {quantity} cases of {spokenProductName}",
+            "add {quantity} cases of {spokenProductName}",
             "order",
             "order {spokenProductName}",
             "order me {quantity} cases of {spokenProductName}",
@@ -163,7 +191,6 @@
             "add {quantity} cases of {spokenProductName} to my order",
             "Start an order for {spokenProductName}",
             "Start an order for {quantity} cases of {spokenProductName}",
-            "Start order",
             "Start an order",
             "I\u0027ll have {quantity} cases of {spokenProductName}",
             "{quantity} cases of {spokenProductName}",
@@ -870,5 +897,5 @@
       }
     ]
   },
-  "version": "51"
+  "version": "63"
 }
