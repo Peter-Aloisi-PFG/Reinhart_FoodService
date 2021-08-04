@@ -29,14 +29,90 @@ const LaunchRequestHandler = {
 const DialogManagementStateInterceptor = {
     process(handlerInput) {
  
-        const attributesManager = handlerInput.attributesManager;
-        const sessionAttributes = attributesManager.getSessionAttributes();
-        console.log(handlerInput.requestEnvelope.request.intent);
-        console.log(sessionAttributes);
-        console.log("start of a new intent ---------------------------------------------------------------");
+        const currentIntent = handlerInput.requestEnvelope.request.intent;
         
+        if (handlerInput.requestEnvelope.request.type === "IntentRequest"
+            && handlerInput.requestEnvelope.request.dialogState !== "COMPLETED") {
+            
+            const attributesManager = handlerInput.attributesManager;
+            const sessionAttributes = attributesManager.getSessionAttributes();
+            
+            // If there are no session attributes we've never entered dialog management
+            // for this intent before.
+            
+            if (sessionAttributes[currentIntent.name]) {
+                let savedSlots = sessionAttributes[currentIntent.name].slots;
+            
+                for (let key in savedSlots) {
+                    // we let the current intent's values override the session attributes
+                    // that way the user can override previously given values.
+                    // this includes anything we have previously stored in their profile.
+                    if (!currentIntent.slots[key].value && savedSlots[key].value) {
+                        currentIntent.slots[key] = savedSlots[key];
+                    }
+                }    
+            }
+            sessionAttributes[currentIntent.name] = currentIntent;
+            attributesManager.setSessionAttributes(sessionAttributes);
+            console.log("start of a new intent ---------------------------------------------------------------");
+        }
     }
 };
+
+
+/**
+ * User starts an order without giving any slot information
+ * Ex: "Start order"
+ * */
+const ProductDescriptionIntentHandler = {
+    canHandle(handlerInput) {
+        return handlerInput.requestEnvelope.request.type === "IntentRequest"
+            && handlerInput.requestEnvelope.request.intent.name === "ProductDescriptionIntent" 
+            && handlerInput.attributesManager.getSessionAttributes().intentState === 1;
+    },
+    handle(handlerInput) {
+        const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+        const product = sessionAttributes.resolvedProducts[sessionAttributes.productIndex];
+        var speakOutput = "this is description of the thing";
+        var retSpecial = false;
+        
+        var repromptOutput = 'Whats next?';
+        
+        
+        if(sessionAttributes.intentState === 1){
+            
+            if(sessionAttributes.yesNoKey === 'productConfirmation'){
+                speakOutput = 'the full description is ' + stringifyProduct(product) + '. would you like to order this?';
+                repromptOutput = ' Please say yes or no, or say cancel to back out';
+            }else{
+                speakOutput = 'the full description is ' + stringifyProduct(product) + '. how many cases do you want to order, say cancel to try again';
+                retSpecial = true;
+            }
+            handlerInput.requestEnvelope.request.intent = sessionAttributes["MakeOrderIntent"];
+        }
+        
+        if(retSpecial === true){
+            return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .addElicitSlotDirective("quantity",
+                        {
+                            name: 'MakeOrderIntent',
+                            confirmationStatus: 'NONE',
+                            slots: handlerInput.requestEnvelope.request.intent.slots
+                        }
+                        
+                    )
+            .reprompt(repromptOutput)
+            .getResponse();
+    } 
+        
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt('repromptOutput')
+            .getResponse();
+    }
+};
+
 
 //---===============================================================---------Make Order---------===================================------------------
 
@@ -52,7 +128,6 @@ const Start_MakeOrderIntentHandler = {
     },
     handle(handlerInput) {
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-        sessionAttributes.intentState = 1;
         return handlerInput.responseBuilder
             .addElicitSlotDirective('spokenProductName')
             .speak("What would you like to order?")
@@ -61,41 +136,7 @@ const Start_MakeOrderIntentHandler = {
     }
 };
 
-async function saveOrder(productToAdd, quantity, handlerInput) {
-    const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-    // check if there is a pending order
-    let orderInfo = await reinhart.getPendingOrderInfo(sessionAttributes.customerID); // hard coded customerID
 
-    if (orderInfo === null) {
-        // there is no pending order so we are going to start one
-        orderInfo = await reinhart.startOrder(sessionAttributes.customerID); // hard coded customerID
-        if (orderInfo === null) {
-            // start order function ran into an error
-            return handlerInput.responseBuilder
-                .speak("I'm sorry, something went wrong when I tried creating an order for you. " +
-                    "Please try going online to complete your order, or contact customer service for assistance.")
-                .reprompt("What would you like to do?")
-                .getResponse();
-        }
-    }
-
-    const addToOrderResult = await reinhart.addToOrder(orderInfo.orderNumber, productToAdd, quantity);
-    if (!addToOrderResult) {
-        // add to order function ran into an error
-        return handlerInput.responseBuilder
-            .speak("Im sorry, something went wrong when I tried adding to your shopping cart. " +
-                "Please try going online to complete your order, or contact customer service for assistance.")
-            .reprompt("What would you like to do?")
-            .getResponse();
-    }
-    
-    
-    sessionAttributes.yesNoKey = "orderMore";
-    return handlerInput.responseBuilder
-      .speak("Okay, I have added " + quantity + " cases of " + sessionAttributes.spokenProductName + " to your order. Would you like to order anything else?")
-      .reprompt("Wwould you like to order anything else?")
-      .getResponse();
-}
 
 /**
  * User has provided a product they would like to order and
@@ -112,20 +153,25 @@ const ProductGiven_MakeOrderIntentHandler = {
     },
     async handle(handlerInput) {
         console.log("entered product given handler");
-        const slots = handlerInput.requestEnvelope.request.intent.slots;
+        const intent = handlerInput.requestEnvelope.request.intent;
+        const slots = intent.slots;
         const spokenProductName = slots.spokenProductName.value;
         const quantity = slots.quantity.value;
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
         sessionAttributes.intentState = 1;
         sessionAttributes.spokenProductName = spokenProductName;
-
+        
+        sessionAttributes.productIndex = 0;
+        sessionAttributes.orderGuideExhausted = false;
+        sessionAttributes.productDenies = 0;
         const keywordProduct = await reinhart.getProductByKeyword(spokenProductName, sessionAttributes.customerID);
         
         if (keywordProduct !== null) {
             // found a keyword so we're going to grab that product and immediately move on w/o confirmation
             console.log("keyword result found");
             const productToAdd = keywordProduct;
-            
+            sessionAttributes.resolvedProducts = [keywordProduct];
+            sessionAttributes.productDescription = spokenProductName;
             slots.spokenProductName.confirmationStatus = "CONFIRMED";
             
             if (quantity !== undefined) {
@@ -154,7 +200,9 @@ const ProductGiven_MakeOrderIntentHandler = {
                         .reprompt("What would you like to do?")
                         .getResponse();
                 }
-                
+                slots.spokenProductName = undefined;
+                slots.quantity = undefined;
+                intent.dialogState = 'COMPLETED';
                 sessionAttributes.yesNoKey = "orderMore";
                 return handlerInput.responseBuilder
                   .speak("Okay, I have added " + quantity + " cases of " + sessionAttributes.spokenProductName + " to your order. Would you like to order anything else?")
@@ -197,16 +245,13 @@ const ProductGiven_MakeOrderIntentHandler = {
                 .getResponse();
         }
 
-        sessionAttributes.productIndex = 0;
-        sessionAttributes.orderGuideExhausted = false;
+       
         sessionAttributes.resolvedProducts = resolvedProducts;
-        sessionAttributes.productDenies = 0;
-
         const descriptionLength = getDescriptionLength(resolvedProducts, sessionAttributes.productIndex);
         const productDescription = parseDescription(resolvedProducts[sessionAttributes.productIndex].DescriptionTranslated, descriptionLength);
         sessionAttributes.productDescription = productDescription;
-        return handlerInput.responseBuilder
-            .addConfirmSlotDirective('spokenProductName')
+         sessionAttributes.yesNoKey = 'productConfirmation';
+        return handlerInput.responseBuilder///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             .speak("I was able to find " + productDescription + " in your order guide. Is this what you would like to order?")
             .reprompt("I was able to find " + productDescription + " in your order guide. Is this what you would like to order?")
             .getResponse();
@@ -433,7 +478,8 @@ const ProductQuantityGiven_MakeOrderIntentHandler = {
         sessionAttributes.productDenies = undefined;
         sessionAttributes.productConfirmation = undefined;
         sessionAttributes.productDescription = undefined;
-
+        sessionAttributes["MakeOrderIntent"] = undefined;
+        
         sessionAttributes.yesNoKey = "orderMore";
         return handlerInput.responseBuilder
             .speak("Okay, I have added " + quantity + " cases of " + productDescription + " to your order. Would you like to order anything else?")
@@ -441,6 +487,10 @@ const ProductQuantityGiven_MakeOrderIntentHandler = {
             .getResponse();
     }
 };
+
+
+
+
 
 //====================================================================================================================================================
 //---===============================================================---------submit order---------===================================-------------------
@@ -1063,24 +1113,10 @@ const YesNoIntentHandler = {
                 const descriptionLength = getDescriptionLength(resolvedProducts, sessionAttributes.productIndex);
                 const productDescription = parseDescription(resolvedProducts[sessionAttributes.productIndex].DescriptionTranslated, descriptionLength);
                 sessionAttributes.productDescription = productDescription;
+                sessionAttributes.yesNoKey = 'productConfirmation';
                 return handlerInput.responseBuilder
                     .speak("Okay, the next best match in your order guide is " + productDescription + ". Is this what you would like to order?")
                     .reprompt("The next best match in your order guide is " + productDescription + ". Is this what you would like to order?")
-                    .addConfirmSlotDirective("spokenProductName", {
-                        name: 'MakeOrderIntent',
-                        confirmationStatus: 'NONE',
-                        slots: {
-                            spokenProductName: {
-                                name: "spokenProductName",
-                                value: sessionAttributes.spokenProductName,
-                                confirmationStatus: sessionAttributes.productConfirmation
-                            },
-                            quantity: {
-                                name: "quantity",
-                                value: sessionAttributes.quantity
-                            }
-                        }
-                    })
                     .getResponse();
             }
             else if (answer === "no") {
@@ -1277,25 +1313,10 @@ const YesNoIntentHandler = {
                 const descriptionLength = getDescriptionLength(resolvedProducts, sessionAttributes.productIndex);
                 const productDescription = parseDescription(resolvedProducts[sessionAttributes.productIndex].DescriptionTranslated, descriptionLength);
                 sessionAttributes.productDescription = productDescription;
-                
+                sessionAttributes.yesNoKey = 'productConfirmation';
                 return handlerInput.responseBuilder
                     .speak("Okay, I found " + resolvedProducts.length + " items related to " + spokenProductName + " in the catalogue. The next best match is " + productDescription + ". Is this what you would like to order?")
                     .reprompt("Okay, I found " + resolvedProducts.length + " items related to " + spokenProductName + " in the catalogue. The next best match is " + productDescription + ". Is this what you would like to order?")
-                    .addConfirmSlotDirective("spokenProductName", {
-                        name: 'MakeOrderIntent',
-                        confirmationStatus: 'NONE',
-                        slots: {
-                            spokenProductName: {
-                                name: "spokenProductName",
-                                value: spokenProductName,
-                                confirmationStatus: sessionAttributes.productConfirmation
-                            },
-                            quantity: {
-                                name: "quantity",
-                                value: sessionAttributes.quantity
-                            }
-                        }
-                    })
                     .getResponse();
 
             }
@@ -1320,6 +1341,30 @@ const YesNoIntentHandler = {
                         }
                     })
                     .getResponse();
+            }
+            else {
+                // there was an error--this is here for debugging purposes
+                sessionAttributes.intentState = 0;
+                return handlerInput.responseBuilder
+                    .speak("I'm sorry, something went wrong.")
+                    .getResponse();
+            }
+        }
+        else if (key === "productConfirmation") {
+            sessionAttributes.yesNoKey = undefined; // must always switch back to undefined
+            let currentIntent = sessionAttributes["MakeOrderIntent"];
+
+            if (answer === "yes") {
+                currentIntent.slots.spokenProductName.confirmationStatus = "CONFIRMED";
+                 return handlerInput.responseBuilder
+                  .addDelegateDirective(currentIntent)
+                  .getResponse();
+            } 
+            else if (answer === "no") {
+                currentIntent.slots.spokenProductName.confirmationStatus = "DENIED";
+                return handlerInput.responseBuilder
+                 .addDelegateDirective(currentIntent)
+                 .getResponse();
             }
             else {
                 // there was an error--this is here for debugging purposes
@@ -1982,9 +2027,15 @@ const CancelIntentHandler = {
             && (Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.CancelIntent');
     },
     handle(handlerInput) {
-
+ const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
         const speakOutput = 'What would you like to do? Say exit to close the app.';
-
+       sessionAttributes.spokenProductName = undefined;
+        sessionAttributes.resolvedProducts = undefined;
+        sessionAttributes.productIndex = undefined;
+        sessionAttributes.productDenies = undefined;
+        sessionAttributes.productConfirmation = undefined;
+        sessionAttributes.productDescription = undefined;
+        sessionAttributes["MakeOrderIntent"] = undefined;
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
@@ -2003,7 +2054,7 @@ const FallbackIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.FallbackIntent';
     },
     handle(handlerInput) {
-        const speakOutput = 'Sorry, I don\'t know about that. Please try again.';
+        const speakOutput = 'Sorry, I don\'t know about that. intent not recognized *debug stuff* Please try again.';
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -2037,11 +2088,11 @@ const IntentReflectorHandler = {
     },
     handle(handlerInput) {
         const intentName = Alexa.getIntentName(handlerInput.requestEnvelope);
-        const speakOutput = `You just triggered ${intentName}`;
+        const speakOutput = `That is not supported right now please try something else'`;
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
-            //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
+            .reprompt('what is next?')
             .getResponse();
     }
 };
@@ -2055,7 +2106,7 @@ const ErrorHandler = {
         return true;
     },
     handle(handlerInput, error) {
-        const speakOutput = 'Sorry, I had trouble doing what you asked. Please try again.';
+        const speakOutput = 'Sorry, I had trouble doing what you asked. There was an error.';
         console.log(`~~~~ Error handled: ${JSON.stringify(error)}` + speakOutput);
         console.log(error);
         return handlerInput.responseBuilder
@@ -2073,7 +2124,7 @@ const ErrorHandler = {
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
-
+        ProductDescriptionIntentHandler,
         ProductGiven_MakeOrderIntentHandler,
         ProductQuantityGiven_MakeOrderIntentHandler,
         ProductConfirmation_MakeOrderIntentHandler,
