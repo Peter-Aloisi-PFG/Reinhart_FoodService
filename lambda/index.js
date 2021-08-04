@@ -8,7 +8,6 @@
 const Alexa = require('ask-sdk-core');
 const reinhart = require('reinhart-api.js');
 
-
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
@@ -18,7 +17,7 @@ const LaunchRequestHandler = {
         const speakOutput = 'Welcome to Reinhart Foodservice. What would you like to do?';
         sessionAttributes.intentState = 0;
         sessionAttributes.customerID = 14445; // hardcoded customerID
-                
+
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
@@ -26,11 +25,14 @@ const LaunchRequestHandler = {
     }
 };
 
+//=====================================================interceptors================================================
 const DialogManagementStateInterceptor = {
     process(handlerInput) {
+
  
         const currentIntent = handlerInput.requestEnvelope.request.intent;
         
+
         if (handlerInput.requestEnvelope.request.type === "IntentRequest"
             && handlerInput.requestEnvelope.request.dialogState !== "COMPLETED") {
             
@@ -54,10 +56,13 @@ const DialogManagementStateInterceptor = {
             }
             sessionAttributes[currentIntent.name] = currentIntent;
             attributesManager.setSessionAttributes(sessionAttributes);
+
             console.log("start of a new intent ---------------------------------------------------------------");
+
         }
     }
 };
+
 
 
 /**
@@ -116,6 +121,38 @@ const ProductDescriptionIntentHandler = {
 
 //---===============================================================---------Make Order---------===================================------------------
 
+
+
+
+const ItemDescriptionIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'ItemDescriptionIntent';
+    },
+    handle(handlerInput) {
+        let speakOutput;
+        const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+        if(handlerInput.requestEnvelope.request.intent.slots.item.value){
+            speakOutput = 'the story is about ' + handlerInput.requestEnvelope.request.intent.slots.item.value;
+        }else{
+            speakOutput = 'let me tell you a story kid';   
+        }
+    
+        console.log("finished item description handler");
+       // console.log(sessionAttributes[sessionAttributes.lastIntent.name]);
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt("and next?")
+            .getResponse();
+    }
+};
+
+
+
+
+
+//---===============================================================---------Make Order---------==================================
+//=======================================================================================================================================
 /**
  * User starts an order without giving any slot information
  * Ex: "Start order"
@@ -170,8 +207,9 @@ const ProductGiven_MakeOrderIntentHandler = {
             // found a keyword so we're going to grab that product and immediately move on w/o confirmation
             console.log("keyword result found");
             const productToAdd = keywordProduct;
+            const productDescription = spokenProductName;
+            sessionAttributes.productDescription = productDescription;
             sessionAttributes.resolvedProducts = [keywordProduct];
-            sessionAttributes.productDescription = spokenProductName;
             slots.spokenProductName.confirmationStatus = "CONFIRMED";
             
             if (quantity !== undefined) {
@@ -200,14 +238,21 @@ const ProductGiven_MakeOrderIntentHandler = {
                         .reprompt("What would you like to do?")
                         .getResponse();
                 }
+
                 slots.spokenProductName = undefined;
                 slots.quantity = undefined;
                 intent.dialogState = 'COMPLETED';
                 sessionAttributes.yesNoKey = "orderMore";
+                let speakOutput = "";
+                if (quantity === 1) {
+                    speakOutput += "Okay, I have added " + quantity + " cases of " + productDescription + " to your order. Would you like to order anything else?"
+                } else {
+                    speakOutput += "Okay, I have added " + quantity + " case of " + productDescription + " to your order. Would you like to order anything else?"
+                }
                 return handlerInput.responseBuilder
-                  .speak("Okay, I have added " + quantity + " cases of " + sessionAttributes.spokenProductName + " to your order. Would you like to order anything else?")
-                  .reprompt("Would you like to order anything else?")
-                  .getResponse();
+                    .speak(speakOutput)
+                    .reprompt("Would you like to order anything else?")
+                    .getResponse();
                
             } else {
                 return handlerInput.responseBuilder
@@ -303,27 +348,20 @@ const ProductConfirmation_MakeOrderIntentHandler = {
             if (sessionAttributes.productDenies === 1) {
                 // user has denied the first product so we are going to ask them if they want to hear more related items
                 const itemsLeft = sessionAttributes.resolvedProducts.length - sessionAttributes.productIndex;
-                sessionAttributes.yesNoKey = "relatedOrderGuide";
-                let speakOutput = "";
-                if (sessionAttributes.orderGuideExhausted === true) {
-                    if (itemsLeft === 1) {
-                        speakOutput += "I was able to find " + itemsLeft + " other item related to " + spokenProductName + " in the catalogue. Would you like to hear it?";
-                    } else {
+
+                if (itemsLeft > 1) {
+                    let speakOutput = "";
+                    sessionAttributes.yesNoKey = "relatedOrderGuide";
+                    if (sessionAttributes.orderGuideExhausted === true) {
                         speakOutput += "I was able to find " + itemsLeft + " other items related to " + spokenProductName + " in the catalogue. Would you like me to go through them?";
-                    }
-                    
-                } else {
-                    if (itemsLeft === 1) {
-                        speakOutput += "I was able to find " + itemsLeft + " other item related to " + spokenProductName + " in your order guide. Would you like to hear it?";
                     } else {
                         speakOutput += "I was able to find " + itemsLeft + " other items related to " + spokenProductName + " in your order guide. Would you like me to go through them?";
                     }
-                }
-
-                return handlerInput.responseBuilder
+                    return handlerInput.responseBuilder
                     .speak(speakOutput)
                     .reprompt(speakOutput)
                     .getResponse();
+                }
             }
 
             if (sessionAttributes.productIndex >= resolvedProducts.length) {
@@ -461,7 +499,7 @@ const ProductQuantityGiven_MakeOrderIntentHandler = {
                     .getResponse();
             }
         }
-
+  
         const addToOrderResult = await reinhart.addToOrder(orderInfo.orderNumber, productToAdd, quantity);
         if (!addToOrderResult) {
             // add to order function ran into an error
@@ -478,11 +516,19 @@ const ProductQuantityGiven_MakeOrderIntentHandler = {
         sessionAttributes.productDenies = undefined;
         sessionAttributes.productConfirmation = undefined;
         sessionAttributes.productDescription = undefined;
+
         sessionAttributes["MakeOrderIntent"] = undefined;
         
+
         sessionAttributes.yesNoKey = "orderMore";
+        let speakOutput = "";
+        if (quantity === 1) {
+            speakOutput += "Okay, I have added " + quantity + " cases of " + productDescription + " to your order. Would you like to order anything else?"
+        } else {
+            speakOutput += "Okay, I have added " + quantity + " case of " + productDescription + " to your order. Would you like to order anything else?"
+        }
         return handlerInput.responseBuilder
-            .speak("Okay, I have added " + quantity + " cases of " + productDescription + " to your order. Would you like to order anything else?")
+            .speak(speakOutput)
             .reprompt("Would you like to order anything else?")
             .getResponse();
     }
@@ -509,7 +555,7 @@ const Start_SubmitOrderIntentHandler = {
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
         const pendingOrderInfo = await reinhart.getPendingOrderInfo(sessionAttributes.customerID); // hardcoded customerID
         sessionAttributes.intentState = 2;
-        
+
         if (pendingOrderInfo === null) {
             // there is no pending order and therefore no items in the customer's cart
             return handlerInput.responseBuilder
@@ -521,7 +567,7 @@ const Start_SubmitOrderIntentHandler = {
         const deliveryDate = parseDate(await reinhart.getNextDeliveryDate(sessionAttributes.customerID));
         const orderContents = await reinhart.getOrderContents(pendingOrderInfo.orderNumber);
         const numberOfItems = orderContents.length;
-        
+
         let speechOutput = "";
         if (numberOfItems === 1) {
             speechOutput += "You have " + numberOfItems + " item in your cart that can be delivered on " + deliveryDate +
@@ -554,7 +600,7 @@ const Complete_SubmitOrderIntentHandler = {
         const intent = handlerInput.requestEnvelope.request.intent;
         const pendingOrderInfo = await reinhart.getPendingOrderInfo(sessionAttributes.customerID); // hardcoded customerID
         sessionAttributes.intentState = 0;
-        
+
         let speechOutput = "";
         if (intent.confirmationStatus === "CONFIRMED") {
             const submitOrderResult = await reinhart.submitOrder(pendingOrderInfo.orderNumber, sessionAttributes.customerID); // hardcoded customerID
@@ -597,7 +643,7 @@ const ProductNotGiven_RemoveItemIntentHandler = {
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
         const pendingOrder = await reinhart.getPendingOrderInfo(sessionAttributes.customerID);
         sessionAttributes.intentState = 4;
-        
+
         if (pendingOrder === null) {
             sessionAttributes.intentState = 0;
             return handlerInput.responseBuilder
@@ -770,7 +816,7 @@ const Start_ClearOrderContentsIntentHandler = {
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
         const pendingOrder = await reinhart.getPendingOrderInfo(sessionAttributes.customerID);
         sessionAttributes.intentState = 4;
-        
+
         if (pendingOrder === null) {
             sessionAttributes.intentState = 0;
             return handlerInput.responseBuilder
@@ -1269,23 +1315,8 @@ const YesNoIntentHandler = {
                 
                 let orderGuideProducts = sessionAttributes.resolvedProducts;
                 let catalogueProducts = await reinhart.getProductFromCatalogue(spokenProductName);
-                let resolvedProducts = [];
-                for (let catalogueProduct in catalogueProducts) {
-                    let shouldPush = true;
-                    for (let orderGuideProduct in orderGuideProducts) {
-                        if (catalogueProducts[catalogueProduct].ProductNumber === orderGuideProducts[orderGuideProduct].ProductNumber) {
-                            shouldPush = false;
-                        }
-                    }
-                    if (shouldPush) {
-                        resolvedProducts.push(catalogueProducts[catalogueProduct]);
-                    }
-                }
-                console.log(resolvedProducts);
+                const resolvedProducts = getProductsDifference(orderGuideProducts, catalogueProducts);
                 sessionAttributes.resolvedProducts = resolvedProducts;
-
-
-                console.log("resolvedProducts: " + JSON.stringify(resolvedProducts));
 
                 if (resolvedProducts === null) {
                     return handlerInput.responseBuilder
@@ -1313,6 +1344,7 @@ const YesNoIntentHandler = {
                 const descriptionLength = getDescriptionLength(resolvedProducts, sessionAttributes.productIndex);
                 const productDescription = parseDescription(resolvedProducts[sessionAttributes.productIndex].DescriptionTranslated, descriptionLength);
                 sessionAttributes.productDescription = productDescription;
+
                 sessionAttributes.yesNoKey = 'productConfirmation';
                 return handlerInput.responseBuilder
                     .speak("Okay, I found " + resolvedProducts.length + " items related to " + spokenProductName + " in the catalogue. The next best match is " + productDescription + ". Is this what you would like to order?")
@@ -1395,7 +1427,7 @@ const YesNoIntentHandler = {
             sessionAttributes.intentState = 0;
             sessionAttributes.yesNoKey = undefined;
             return handlerInput.responseBuilder
-                .speak("I'm sorry, something went wrong.")
+                .speak("I'm sorry, something went wrong in yes and no.")
                 .getResponse();
         }
     }
@@ -1418,7 +1450,7 @@ const ProductNotGiven_EditOrderIntentHandler = {
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
         const pendingOrder = await reinhart.getPendingOrderInfo(sessionAttributes.customerID);
         sessionAttributes.intentState = 3;
-        
+
         if (pendingOrder === null) {
             sessionAttributes.intentState = 0;
             return handlerInput.responseBuilder
@@ -1673,7 +1705,10 @@ const ProductQuantityGiven_EditOrderIntentHandler = {
 //---===============================================================---------Small Functions---------===================================---------
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
+/**
+ * Shows the user the delivery contents of all order items combined for the next delivery date
+ * 
+ */
 const ViewNextDeliveryContentsIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
@@ -1754,6 +1789,9 @@ const ViewPendingOrderContentsIntentHandler = {
 
 
 
+
+
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //---===============================================================---------Helpers---------===================================-----------------
 //=====~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1812,7 +1850,7 @@ const stringifyItemList = (orderItems) => {
         else {
             stringList += ", ";
         }
-        console
+        
         if (quantity === 1) {
             stringList += quantity + " case of " + productName
         } else {
@@ -1826,6 +1864,10 @@ const stringifyItemList = (orderItems) => {
  * Takes in all of a products information and stringifies items
  * into a digestible, string format for the user
  * */
+/**
+* Takes in all of a products information and stringifies items
+* into a digestible, string format for the user
+* */
 const stringifyProduct = (product) => {
     const descriptionTranslated = product.DescriptionTranslated;
     const packSize = product.PackSize;
@@ -1847,6 +1889,7 @@ const stringifyProduct = (product) => {
 
     toReturn += parsedDescription + " from " + brandTranslated;
     
+
     toReturn += parsedDescription;
     toReturn = toReturn.toLowerCase();
     console.log("stringified product: " + toReturn);
@@ -1905,7 +1948,7 @@ const parseDescription = (descriptionTranslated, numWords) => {
     if (j < splitDescription.length - 1 && (!isNaN(splitDescription[j]) || splitDescription[j].toLowerCase() === "and")) {
         descriptionTranslated += " " + splitDescription[j + 1];
     }
-    
+
     for (let i = 0; i < descriptionTranslated.length; i++) {
         switch (descriptionTranslated.charAt(i)) {
             case "\"":
@@ -1919,6 +1962,7 @@ const parseDescription = (descriptionTranslated, numWords) => {
                 break;
         }
     }
+    console.log("parsed description: toReturn " + toReturn);
     return toReturn.toLowerCase();
 }
 
@@ -1942,6 +1986,32 @@ const parsePackSize = (packSize) => {
     console.log("pack size array [" + splitPackSize + "]");
     return splitPackSize;
 }
+
+/**
+ * Takes in an array of order guide products and an array of catalogue products. 
+ * We will check to see which products from the catalogue products are not in the order guide products.
+ * We will return these products as a new array.
+ * 
+ * param: orderGuideProducts, catalogueProducts
+ * return: an array of resolvedProducts
+ * */
+const getProductsDifference = (orderGuideProducts, catalogueProducts) => {
+    let resolvedProducts = [];
+    for (let catalogueProduct in catalogueProducts) {
+        let shouldPush = true;
+        for (let orderGuideProduct in orderGuideProducts) {
+            if (catalogueProducts[catalogueProduct].ProductNumber.toString() === orderGuideProducts[orderGuideProduct].ProductNumber.toString()) {
+                shouldPush = false;
+            }
+        }
+        if (shouldPush) {
+            resolvedProducts.push(catalogueProducts[catalogueProduct]);
+        }
+    }
+    return resolvedProducts;
+}
+
+
 
 /**
  * Resolves multivalued slots based on what a user says.
@@ -2027,6 +2097,7 @@ const CancelIntentHandler = {
             && (Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.CancelIntent');
     },
     handle(handlerInput) {
+
  const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
         const speakOutput = 'What would you like to do? Say exit to close the app.';
        sessionAttributes.spokenProductName = undefined;
@@ -2036,6 +2107,7 @@ const CancelIntentHandler = {
         sessionAttributes.productConfirmation = undefined;
         sessionAttributes.productDescription = undefined;
         sessionAttributes["MakeOrderIntent"] = undefined;
+
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
@@ -2108,7 +2180,9 @@ const ErrorHandler = {
     handle(handlerInput, error) {
         const speakOutput = 'Sorry, I had trouble doing what you asked. There was an error.';
         console.log(`~~~~ Error handled: ${JSON.stringify(error)}` + speakOutput);
+
         console.log(error);
+
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
@@ -2149,6 +2223,7 @@ exports.handler = Alexa.SkillBuilders.custom()
 
         ViewNextDeliveryContentsIntentHandler,
         ViewPendingOrderContentsIntentHandler,
+        ItemDescriptionIntentHandler,
 
         HelpIntentHandler,
         CancelIntentHandler,
@@ -2156,6 +2231,10 @@ exports.handler = Alexa.SkillBuilders.custom()
         FallbackIntentHandler,
         SessionEndedRequestHandler,
         IntentReflectorHandler)
+        
+    .addRequestInterceptors(
+        DialogManagementStateInterceptor)
+        
     .addErrorHandlers(
         ErrorHandler)
         .addRequestInterceptors(
