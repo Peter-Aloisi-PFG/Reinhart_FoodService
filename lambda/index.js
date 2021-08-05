@@ -153,7 +153,7 @@ const ProductGiven_MakeOrderIntentHandler = {
                     sessionAttributes.resolvedProducts = [productToAdd];
                     sessionAttributes.productDescription = productDescription;
                     return handlerInput.responseBuilder
-                        .speak("You did not provide a valid quantity. Please provide a new quantity between 1 and 100")
+                        .speak("You did not provide a valid quantity. Please provide a new quantity between 1 and 100.")
                         .reprompt("How many cases would you like to order?")
                         .addElicitSlotDirective("quantity",
                             {
@@ -206,9 +206,9 @@ const ProductGiven_MakeOrderIntentHandler = {
                 sessionAttributes.yesNoKey = "orderMore";
                 let speakOutput = "";
                 if (quantity > 1) {
-                    speakOutput += "Okay, I have added " + quantity + " cases of " + productDescription + " to your order. Would you like to order anything else?"
+                    speakOutput += "I have added " + quantity + " cases of " + productDescription + " to your order. Would you like to order anything else?"
                 } else {
-                    speakOutput += "Okay, I have added " + quantity + " case of " + productDescription + " to your order. Would you like to order anything else?"
+                    speakOutput += "I have added " + quantity + " case of " + productDescription + " to your order. Would you like to order anything else?"
                 }
                 return handlerInput.responseBuilder
                     .speak(speakOutput)
@@ -360,8 +360,8 @@ const ProductConfirmation_MakeOrderIntentHandler = {
             const productDescription = parseDescription(resolvedProducts[sessionAttributes.productIndex].DescriptionTranslated, descriptionLength);
             sessionAttributes.productDescription = productDescription;
             return handlerInput.responseBuilder
-                .speak("Okay, how about " + productDescription + "?")
-                .reprompt("Okay, how about " + productDescription + "?")
+                .speak("How about " + productDescription + "?")
+                .reprompt("How about " + productDescription + "?")
                 .addConfirmSlotDirective('spokenProductName')
                 .getResponse();
 
@@ -418,7 +418,7 @@ const ProductQuantityGiven_MakeOrderIntentHandler = {
 
         if (isNaN(quantity) || !Number.isInteger(parseInt(quantity)) || quantity < 1 || quantity > 100) {
             return handlerInput.responseBuilder
-                .speak("You did not provide a valid quantity. Please provide a new quantity between 1 and 100")
+                .speak("You did not provide a valid quantity. Please provide a new quantity between 1 and 100.")
                 .reprompt("How many cases would you like to order?")
                 .addElicitSlotDirective("quantity",
                     {
@@ -478,9 +478,9 @@ const ProductQuantityGiven_MakeOrderIntentHandler = {
         sessionAttributes.yesNoKey = "orderMore";
         let speakOutput = "";
         if (quantity > 1) {
-            speakOutput += "Okay, I have added " + quantity + " cases of " + productDescription + " to your order. Would you like to order anything else?"
+            speakOutput += "I have added " + quantity + " cases of " + productDescription + " to your order. Would you like to order anything else?"
         } else {
-            speakOutput += "Okay, I have added " + quantity + " case of " + productDescription + " to your order. Would you like to order anything else?"
+            speakOutput += "I have added " + quantity + " case of " + productDescription + " to your order. Would you like to order anything else?"
         }
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -510,7 +510,7 @@ const Start_SubmitOrderIntentHandler = {
         if (pendingOrderInfo === null) {
             // there is no pending order and therefore no items in the customer's cart
             return handlerInput.responseBuilder
-                .speak("You do not currently have any items in your shopping cart. Please start a new order before attempting to submit.")
+                .speak("There are no items in your shopping cart to submit. Please start a new order before attempting to submit again.")
                 .reprompt("What would you like to do?")
                 .getResponse();
         }
@@ -561,7 +561,7 @@ const Complete_SubmitOrderIntentHandler = {
 
             } else {
                 const deliveryDate = parseDate(submitOrderResult);
-                speechOutput += "Okay, I have submitted your order. Your items should arrive with your next delivery on " + deliveryDate +
+                speechOutput += "I have submitted your order. Your items should arrive with your next delivery on " + deliveryDate +
                     ". What else can I help you with today?";
             }
 
@@ -615,7 +615,7 @@ const ProductNotGiven_RemoveItemIntentHandler = {
         return handlerInput.responseBuilder
             .addElicitSlotDirective('spokenProductName')
             .speak("Which item in your cart do you want to remove?")
-            .reprompt('If you would like to me list the items in your shopping cart, say view my shopping cart, otherwise state the name of the product you wish to remove.')
+            .reprompt('If you would like me to list the items in your shopping cart, say view my shopping cart, otherwise state the name of the product you wish to remove.')
             .getResponse();
     }
 };
@@ -672,7 +672,7 @@ const ProductGiven_RemoveItemIntentHandler = {
                         }
                     })
                 .speak("I'm sorry, I was not able to find a product matching " + spokenProductName + " in your shopping cart. Please state a new product or try being more specific.")
-                .reprompt("Try to be as specific as possible. Which item in your cart do you want to edit?")
+                .reprompt("Which item in your cart do you want to edit? Try to be as specific as possible.")
                 .getResponse();
         }
 
@@ -716,8 +716,8 @@ const ProductConfirmation_RemoveItemIntentHandler = {
 
         if (intent.slots.spokenProductName.confirmationStatus === "DENIED") {
             return handlerInput.responseBuilder
-                .speak("Okay, which item in your cart would you like to remove then?")
-                .reprompt("Try to be as specific as possible. Which item in your cart would you like to remove?")
+                .speak("Which item in your cart would you like to remove then?")
+                .reprompt("Which item in your cart do you want to remove? Try to be as specific as possible.")
                 .addElicitSlotDirective('spokenProductName',
                     {
                         name: 'EditOrderIntent',
@@ -736,7 +736,7 @@ const ProductConfirmation_RemoveItemIntentHandler = {
         let speechOutput = "";
         const removeProductResult = await reinhart.removeProduct(orderNumber, productInCart.ProductNumber);
         if (removeProductResult) {
-            speechOutput += "Okay, I removed " + parseDescription(productInCart.DescriptionTranslated, 3) + " from your cart. What else can I help you with today?";
+            speechOutput += "I removed " + parseDescription(productInCart.DescriptionTranslated, 3) + " from your cart. What else can I help you with today?";
         } else {
             speechOutput += "I'm sorry, something went wrong when I tried removing the item from your cart. Please try going online to complete the removal process.";
         }
@@ -820,11 +820,11 @@ const Complete_ClearOrderContentsIntentHandler = {
 
         let speechOutput = "";
         if (intent.confirmationStatus === "DENIED") {
-            speechOutput += "Okay, I did not clear your cart. What else can I help you with today?"
+            speechOutput += "I did not clear your cart. What else can I help you with today?"
         } else {
             const clearOrderResult = await reinhart.clearOrderContents(orderNumber);
             if (clearOrderResult) {
-                speechOutput += "Okay, I have removed all items from your cart. What else can I help you with today?"
+                speechOutput += "I have removed all items from your cart. What else can I help you with today?"
             } else {
                 speechOutput += "I'm sorry, something went wrong when I tried to clear your cart. Please try going online to complete this process."
             }
@@ -1090,7 +1090,7 @@ const YesNoIntentHandler = {
             else if (answer === "no") {
                 sessionAttributes.intentState = 0;
                 return handlerInput.responseBuilder
-                    .speak("Okay, what else can I help you with today?")
+                    .speak("What else can I help you with today?")
                     .reprompt("What would you like to do?")
                     .getResponse();
             }
@@ -1113,7 +1113,7 @@ const YesNoIntentHandler = {
                 const productDescription = parseDescription(resolvedProducts[sessionAttributes.productIndex].DescriptionTranslated, descriptionLength);
                 sessionAttributes.productDescription = productDescription;
                 return handlerInput.responseBuilder
-                    .speak("Okay, the next best match in your order guide is " + productDescription + ". Is this what you would like to order?")
+                    .speak("The next best match in your order guide is " + productDescription + ". Is this what you would like to order?")
                     .reprompt("The next best match in your order guide is " + productDescription + ". Is this what you would like to order?")
                     .addConfirmSlotDirective("spokenProductName", {
                         name: 'MakeOrderIntent',
@@ -1135,7 +1135,7 @@ const YesNoIntentHandler = {
             else if (answer === "no") {
                 // user has indicated they do not want to hear more related items in their order guide so we will ask them to state a more specific product name
                 return handlerInput.responseBuilder
-                    .speak("Okay, please state a more specific product name for me to search.")
+                    .speak("Please state a more specific product name for me to search.")
                     .reprompt('What would you like to order?')
                     .addElicitSlotDirective('spokenProductName', {
                         name: 'MakeOrderIntent',
@@ -1203,8 +1203,8 @@ const YesNoIntentHandler = {
             else if (answer === "no") {
                 sessionAttributes.intentState = 0;
                 return handlerInput.responseBuilder
-                    .speak("Okay, what else can I do for you today?")
-                    .reprompt("Okay, what else can I do for you today?")
+                    .speak("What else can I do for you today?")
+                    .reprompt("What else can I do for you today?")
                     .getResponse();
             }
             else {
@@ -1259,8 +1259,8 @@ const YesNoIntentHandler = {
             else if (answer === "no") {
                 sessionAttributes.intentState = 0;
                 return handlerInput.responseBuilder
-                    .speak("Okay, what else can I do for you today?")
-                    .reprompt("Okay, what else can I do for you today?")
+                    .speak("What else can I do for you today?")
+                    .reprompt("What else can I do for you today?")
                     .getResponse();
             }
             else {
@@ -1314,9 +1314,9 @@ const YesNoIntentHandler = {
                 
                 let speakOutput = "";
                 if (resolvedProducts.length > 1) {
-                    speakOutput += "Okay, I found " + resolvedProducts.length + " items related to " + spokenProductName + " in the catalogue. The best match is " + productDescription + ". Is this what you would like to order?";
+                    speakOutput += "I found " + resolvedProducts.length + " items related to " + spokenProductName + " in the catalogue. The best match is " + productDescription + ". Is this what you would like to order?";
                 } else {
-                    speakOutput += "Okay, I found " + resolvedProducts.length + " item related to " + spokenProductName + " in the catalogue. The best match is " + productDescription + ". Is this what you would like to order?";
+                    speakOutput += "I found " + resolvedProducts.length + " item related to " + spokenProductName + " in the catalogue. The best match is " + productDescription + ". Is this what you would like to order?";
                 }
                 
                 return handlerInput.responseBuilder
@@ -1343,7 +1343,7 @@ const YesNoIntentHandler = {
             else if (answer === "no") {
                 // user has indicated they do not want to hear more related items from the catalogue so we will ask them to state a more specific product name
                 return handlerInput.responseBuilder
-                    .speak("Okay, please state a more specific product name for me to search.")
+                    .speak("Please state a more specific product name for me to search.")
                     .reprompt('What would you like to order?')
                     .addElicitSlotDirective('spokenProductName', {
                         name: 'MakeOrderIntent',
@@ -1496,7 +1496,7 @@ const ProductGiven_EditOrderIntentHandler = {
                         }
                     })
                 .speak("I'm sorry, I was not able to find a product matching " + spokenProductName + " in your shopping cart. Please state a new product or try being more specific.")
-                .reprompt("Try to be as specific as possible. Which item in your cart do you want to edit?")
+                .reprompt("Which item in your cart do you want to edit? Try to be as specific as possible.")
                 .getResponse();
         }
 
@@ -1541,8 +1541,8 @@ const ProductConfirmation_EditOrderIntentHandler = {
 
         if (intent.slots.spokenProductName.confirmationStatus === "DENIED") {
             return handlerInput.responseBuilder
-                .speak("Okay, which item in your cart would you like to edit then?")
-                .reprompt("Try to be as specific as possible. Which item in your cart would you like to edit?")
+                .speak("Which item in your cart would you like to edit then?")
+                .reprompt("Which item in your cart do you want to edit? Try to be as specific as possible.")
                 .addElicitSlotDirective('spokenProductName',
                     {
                         name: 'EditOrderIntent',
@@ -1565,8 +1565,8 @@ const ProductConfirmation_EditOrderIntentHandler = {
         if (intent.slots.spokenProductName.confirmationStatus === "CONFIRMED") {
 
             return handlerInput.responseBuilder
-                .speak("Please state a new quantity for " + parseDescription(productInCart.DescriptionTranslated, 3) + " or say zero to remove the item from your cart.")
-                .reprompt("Please state a number for the new quantity for " + parseDescription(productInCart.DescriptionTranslated, 3) + " or say zero to remove the item from your cart.")
+                .speak("Please state a new quantity for " + parseDescription(productInCart.DescriptionTranslated, 3) + ", or say zero to remove the item from your cart.")
+                .reprompt("Please state a number for the new quantity for " + parseDescription(productInCart.DescriptionTranslated, 3) + ", or say zero to remove the item from your cart.")
                 .addElicitSlotDirective('newQuantity',
                     {
                         name: 'EditOrderIntent',
@@ -1612,8 +1612,8 @@ const ProductQuantityGiven_EditOrderIntentHandler = {
 
         if (isNaN(newQuantity) || !Number.isInteger(parseInt(newQuantity)) || newQuantity < 0 || newQuantity > 100) {
             return handlerInput.responseBuilder
-                .speak("You did not provide a valid quantity. Please provide a new quantity between 0 and 100")
-                .reprompt("Please state a number for the new quantity for " + parseDescription(productInCart.DescriptionTranslated, 3) + " or say zero to remove the item from your cart.")
+                .speak("You did not provide a valid quantity. Please provide a new quantity between 0 and 100.")
+                .reprompt("Please state a number for the new quantity for " + parseDescription(productInCart.DescriptionTranslated, 3) + ", or say zero to remove the item from your cart.")
                 .addElicitSlotDirective("newQuantity",
                     {
                         name: 'EditOrderIntent',
@@ -1638,9 +1638,9 @@ const ProductQuantityGiven_EditOrderIntentHandler = {
             const updateQuantityResult = await reinhart.updateQuantity(orderNumber, productInCart.ProductNumber, intent.slots.newQuantity.value);
             if (updateQuantityResult) {
                 if (intent.slots.newQuantity.value > 1) {
-                    speechOutput += "Okay, your cart now contains " + intent.slots.newQuantity.value + " cases of " + parseDescription(productInCart.DescriptionTranslated, 3) + ". Would you like to edit anything else in your cart?";
+                    speechOutput += "Your cart now contains " + intent.slots.newQuantity.value + " cases of " + parseDescription(productInCart.DescriptionTranslated, 3) + ". Would you like to edit anything else in your cart?";
                 } else {
-                    speechOutput += "Okay, your cart now contains " + intent.slots.newQuantity.value + " case of " + parseDescription(productInCart.DescriptionTranslated, 3) + ". Would you like to edit anything else in your cart?";
+                    speechOutput += "Your cart now contains " + intent.slots.newQuantity.value + " case of " + parseDescription(productInCart.DescriptionTranslated, 3) + ". Would you like to edit anything else in your cart?";
                 }
             } else {
                 speechOutput += "I'm sorry, something went wrong when I tried editing your cart. Please try going online to finish editing your cart.";
@@ -1648,7 +1648,7 @@ const ProductQuantityGiven_EditOrderIntentHandler = {
         } else {
             const removeProductResult = await reinhart.removeProduct(orderNumber, productInCart.ProductNumber);
             if (removeProductResult) {
-                speechOutput += "Okay, I removed " + parseDescription(productInCart.DescriptionTranslated, 3) + " from your cart. Would you like to edit anything else in your cart?";
+                speechOutput += "I removed " + parseDescription(productInCart.DescriptionTranslated, 3) + " from your cart. Would you like to edit anything else in your cart?";
             } else {
                 speechOutput += "I'm sorry, something went wrong when I tried removing the item from your cart. Please try going online to complete the removal process.";
             }
@@ -2060,7 +2060,7 @@ const StopIntentHandler = {
             && (Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
     },
     handle(handlerInput) {
-        const speakOutput = 'Thank you for shopping with reinhart. Please come again!';
+        const speakOutput = 'Thank you for shopping with Reinhart. Please come again!';
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
