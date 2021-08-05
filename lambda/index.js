@@ -933,13 +933,15 @@ const YesNoIntentHandler = {
 
                 if (allItems !== null) {
                     let itemsToRead;
-                    if (allItems.length > 3) {
+                    const numItems = allItems.length;
+                    if (numItems > 3) {
                         sessionAttributes.itemsToReadIndex = 0;
                         sessionAttributes.allItems = allItems;
                         itemsToRead = [allItems[sessionAttributes.itemsToReadIndex], allItems[sessionAttributes.itemsToReadIndex + 1], allItems[sessionAttributes.itemsToReadIndex + 2]];
+                        
                         sessionAttributes.yesNoKey = "listMoreSubmit";
                         return handlerInput.responseBuilder
-                            .speak('There are ' + allItems.length + ' items in your cart: ' + stringifyItemList(itemsToRead) + ". Would you like to hear more?")
+                            .speak('There are ' + numItems + ' items in your cart: ' + stringifyItemList(itemsToRead) + ". Would you like to hear more?")
                             .reprompt("Would you like to hear more?")
                             .getResponse();
 
@@ -1389,7 +1391,7 @@ const YesNoIntentHandler = {
             sessionAttributes.intentState = 0;
             sessionAttributes.yesNoKey = undefined;
             return handlerInput.responseBuilder
-                .speak("I'm sorry, something went wrong in yes and no.")
+                .speak("I'm sorry, I don't understand.")
                 .getResponse();
         }
     }
@@ -1686,15 +1688,21 @@ const ViewNextDeliveryContentsIntentHandler = {
         let speakOutput;
         if (allItems !== null) {
             let itemsToRead;
-            if (allItems.length > 3) {
+            const numItems = allItems.length;
+            if (numItems > 3) {
                 sessionAttributes.itemsToReadIndex = 0;
                 sessionAttributes.allItems = allItems;
                 itemsToRead = [allItems[sessionAttributes.itemsToReadIndex], allItems[sessionAttributes.itemsToReadIndex + 1], allItems[sessionAttributes.itemsToReadIndex + 2]];
-                speakOutput = 'There are ' + allItems.length + ' items in your next delivery: ' + stringifyItemList(itemsToRead) + ". Would you like to hear more?"
+                speakOutput = 'There are ' + numItems + ' items in your next delivery: ' + stringifyItemList(itemsToRead) + ". Would you like to hear more?"
                 sessionAttributes.yesNoKey = "listDelivery";
 
             } else {
-                speakOutput = 'There are ' + allItems.length + ' items in your next delivery: ' + stringifyItemList(allItems) + ". What else can I help you with today?";
+                if (numItems === 1) {
+                    speakOutput = 'There is ' + numItems + ' item in your next delivery: ' + stringifyItemList(allItems) + ". What else can I help you with today?";
+                } else {
+                    speakOutput = 'There are ' + numItems + ' items in your next delivery: ' + stringifyItemList(allItems) + ". What else can I help you with today?";
+                }
+
             }
         } else {
             speakOutput = 'There are no items coming in your next delivery. What else can I do for you today?';
@@ -1727,16 +1735,21 @@ const ViewPendingOrderContentsIntentHandler = {
 
             if (allItems !== null) {
                 let itemsToRead;
-                if (allItems.length > 3) {
+                const numItems = allItems.length;
+                if (numItems > 3) {
                     sessionAttributes.itemsToReadIndex = 0;
                     sessionAttributes.allItems = allItems;
                     itemsToRead = [allItems[sessionAttributes.itemsToReadIndex], allItems[sessionAttributes.itemsToReadIndex + 1], allItems[sessionAttributes.itemsToReadIndex + 2]];
-                    speakOutput = 'There are ' + allItems.length + ' items in your cart: ' + stringifyItemList(itemsToRead) + ". Would you like to hear more?"
+                    speakOutput = 'There are ' + numItems + ' items in your cart: ' + stringifyItemList(itemsToRead) + ". Would you like to hear more?"
                     sessionAttributes.yesNoKey = "listPending";
 
                 } else {
                     sessionAttributes.intentState = 0;
-                    speakOutput = 'There are ' + allItems.length + ' items in your cart: ' + stringifyItemList(allItems) + ". What else can I help you with today?";
+                    if (numItems === 1) {
+                        speakOutput = 'There is ' + numItems + ' item in your cart: ' + stringifyItemList(allItems) + ". What else can I help you with today?";
+                    } else {
+                        speakOutput = 'There are ' + numItems + ' items in your cart: ' + stringifyItemList(allItems) + ". What else can I help you with today?";
+                    }
                 }
             } else {
                 sessionAttributes.intentState = 0;

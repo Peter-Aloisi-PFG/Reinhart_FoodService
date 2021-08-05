@@ -783,16 +783,6 @@
             }
           ],
           "name": "yes_no"
-        },
-        {
-          "values": [
-            {
-              "name": {
-                "value": "{stringLiteral}"
-              }
-            }
-          ],
-          "name": "stringLiteral"
         }
       ]
     },
@@ -912,5 +902,5 @@
       }
     ]
   },
-  "version": "69"
+  "version": "71"
 }
