@@ -31,7 +31,7 @@ const DialogManagementStateInterceptor = {
     process(handlerInput) {
     
         const currentIntent = handlerInput.requestEnvelope.request.intent;
-        console.log("interceptor fired on ");
+        console.log("interceptor fired on ===============================================================");
         console.log(currentIntent);
         if (handlerInput.requestEnvelope.request.type === "IntentRequest"
             && handlerInput.requestEnvelope.request.dialogState !== "COMPLETED") {
@@ -260,8 +260,9 @@ const ProductGiven_MakeOrderIntentHandler = {
         const descriptionLength = getDescriptionLength(resolvedProducts, sessionAttributes.productIndex);
         const productDescription = parseDescription(resolvedProducts[sessionAttributes.productIndex].DescriptionTranslated, descriptionLength);
         sessionAttributes.productDescription = productDescription;
+        sessionAttributes.yesNoKey = 'productConfirmation';
         return handlerInput.responseBuilder
-            .addConfirmSlotDirective('spokenProductName')
+           // .addConfirmSlotDirective('spokenProductName')
             .speak("I was able to find " + productDescription + " in your order guide. Is this what you would like to order?")
             .reprompt("I was able to find " + productDescription + " in your order guide. Is this what you would like to order?")
             .getResponse();
@@ -362,7 +363,7 @@ const ProductConfirmation_MakeOrderIntentHandler = {
             return handlerInput.responseBuilder
                 .speak("Okay, how about " + productDescription + "?")
                 .reprompt("Okay, how about " + productDescription + "?")
-                .addConfirmSlotDirective('spokenProductName')
+               // .addConfirmSlotDirective('spokenProductName')
                 .getResponse();
 
         }
@@ -687,7 +688,7 @@ const ProductGiven_RemoveItemIntentHandler = {
         }
 
         return handlerInput.responseBuilder
-            .addConfirmSlotDirective('spokenProductName')
+            //.addConfirmSlotDirective('spokenProductName')
             .speak(speechOutput)
             .reprompt(speechOutput)
             .getResponse();
@@ -1112,24 +1113,25 @@ const YesNoIntentHandler = {
                 const descriptionLength = getDescriptionLength(resolvedProducts, sessionAttributes.productIndex);
                 const productDescription = parseDescription(resolvedProducts[sessionAttributes.productIndex].DescriptionTranslated, descriptionLength);
                 sessionAttributes.productDescription = productDescription;
+                sessionAttributes.yesNoKey = 'productConfirmation';
                 return handlerInput.responseBuilder
                     .speak("Okay, the next best match in your order guide is " + productDescription + ". Is this what you would like to order?")
                     .reprompt("The next best match in your order guide is " + productDescription + ". Is this what you would like to order?")
-                    .addConfirmSlotDirective("spokenProductName", {
-                        name: 'MakeOrderIntent',
-                        confirmationStatus: 'NONE',
-                        slots: {
-                            spokenProductName: {
-                                name: "spokenProductName",
-                                value: sessionAttributes.spokenProductName,
-                                confirmationStatus: sessionAttributes.productConfirmation
-                            },
-                            quantity: {
-                                name: "quantity",
-                                value: sessionAttributes.quantity
-                            }
-                        }
-                    })
+                    // .addConfirmSlotDirective("spokenProductName", {
+                    //     name: 'MakeOrderIntent',
+                    //     confirmationStatus: 'NONE',
+                    //     slots: {
+                    //         spokenProductName: {
+                    //             name: "spokenProductName",
+                    //             value: sessionAttributes.spokenProductName,
+                    //             confirmationStatus: sessionAttributes.productConfirmation
+                    //         },
+                    //         quantity: {
+                    //             name: "quantity",
+                    //             value: sessionAttributes.quantity
+                    //         }
+                    //     }
+                    // })
                     .getResponse();
             }
             else if (answer === "no") {
@@ -1370,6 +1372,33 @@ const YesNoIntentHandler = {
                     .getResponse();
             }
         }
+        else if (key === "productConfirmation") {
+            sessionAttributes.yesNoKey = undefined; // must always switch back to undefined
+            let currentIntent = sessionAttributes["MakeOrderIntent"];
+
+            if (answer === "yes") {
+                currentIntent.slots.spokenProductName.confirmationStatus = "CONFIRMED";
+                console.log("yesNoKey returned confirmed for spokenproductname")
+                 return handlerInput.responseBuilder
+                  .addDelegateDirective(currentIntent)
+                  .getResponse();
+            } 
+            else if (answer === "no") {
+                currentIntent.slots.spokenProductName.confirmationStatus = "DENIED";
+                 console.log("yesNoKey returned denied for spokenproductname");
+                 console.log(currentIntent);
+                return handlerInput.responseBuilder
+                 .addDelegateDirective(currentIntent)
+                 .getResponse();
+            }
+            else {
+                // there was an error--this is here for debugging purposes
+                sessionAttributes.intentState = 0;
+                return handlerInput.responseBuilder
+                    .speak("I'm sorry, something went wrong. in product confirmation yes no key")
+                    .getResponse();
+            }
+        }
         else if (key === "template") {
             sessionAttributes.yesNoKey = undefined; // must always switch back to undefined
             if (answer === "yes") {
@@ -1511,7 +1540,7 @@ const ProductGiven_EditOrderIntentHandler = {
         }
 
         return handlerInput.responseBuilder
-            .addConfirmSlotDirective('spokenProductName')
+           // .addConfirmSlotDirective('spokenProductName')
             .speak(speechOutput)
             .reprompt(speechOutput)
             .getResponse();
