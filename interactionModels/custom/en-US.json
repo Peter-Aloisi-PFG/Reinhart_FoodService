@@ -1,7 +1,7 @@
 {
   "interactionModel": {
       "languageModel": {
-          "invocationName": "a test for our reinhart app",
+          "invocationName": "the big bad and ugly but somehow working batch",
           "intents": [
               {
                   "name": "AMAZON.CancelIntent",
@@ -9,7 +9,14 @@
               },
               {
                   "name": "AMAZON.HelpIntent",
-                  "samples": []
+                  "samples": [
+                      "help me out",
+                      "tell me what to do",
+                      "what can i do",
+                      "what are my options",
+                      "help me",
+                      "help"
+                  ]
               },
               {
                   "name": "AMAZON.StopIntent",
@@ -52,6 +59,7 @@
                       }
                   ],
                   "samples": [
+                      "add {quantity} cases of {spokenProductName}",
                       "i want {quantity} units",
                       "give me {quantity} units",
                       "order {quantity} items",
@@ -534,7 +542,10 @@
                   "slots": [
                       {
                           "name": "spokenProductName",
-                          "type": "AMAZON.Food"
+                          "type": "AMAZON.Food",
+                          "samples": [
+                              "{spokenProductName}"
+                          ]
                       }
                   ],
                   "samples": [
@@ -800,14 +811,12 @@
                           "name": "quantity",
                           "type": "AMAZON.NUMBER",
                           "confirmationRequired": false,
-                          "elicitationRequired": true,
-                          "prompts": {
-                              "elicitation": "Elicit.Slot.346939382142.1462815290058"
-                          },
+                          "elicitationRequired": false,
+                          "prompts": {},
                           "validations": [
                               {
-                                  "type": "isLessThanOrEqualTo",
-                                  "prompt": "Slot.Validation.606644926628.964608683671.293601956148",
+                                  "type": "isGreaterThanOrEqualTo",
+                                  "prompt": "Slot.Validation.1109986897610.356297113704.241703322980",
                                   "value": "0"
                               }
                           ]
@@ -816,21 +825,13 @@
                           "name": "spokenProductName",
                           "type": "AMAZON.Food",
                           "confirmationRequired": false,
-                          "elicitationRequired": true,
-                          "prompts": {
-                              "elicitation": "Elicit.Slot.346939382142.1520437581110"
-                          }
+                          "elicitationRequired": false,
+                          "prompts": {}
                       }
                   ]
               },
               {
-                  "name": "SubmitOrderIntent",
-                  "confirmationRequired": false,
-                  "prompts": {},
-                  "slots": []
-              },
-              {
-                  "name": "EditOrderIntent",
+                  "name": "RemoveItemIntent",
                   "delegationStrategy": "SKILL_RESPONSE",
                   "confirmationRequired": false,
                   "prompts": {},
@@ -838,87 +839,55 @@
                       {
                           "name": "spokenProductName",
                           "type": "AMAZON.Food",
-                          "confirmationRequired": false,
-                          "elicitationRequired": false,
-                          "prompts": {}
-                      },
-                      {
-                          "name": "newQuantity",
-                          "type": "AMAZON.NUMBER",
-                          "confirmationRequired": false,
-                          "elicitationRequired": false,
-                          "prompts": {}
+                          "confirmationRequired": true,
+                          "elicitationRequired": true,
+                          "prompts": {
+                              "confirmation": "Confirm.Slot.1430929145156.728991583532",
+                              "elicitation": "Elicit.Slot.1430929145156.728991583532"
+                          }
                       }
                   ]
               }
           ],
-          "delegationStrategy": "SKILL_RESPONSE"
+          "delegationStrategy": "ALWAYS"
       },
       "prompts": [
           {
-              "id": "Elicit.Slot.346939382142.1462815290058",
+              "id": "Slot.Validation.1109986897610.356297113704.241703322980",
               "variations": [
                   {
                       "type": "PlainText",
-                      "value": "How many cases of {spokenProductName} would you like?"
+                      "value": "ALEXA please enter a value greater than zero ALEXA"
                   }
               ]
           },
           {
-              "id": "Elicit.Slot.346939382142.1520437581110",
+              "id": "Elicit.Slot.1109986897610.356297113704",
               "variations": [
                   {
                       "type": "PlainText",
-                      "value": "What product would you like to order?"
+                      "value": "ALEXA how many cases do you need ALEXA"
                   }
               ]
           },
           {
-              "id": "Confirm.Slot.831481279506.420250421361",
+              "id": "Elicit.Slot.1430929145156.728991583532",
               "variations": [
                   {
                       "type": "PlainText",
-                      "value": "I was able to find {spokenProductName} . Is this correct?"
+                      "value": "what product to remove"
                   }
               ]
           },
           {
-              "id": "Confirm.Intent.841627996573",
+              "id": "Confirm.Slot.1430929145156.728991583532",
               "variations": [
                   {
                       "type": "PlainText",
-                      "value": "Are you sure you would like to submit?"
-                  }
-              ]
-          },
-          {
-              "id": "Elicit.Slot.670601812336.281805026272",
-              "variations": [
-                  {
-                      "type": "PlainText",
-                      "value": "What do you want to edit?"
-                  }
-              ]
-          },
-          {
-              "id": "Elicit.Slot.670601812336.1618120151253",
-              "variations": [
-                  {
-                      "type": "PlainText",
-                      "value": "enter New value enter zero to remove"
-                  }
-              ]
-          },
-          {
-              "id": "Slot.Validation.606644926628.964608683671.293601956148",
-              "variations": [
-                  {
-                      "type": "PlainText",
-                      "value": "Please enter a value greater than zero"
+                      "value": "Is this the item you want to remove?"
                   }
               ]
           }
-
       ]
   }
 }
