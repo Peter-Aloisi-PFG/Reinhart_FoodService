@@ -51,6 +51,9 @@ async function addToOrder(orderNumber, product, quantity) {
         for (var key in orderData.orders) {
             if (orderData.orders[key].orderNumber === orderNumber) {
                 console.log("order numbers matched");
+                console.log(orderData);
+                console.log(product);
+                console.log(quantity);
                 product["quantity"] = quantity; //add quantity attribute
                 orderData.orders[key].orderItem.push(product);
                 orderData.orders[key].numItems++;
@@ -110,12 +113,19 @@ async function getProductByKeyword(spokenProductDescription, customerID) {
     var orderGuide = await Util.getJSON(customerOGFile);
     console.log("order guide is ");
     console.log(orderGuide);
-    var searchResult = searchByKeyword(spokenProductDescription, orderGuide);
-    console.log(searchResult);
+    let keywordProductNum = searchByKeyword(spokenProductDescription, orderGuide.keywords);
+    let searchResult = null;
+    if (keywordProductNum === null) {
+        return null;
+    } else {
+        searchResult = searchByProductNumber( keywordProductNum, orderGuide.products);
+    }
+    
     if (searchResult === null) {
         return null;
     }
-    console.log("found products in catalouge");
+    
+    console.log("found products in order guide");
     console.log(searchResult);
     return searchResult;
 }
@@ -133,9 +143,13 @@ async function getProductFromCatalogue(spokenProductName) {
     console.log(spokenProductName);
     var searchResults = searchByDescription(spokenProductName, foodData);
     console.log(searchResults);
-    if (searchResults[0].score < .1) {
-        console.log("did not find a relatable product (.1 or above) in catalougue");
+    if (searchResults[0].score < .14) {
+        console.log("did not find a relatable product (.1 or above) in catalogue");
         return null;
+    } else if (searchResults[1].score < .14) {
+        searchResults = [searchResults[0]];
+    } else if (searchResults[2].score < .14) {
+        searchResults = [searchResults[0], searchResults[1]];
     }
     console.log("found products in catalogue");
     let products = [];
@@ -153,22 +167,21 @@ async function getProductFromCatalogue(spokenProductName) {
 /    parameters: customerID, spokenProductName 
 /    return: resolvedProductName, resolvedProductID
 */
-async function getProductFromOrderGuide(customerID, spokenProductName) {
+async function getProductFromOrderGuide(spokenProductDescription, customerID) {
     let customerOGFile = "orderGuideCustomer" + customerID + ".json";
     console.log(customerOGFile + " is filename to search for ");
     var orderGuide = await Util.getJSON(customerOGFile);
     console.log("order guide is ");
     console.log(orderGuide);
-    var searchResults = searchByDescription(spokenProductName, orderGuide.products);
+    var searchResults = searchByDescription(spokenProductDescription, orderGuide.products);
     console.log(searchResults);
-    if (searchResults[0].score < .1) {
+    if (searchResults[0].score < .14) {
         console.log("did not find a relatable product (.1 or above) in catalogue");
         return null;
-    } else if (searchResults[1] < .1) {
-        return [searchResults[0]];
-    } else if (searchResults[1] < .1) {
-        return [searchResults[0], searchResults[1]];
-
+    } else if (searchResults[1].score < .14) {
+        searchResults = [searchResults[0]];
+    } else if (searchResults[2].score < .14) {
+        searchResults = [searchResults[0], searchResults[1]];
     }
     console.log("found products in catalouge");
     let products = [];
@@ -188,20 +201,28 @@ async function getProductFromOrderGuide(customerID, spokenProductName) {
 /
 /    return: resolvedProductName, resolvedProductID, quantity
 */
-async function getOrderItemFromOrder(orderNumber, spokenProductDescription) {
+async function getOrderItemFromOrder(orderNumber, spokenProductDescription, customerID) {
     var orderData = await Util.getJSON("orders.json");
     for (var key in orderData.orders) {
         if (orderData.orders[key].orderNumber === orderNumber) {
             console.log("found order ");
             if (orderData.orders[key].orderStatus === 0) {
-                var searchResult = searchByDescription(spokenProductDescription, orderData.orders[key].orderItem);
-                console.log(searchResult);
-                console.log("search result was " + searchResult.score + " with answer " + searchResult.product)
-                if (searchResult.score < .1) {
-                    console.log("did not find a relatable product (.1 or above) in catalouge");
-                    return null;
+                let orderGuide = await Util.getJSON("orderGuideCustomer" + customerID + ".json");
+                let keywordProductNum = searchByKeyword(spokenProductDescription, orderGuide.keywords);
+                
+                let searchResult = null;
+                if (keywordProductNum !== null) {
+                    searchResult = searchByProductNumber(keywordProductNum, orderData.orders[key].orderItem);
+                    if (searchResult !== null) {
+                        return searchResult;
+                    }
+                } else {
+                    searchResult = searchByDescription(spokenProductDescription, orderData.orders[key].orderItem);
+                    if (searchResult !== null) {
+                        return searchResult[0].product;
+                    }
                 }
-                return searchResult[0].product;
+                return null;
             }
         }
     }
@@ -570,25 +591,22 @@ function diceCoefficient(str1, str2) {
     return (2 * intersect(bigrams1, bigrams2).size) / (bigrams1.size + bigrams2.size);
 }
 
-
-
-function searchByKeyword(spokenProductName, orderGuide) {
+function searchByKeyword(spokenProductName, keywords) {
     let chosenProduct = {
         "score": -1,
         "productNumber": ""
     }
 
-    for (let i = 0; i < orderGuide.keywords.length; i++) {
-        let score = diceCoefficient(spokenProductName, orderGuide.keywords[i].key);
+    for (let i = 0; i < keywords.length; i++) {
+        let score = diceCoefficient(spokenProductName, keywords[i].key);
         if (score > chosenProduct.score) {
             chosenProduct.score = score;
-            chosenProduct.productNumber = orderGuide.keywords[i].ProductNumber;
+            chosenProduct.productNumber = keywords[i].ProductNumber;
         }
     }
 
-    if (chosenProduct.score > .6) {
-        console.log("keyword match, searching by product number");
-        return searchByProductNumber(chosenProduct.productNumber, orderGuide.products);
+    if (chosenProduct.score > .7) {
+        return chosenProduct.productNumber;
     } else {
         return null;
     }
