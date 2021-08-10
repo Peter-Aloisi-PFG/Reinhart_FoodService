@@ -774,37 +774,31 @@
           ]
         },
         {
-          "name": "ProductDescriptionIntent",
-          "slots": [
-            {
-              "name": "item",
-              "type": "AMAZON.Food"
-            }
-          ],
-          "samples": [
-            "can you tell me about the {item}",
-            "what do you know about {item}",
-            "more about a {item}",
-            "can you tell us about the {item}",
-            "i want to know about the {item}",
-            "i want to hear about the {item}",
-            "tell me about this",
-            "can you tell me more about {item}",
-            "i want to know about {item}",
-            "tell me about the {item}",
-            "can you tell us more about {item}",
-            "what is in {item}",
-            "can you get more about {item}",
-            "can you show me more about {item}",
-            "tell me more",
-            "tell us more about {item}",
-            "tell me about {item}",
-            "tell me more about {item}",
-            "tell me more about this",
-            "description",
-            "what is {item}",
-            "what is this"
-          ]
+            "name": "ItemDescriptionIntent",
+            "slots": [
+                {
+                    "name": "item",
+                    "type": "AMAZON.Food"
+                }
+            ],
+            "samples": [
+                "tell me about this",
+                "can you tell me more about {item}",
+                "i want to know about {item}",
+                "tell me about the {item}",
+                "can you tell us more about {item}",
+                "what is in {item}",
+                "can you get more about {item}",
+                "can you show me more about {item}",
+                "tell me more",
+                "tell us more about {item}",
+                "tell me about {item}",
+                "tell me more about {item}",
+                "tell me more about this",
+                "description",
+                "what is {item}",
+                "what is this"
+            ]
         },
         {
           "name": "FindOrderItemIntent",
