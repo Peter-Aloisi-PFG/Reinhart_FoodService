@@ -59,18 +59,10 @@
                       }
                   ],
                   "samples": [
-                      "add {quantity} cases of {spokenProductName}",
-                      "i want {quantity} units",
-                      "give me {quantity} units",
-                      "order {quantity} items",
-                      "give me {quantity} cases",
-                      "I want {quantity} cases of that",
-                      "order {quantity} cases",
-                      "i want {quantity} cases",
                       "order",
+                      "add {quantity} cases of {spokenProductName}",
                       "order {spokenProductName}",
                       "order me {quantity} cases of {spokenProductName}",
-                      "order me {quantity} cases",
                       "I want to start ordering",
                       "I'd like to begin my order",
                       "I'd like to order",
@@ -739,7 +731,7 @@
                   ]
               },
               {
-                  "name": "ProductDescriptionIntent",
+                  "name": "ItemDescriptionIntent",
                   "slots": [
                       {
                           "name": "item",
