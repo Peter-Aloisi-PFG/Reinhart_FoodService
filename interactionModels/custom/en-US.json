@@ -68,6 +68,13 @@
             }
           ],
           "samples": [
+            "gimme {quantity} cases of {spokenProductName}",
+            "I\u0027ll get {quantity} cases of {spokenProductName}",
+            "I\u0027ll get {quantity} {spokenProductName}",
+            "I\u0027ll take {quantity} cases of {spokenProductName}",
+            "I\u0027ll take {quantity} {spokenProductName}",
+            "add some {spokenProductName}",
+            "{spokenProductName}",
             "I want {spokenProductName} ",
             "lets order {quantity} more cases",
             "add {quantity} cases of {spokenProductName} to my shopping cart",
@@ -774,31 +781,60 @@
           ]
         },
         {
-            "name": "ItemDescriptionIntent",
-            "slots": [
-                {
-                    "name": "item",
-                    "type": "AMAZON.Food"
-                }
-            ],
-            "samples": [
-                "tell me about this",
-                "can you tell me more about {item}",
-                "i want to know about {item}",
-                "tell me about the {item}",
-                "can you tell us more about {item}",
-                "what is in {item}",
-                "can you get more about {item}",
-                "can you show me more about {item}",
-                "tell me more",
-                "tell us more about {item}",
-                "tell me about {item}",
-                "tell me more about {item}",
-                "tell me more about this",
-                "description",
-                "what is {item}",
-                "what is this"
-            ]
+          "name": "ItemDescriptionIntent",
+          "slots": [
+            {
+              "name": "item",
+              "type": "AMAZON.Food"
+            }
+          ],
+          "samples": [
+            "whats that",
+            "what is the information on that",
+            "what is that items description",
+            "tell me about that",
+            "what is that",
+            "what is the {item} description",
+            "what is {item} description",
+            "what is {item} information",
+            "{item} information",
+            "can you tell me what {item} is",
+            "tell me what {item} is",
+            "{item} description",
+            "can you tell me about a {item}",
+            "i want to know about a {item}",
+            "tell me what the {item} is",
+            "i want to hear about a {item}",
+            "more about the {item}",
+            "tell about a {item}",
+            "what do you know about the {item}",
+            "what about the {item}",
+            "can you tell me more about the {item}",
+            "what is that {item}",
+            "tell me about this {item}",
+            "tell me about that {item}",
+            "what are {item}",
+            "tell me the details of {item}",
+            "what the heck is {item}",
+            "what is the {item}",
+            "can you tell me about the {item}",
+            "what do you know about {item}",
+            "more about a {item}",
+            "can you tell us about the {item}",
+            "i want to know about the {item}",
+            "i want to hear about the {item}",
+            "can you tell me more about {item}",
+            "i want to know about {item}",
+            "tell me about the {item}",
+            "can you tell us more about {item}",
+            "what is in {item}",
+            "can you get more about {item}",
+            "can you show me more about {item}",
+            "tell us more about {item}",
+            "tell me about {item}",
+            "tell me more about {item}",
+            "what is {item}"
+          ]
         },
         {
           "name": "FindOrderItemIntent",
@@ -856,6 +892,18 @@
               "name": {
                 "value": "yes",
                 "synonyms": [
+                  "hm sure",
+                  "hm yes",
+                  "um yeah",
+                  "um yes",
+                  "uh sure",
+                  "uh okay",
+                  "uh yes",
+                  "uh yeah",
+                  "i said yes",
+                  "by all means",
+                  "yes of course",
+                  "absolutely",
                   "sure",
                   "yes please",
                   "of course",
@@ -869,6 +917,26 @@
               "name": {
                 "value": "no",
                 "synonyms": [
+                  "no alexa",
+                  "alexa no",
+                  "not by any means",
+                  "by no means",
+                  "i said no",
+                  "nay",
+                  "absolutely no",
+                  "absolutely not",
+                  "not at all",
+                  "negative",
+                  "no way",
+                  "no no",
+                  " no it\u0027s not that",
+                  "not that",
+                  "wait no",
+                  "nope",
+                  "never",
+                  "um no",
+                  "mm no",
+                  "hm no",
                   "definitely not",
                   "no thank you",
                   "no thanks",
@@ -1008,5 +1076,5 @@
       }
     ]
   },
-  "version": "91"
+  "version": "102"
 }

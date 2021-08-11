@@ -132,6 +132,12 @@ const ItemDescriptionIntentHandler = {
                 .speak(speakOutput)
                 .reprompt("yes or no, say cancel to back out")
                 .getResponse();
+        } else if (sessionAttributes.orderGuideExhausted === true) {
+            speakOutput = "the full description is " + stringifyProduct(sessionAttributes.productInCart) + " is this the item to edit?";
+            return handlerInput.responseBuilder
+                .speak(speakOutput)
+                .reprompt("yes or no, say cancel to back out")
+                .getResponse();
         }
 
         console.log(sessionAttributes.productInCart);
@@ -306,11 +312,10 @@ const ProductGiven_MakeOrderIntentHandler = {
         console.log('resolved products: ' + JSON.stringify(resolvedProducts));
 
         if (resolvedProducts === null) {
-            sessionAttributes.orderGuideExhausted = true;
             sessionAttributes.yesNoKey = 'relatedCatalogue';
             return handlerInput.responseBuilder
-                .speak('I\'m sorry, I was not able to find any product matching ' + spokenProductName + ' in your order guide. Would you like to me to search the catalogue?')
-                .reprompt('I\'m sorry, I was not able to find any product matching ' + spokenProductName + ' in your order guide. Would you like to me to search the catalogue?')
+                .speak('I\'m sorry, I was not able to find any product matching ' + spokenProductName + ' in your order guide. Would you like me to search the catalogue?')
+                .reprompt('I\'m sorry, I was not able to find any product matching ' + spokenProductName + ' in your order guide. Would you like me to search the catalogue?')
                 .getResponse();
         }
 
@@ -369,14 +374,9 @@ const ProductConfirmation_MakeOrderIntentHandler = {
                 // user has denied the first product so we are going to ask them if they want to hear more related items
                 const itemsLeft = sessionAttributes.resolvedProducts.length - sessionAttributes.productIndex;
 
-                if (itemsLeft > 1) {
-                    let speakOutput = '';
+                if (itemsLeft > 1 && sessionAttributes.orderGuideExhausted !== true) {
                     sessionAttributes.yesNoKey = 'relatedOrderGuide';
-                    if (sessionAttributes.orderGuideExhausted === true) {
-                        speakOutput += 'I was able to find ' + itemsLeft + ' other items related to ' + spokenProductName + ' in the catalogue. Would you like me to go through them?';
-                    } else {
-                        speakOutput += 'I was able to find ' + itemsLeft + ' other items related to ' + spokenProductName + ' in your order guide. Would you like me to go through them?';
-                    }
+                    const speakOutput = 'I was able to find ' + itemsLeft + ' other items related to ' + spokenProductName + ' in your order guide. Would you like me to go through them?';
                     return handlerInput.responseBuilder
                         .speak(speakOutput)
                         .reprompt(speakOutput)
@@ -410,7 +410,6 @@ const ProductConfirmation_MakeOrderIntentHandler = {
 
                 } else {
                     // user has reached the end of our related products list from the order guide so we need to ask if we should search the catalogue
-                    sessionAttributes.orderGuideExhausted = true;
                     sessionAttributes.yesNoKey = 'relatedCatalogue';
                     return handlerInput.responseBuilder
                         .speak('I found no other items related to ' + spokenProductName + ' in your order guide. Would you like me to try searching the catalogue?')
@@ -423,6 +422,7 @@ const ProductConfirmation_MakeOrderIntentHandler = {
             const descriptionLength = getDescriptionLength(resolvedProducts, sessionAttributes.productIndex);
             const productDescription = parseDescription(resolvedProducts[sessionAttributes.productIndex].DescriptionTranslated, descriptionLength);
             sessionAttributes.productDescription = productDescription;
+            sessionAttributes.fullDescription = resolvedProducts[sessionAttributes.productIndex];
             
             sessionAttributes.yesNoKey = 'productConfirmation';
             return handlerInput.responseBuilder
@@ -924,48 +924,11 @@ const YesNoIntentHandler = {
         const slots = handlerInput.requestEnvelope.request.intent.slots;
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
         const key = sessionAttributes.yesNoKey;
+        sessionAttributes.yesNoKey = undefined; // must always switch back to undefined
         const answer = resolveEntity(slots, 'answer');
 
         if (key === 'orderMore') {
-            sessionAttributes.yesNoKey = undefined; // must always switch back to undefined
-            if (answer === 'yes') {
-                // user would like to add more to their order
-                return handlerInput.responseBuilder
-                    .speak('What would you like to order?')
-                    .reprompt('What would you like to order')
-                    .addElicitSlotDirective('spokenProductName',
-                        {
-                            name: 'MakeOrderIntent',
-                            confirmationStatus: 'NONE',
-                            slots: {
-                                spokenProductName: {
-                                    name: 'spokenProductName',
-                                    value: undefined,
-                                    confirmationStatus: 'NONE'
-                                },
-                                quantity: {
-                                    name: 'quantity',
-                                    value: undefined,
-                                    confirmationStatus: 'NONE'
-                                }
-                            }
-                        })
-                    .getResponse();
-            }
-            else if (answer === 'no') {
-                // prompt user if they would like to route to submit order intent
-                sessionAttributes.yesNoKey = 'submitOrder';
-                return handlerInput.responseBuilder
-                    .speak('Would you like to submit this order?')
-                    .reprompt('Would you like to submit this order?')
-                    .getResponse();
-            }
-            else {
-                // there was an error--this is here for debugging purposes
-                return handlerInput.responseBuilder
-                    .speak('I\'m sorry, something went wrong.')
-                    .getResponse();
-            }
+            return yesNo_orderMore(handlerInput, sessionAttributes, answer);
         }
         else if (key === 'submitOrder') {
             sessionAttributes.yesNoKey = undefined; // must always switch back to undefined
@@ -1347,6 +1310,7 @@ const YesNoIntentHandler = {
                 const spokenProductName = sessionAttributes.spokenProductName;
                 sessionAttributes.productIndex = 0;
                 sessionAttributes.productDenies = 0;
+                sessionAttributes.orderGuideExhausted = true;
 
                 let orderGuideProducts = sessionAttributes.resolvedProducts;
                 let catalogueProducts = await reinhart.getProductFromCatalogue(spokenProductName);
@@ -1354,6 +1318,7 @@ const YesNoIntentHandler = {
                 sessionAttributes.resolvedProducts = resolvedProducts;
 
                 if (resolvedProducts === null) {
+                    sessionAttributes.orderGuideExhausted = false;
                     return handlerInput.responseBuilder
                         .speak('I\'m sorry, I was not able to find any related items in the catalogue. Please state a new product name for me to search.')
                         .reprompt('I\'m sorry, I was not able to find any related items in the catalogue. Please state a new product name for me to search.')
@@ -1378,6 +1343,7 @@ const YesNoIntentHandler = {
                 // user has indicated they would like to hear more related items from the catalogue so we will start listing them off
                 const descriptionLength = getDescriptionLength(resolvedProducts, sessionAttributes.productIndex);
                 const productDescription = parseDescription(resolvedProducts[sessionAttributes.productIndex].DescriptionTranslated, descriptionLength);
+                sessionAttributes.fullDescription = resolvedProducts[sessionAttributes.productIndex];
                 sessionAttributes.productDescription = productDescription;
                 let speakOutput = '';
                 if (resolvedProducts.length > 1) {
@@ -1988,7 +1954,7 @@ const FindOrderItemIntentHandler = {
             } else {
                 const itemName = parseDescription(orderItemFound.DescriptionTranslated, 3);
                 const quantity = orderItemFound.quantity;
-                speakOutput += 'Yes, I found ' + quantity + ' cases of ' + itemName + ' in your cart';
+                speakOutput += 'Yes, I found ' + quantity + ' cases of ' + itemName + ' in your cart.';
             }
         }
         
@@ -2086,9 +2052,7 @@ const stringifyProduct = (product) => {
     const brandTranslated = product.BrandTranslated;
 
     let parsedDescription = parseDescription(descriptionTranslated, 100);
-
     let toReturn = '';
-    
     let parsedPackSize = parsePackSize(packSize);
 
     if (parsedPackSize.length === 1) {
@@ -2100,7 +2064,6 @@ const stringifyProduct = (product) => {
     }
 
     toReturn += parsedDescription + ' from ' + brandTranslated;
-    toReturn += parsedDescription;
     toReturn = toReturn.toLowerCase();
     console.log('stringified product: ' + toReturn);
     return toReturn;
@@ -2161,7 +2124,7 @@ const parseDescription = (descriptionTranslated, numWords) => {
 
     for (let i = 0; i < descriptionTranslated.length; i++) {
         switch (descriptionTranslated.charAt(i)) {
-            case '\'':
+            case '"':
                 toReturn += ' inch';
                 break;
             case '&':
@@ -2242,6 +2205,49 @@ const resolveEntity = function (resolvedEntity, slotName) {
 };
 
 
+function yesNo_orderMore(handlerInput, sessionAttributes, answer) {
+    if (answer === 'yes') {
+        // user would like to add more to their order
+        let speakOutput = 'What would you like to order?';
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt(speakOutput)
+            .addElicitSlotDirective('spokenProductName',
+                {
+                    name: 'MakeOrderIntent',
+                    confirmationStatus: 'NONE',
+                    slots: {
+                        spokenProductName: {
+                            name: 'spokenProductName',
+                            value: undefined,
+                            confirmationStatus: 'NONE'
+                        },
+                        quantity: {
+                            name: 'quantity',
+                            value: undefined,
+                            confirmationStatus: 'NONE'
+                        }
+                    }
+                })
+            .getResponse();
+    }
+    else if (answer === 'no') {
+        // prompt user if they would like to route to submit order intent
+        sessionAttributes.yesNoKey = 'submitOrder';
+        return handlerInput.responseBuilder
+            .speak('Would you like to submit this order?')
+            .reprompt('Would you like to submit this order?')
+            .getResponse();
+    }
+    else {
+        // there was an error--this is here for debugging purposes
+        return handlerInput.responseBuilder
+            .speak('I\'m sorry, something went wrong.')
+            .getResponse();
+    }
+}
+
+
 
 
 //====================================================================================================================================================
@@ -2262,16 +2268,16 @@ const HelpIntentHandler = {
                 speakOutput = 'In Reinhart\'s Alexa app you can quickly add, edit, view, and remove items from your shopping cart. You can also submit an order for your next delivery date. Say help at any point to get assistance at that stage.';
                 break;
             case 1:
-                speakOutput = 'Say the keyword or product name you want to order. Alexa will then prompt you for a quantity. You can only add one product at a time, please follow Alexa\'s prompts.';
+                speakOutput = 'Say your keyword or the product name that you want to order. Alexa will then prompt you for a quantity. You can only add one product at a time, please follow Alexa\'s prompts.';
                 break;
             case 2:
                 speakOutput = 'To submit this order say, submit order, then follow along with Alexa\'s response\'s';
                 break;
             case 3:
-                speakOutput = 'Say the keyword or product name that you want to edit. Alexa will then ask for a new quantity. Say, zero, to remove the product from your cart. You cannot remove or edit submitted orders using the Alexa app, please use the website to do so.';
+                speakOutput = 'Say your keyword or the product name that you want to edit. Alexa will then ask for a new quantity. Say, zero, to remove the product from your cart. You cannot remove or edit submitted orders using the Alexa app, please use the website to do so.';
                 break;
             case 4:
-                speakOutput = 'Say the keyword or product name you want to remove. Alexa will then remove it from your shopping cart. You cannot remove or edit submitted orders using the Alexa app, please use Reinhart\'s website to do so.';
+                speakOutput = 'Say your keyword or the product name that you want to remove. Alexa will then remove it from your shopping cart. You cannot remove or edit submitted orders using the Alexa app, please use Reinhart\'s website to do so.';
                 break;
             default:
                 speakOutput = 'error in help';
