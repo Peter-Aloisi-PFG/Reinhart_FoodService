@@ -979,98 +979,127 @@
               "prompts": {}
             }
           ],
-          "delegationStrategy": "SKILL_RESPONSE"
-        },
-        {
-          "name": "RemoveItemIntent",
-          "confirmationRequired": false,
-          "prompts": {},
-          "slots": [
-            {
-              "name": "spokenProductName",
-              "type": "AMAZON.Food",
-              "elicitationRequired": true,
-              "confirmationRequired": true,
-              "prompts": {
-                "confirmation": "Confirm.Slot.1430929145156.728991583532",
-                "elicitation": "Elicit.Slot.1430929145156.728991583532"
+          "types": [
+              {
+                  "name": "yes_no",
+                  "values": [
+                      {
+                          "name": {
+                              "value": "yes",
+                              "synonyms": [
+                                  "sure",
+                                  "yes please",
+                                  "of course",
+                                  "yah",
+                                  "yeah",
+                                  "yup"
+                              ]
+                          }
+                      },
+                      {
+                          "name": {
+                              "value": "no",
+                              "synonyms": [
+                                  "definitely not",
+                                  "no thank you",
+                                  "no thanks",
+                                  "nah",
+                                  "nope"
+                              ]
+                          }
+                      }
+                  ]
               }
-            }
-          ],
-          "delegationStrategy": "SKILL_RESPONSE"
-        },
-        {
-          "name": "FindOrderItemIntent",
-          "confirmationRequired": false,
-          "prompts": {},
-          "slots": [
-            {
-              "name": "spokenProductName",
-              "type": "AMAZON.Food",
-              "elicitationRequired": true,
-              "confirmationRequired": false,
-              "prompts": {
-                "elicitation": "Elicit.Slot.564962027118.35740533681"
+          ]
+      },
+      "dialog": {
+          "intents": [
+              {
+                  "name": "MakeOrderIntent",
+                  "delegationStrategy": "SKILL_RESPONSE",
+                  "confirmationRequired": false,
+                  "prompts": {},
+                  "slots": [
+                      {
+                          "name": "quantity",
+                          "type": "AMAZON.NUMBER",
+                          "confirmationRequired": false,
+                          "elicitationRequired": false,
+                          "prompts": {},
+                          "validations": [
+                              {
+                                  "type": "isGreaterThanOrEqualTo",
+                                  "prompt": "Slot.Validation.1109986897610.356297113704.241703322980",
+                                  "value": "0"
+                              }
+                          ]
+                      },
+                      {
+                          "name": "spokenProductName",
+                          "type": "AMAZON.Food",
+                          "confirmationRequired": false,
+                          "elicitationRequired": false,
+                          "prompts": {}
+                      }
+                  ]
+              },
+              {
+                  "name": "RemoveItemIntent",
+                  "delegationStrategy": "SKILL_RESPONSE",
+                  "confirmationRequired": false,
+                  "prompts": {},
+                  "slots": [
+                      {
+                          "name": "spokenProductName",
+                          "type": "AMAZON.Food",
+                          "confirmationRequired": true,
+                          "elicitationRequired": true,
+                          "prompts": {
+                              "confirmation": "Confirm.Slot.1430929145156.728991583532",
+                              "elicitation": "Elicit.Slot.1430929145156.728991583532"
+                          }
+                      }
+                  ]
               }
-            }
           ],
-          "delegationStrategy": "SKILL_RESPONSE"
-        }
-      ],
-      "delegationStrategy": "ALWAYS"
-    },
-    "prompts": [
-      {
-        "id": "Slot.Validation.1109986897610.356297113704.241703322980",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "ALEXA please enter a value greater than zero ALEXA"
-          }
-        ]
+          "delegationStrategy": "ALWAYS"
       },
-      {
-        "id": "Elicit.Slot.1109986897610.356297113704",
-        "variations": [
+      "prompts": [
           {
-            "type": "PlainText",
-            "value": "ALEXA how many cases do you need ALEXA"
-          }
-        ]
-      },
-      {
-        "id": "Elicit.Slot.1430929145156.728991583532",
-        "variations": [
+              "id": "Slot.Validation.1109986897610.356297113704.241703322980",
+              "variations": [
+                  {
+                      "type": "PlainText",
+                      "value": "ALEXA please enter a value greater than zero ALEXA"
+                  }
+              ]
+          },
           {
-            "type": "PlainText",
-            "value": "what product to remove"
-          }
-        ]
-      },
-      {
-        "id": "Confirm.Slot.1430929145156.728991583532",
-        "variations": [
+              "id": "Elicit.Slot.1109986897610.356297113704",
+              "variations": [
+                  {
+                      "type": "PlainText",
+                      "value": "ALEXA how many cases do you need ALEXA"
+                  }
+              ]
+          },
           {
-            "type": "PlainText",
-            "value": "Is this the item you want to remove?"
-          }
-        ]
-      },
-      {
-        "id": "Elicit.Slot.1261368628421.1292778876043",
-        "variations": [
+              "id": "Elicit.Slot.1430929145156.728991583532",
+              "variations": [
+                  {
+                      "type": "PlainText",
+                      "value": "what product to remove"
+                  }
+              ]
+          },
           {
-            "type": "PlainText",
-            "value": "What product are you looking for?"
-          }
-        ]
-      },
-      {
-        "id": "Elicit.Slot.564962027118.35740533681",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "what product in your order are you searching for"
+              "id": "Confirm.Slot.1430929145156.728991583532",
+              "variations": [
+                  {
+                      "type": "PlainText",
+                      "value": "Is this the item you want to remove?"
+                  }
+              ]
           }
         ]
       }
