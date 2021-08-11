@@ -16,6 +16,25 @@ const shortScoreThreshold = .4;
 /    parameters: customerID
 /    return: orderNumber
 */
+async function getUserId(email) {
+    var customerData = await Util.getJSON("customers.json");
+    console.log("checking email");
+    for(let key in customerData){
+        if(customerData[key].Email !== undefined && customerData[key].Email === email){
+            return customerData[key].CustomerNumber;
+        }
+    }
+    console.log("didnt find email");
+    return  null ;
+}
+
+
+/*
+/    starts an order using the customers customer ID
+/    
+/    parameters: customerID
+/    return: orderNumber
+*/
 async function startOrder(customerNumber) {
     var orderData = await Util.getJSON('orders.json')
 
@@ -677,4 +696,4 @@ function searchByDescription(spokenProductName, products) {
 
 
 
-module.exports = { startOrder, addToOrder, getPendingOrderInfo, getProductFromCatalogue, getProductFromOrderGuide, getProductByKeyword, getOrderItemFromOrder, getNextDeliveryOrderNumbers, updateQuantity, removeProduct, clearOrderContents, submitOrder, cancelNextDelivery, calculateDeliveryDay, getNextDeliveryDate, getOrderItemFromNextDelivery, getOrderContents, getNextDeliveryContents }; //getProductFromOrderGuide
+module.exports = {getUserId, startOrder, addToOrder, getPendingOrderInfo, getProductFromCatalogue, getProductFromOrderGuide, getProductByKeyword, getOrderItemFromOrder, getNextDeliveryOrderNumbers, updateQuantity, removeProduct, clearOrderContents, submitOrder, cancelNextDelivery, calculateDeliveryDay, getNextDeliveryDate, getOrderItemFromNextDelivery, getOrderContents, getNextDeliveryContents }; //getProductFromOrderGuide
