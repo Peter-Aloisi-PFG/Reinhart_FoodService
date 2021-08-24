@@ -60,6 +60,36 @@ function uploadJSON(fileName, uploadee) {
     });
 }
 
+//gets the user info from amazon api
+async function getUserAccess(accessToken) {
+    return new Promise((resolve, reject) => {
+        const options = {
+            "method": "GET",
+            "hostname": "api.amazon.com",
+            "path": "/user/profile",
+            "headers": {
+                "Authorization": `Bearer ${accessToken}`
+            }
+        };
+        let req = https.request(options, (response) => {
+            let returnData = '';
+
+            response.on('data', (chunk) => {
+                returnData += chunk;
+            });
+
+            response.on('end', () => {
+                resolve(JSON.parse(returnData));
+            });
+
+            response.on("error", (error) => {
+                reject(error)
+            })
+        })
+        req.end();
+    })
+}
+
 //--------------------------------------Helper Methods--------------------------------------------------------------------
 
 
@@ -100,4 +130,4 @@ function getPromise(fileName) {
 
 
 
-module.exports = { getS3PreSignedUrl, getJSON, upload, uploadJSON }
+module.exports = { getUserAccess, getS3PreSignedUrl, getJSON, upload, uploadJSON }
